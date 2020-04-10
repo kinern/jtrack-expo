@@ -1,7 +1,7 @@
-# jtrack - Fitness Tracker App
+# JTrack - Fitness Tracking App
 
 React Native App with "Don't Break The Chain" style fitness tracker.  
-Originally only for jump roping, modified to store minutes of execise instead of repetitions.
+Originally for jump roping, modified to store minutes of execise instead of repetitions.
 
 ### Features
 - "Don't Break The Chain" style calendar with images to indicate minutes.
