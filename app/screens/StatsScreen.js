@@ -135,11 +135,6 @@ export default class StatsScreen extends Component {
     return (
       <View>
         <ImageBackground style= { statsStyles.statsBackground } source={require(`../assets/images/hpgradient.jpg`)}>
-        <View style={statsStyles.topcontainer}>
-        <Text style={statsStyles.title}>
-          Graph
-        </Text>
-        </View >
         <View style={statsStyles.graphcontainer}>
           <View>
             <View style={statsStyles.graphnavicontainer}>

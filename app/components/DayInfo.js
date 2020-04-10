@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import Database from './Database';
 import Geolocation from 'react-native-geolocation-service';
+import { Permissions, PermissionsAndroid } from 'react-native';
 
 
 const db = new Database();
@@ -110,16 +111,36 @@ class DayInfo extends Component {
       weatherdata: {main: {temp: 60}, weather: [{main: 'Clear', description : 'clear sky', id: 800}]}
     };
   }
-
+ 
+  async requestLocationPermission() 
+  {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //Get weather from geolocation.
+        this.getWeatherTemp();
+      } else {
+        //Permission denied.
+        alert('Location needed for weather updates.');
+        this.getWeatherTemp();
+      }
+    } catch (err) {
+      console.warn(err)
+    }
+  }
+  
   //Set Up Day Strings
   async componentDidMount (){
-    var that = this;
     var day = new Date().getDate(); 
     var month = new Date().getMonth();
     var dayEndingStr = this.getTodayEndingStr();
-    this.getWeatherTemp();
 
-    that.setState({
+    //Check for location permissions.
+    this.requestLocationPermission();
+
+    this.setState({
       todayDay: day,
       todayEndingStr : dayEndingStr,
       todayMonth: monthNames[month],
@@ -182,7 +203,6 @@ class DayInfo extends Component {
   weatherApiCall = (lat, lon) => {
     var that = this;
     db.getWeatherFromAPI(lat, lon).then((data) => {
-      console.log(data);
       that.setState({
         weatherdata : data
       });

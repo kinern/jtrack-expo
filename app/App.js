@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import { PermissionsAndroid } from 'react-native';
 
 
 import Calendar from './screens/CalendarScreen';
@@ -10,6 +11,7 @@ import Stats from './screens/StatsScreen';
 const Tabs = createBottomTabNavigator();
 
 function App() {
+
   return (
     <NavigationContainer>
       <Tabs.Navigator initialRouteName="Calendar" 
