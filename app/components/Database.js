@@ -1,10 +1,6 @@
 import SQLite from "react-native-sqlite-storage";
-import { weather_api_key } from '../../api';
 
 const database_name = "JTrackDatabase.db";
-const database_displayname = "JTrack SQLite React Offline Database";
-const database_size = 200000;
-
 
 export default class Database{
     constructor(){
@@ -24,29 +20,12 @@ export default class Database{
                     'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, minutes INTEGER, action_date DATETIME)',
                     []
                   );
-                  /*
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-03-16 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-03-17 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (40, "2020-03-18 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (40, "2020-03-19 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (20, "2020-03-20 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (45, "2020-04-21 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (30, "2020-04-22 00:00:00")');
-                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-04-23 00:00:00")');
-                  */
                 }
+                resolve();
               }
             );
         });
       });
-    }
-
-    getWeatherFromAPI = async (lat, lon) => {
-      const weather_key = weather_api_key;
-      const api = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}&units=imperial`;
-      const response = await fetch(api);
-      const jsonData = await response.json();
-      return jsonData;
     }
 
     //Save Exercise
@@ -64,14 +43,11 @@ export default class Database{
                 resolve(true);
               }).catch((err) => {
                 console.log(err);
-                resolve(false);
               });
-            } else {
-              resolve(true);
-            }
+            } 
+            resolve(true);
           }).catch((err) => {
             console.log(err);
-            resolve(false);
           });
         }
       });
@@ -90,12 +66,8 @@ export default class Database{
                 'UPDATE exercises SET minutes = ? WHERE action_date = ?',
                 [minutes, action_date],
                 (tx, results) => {
-                if (results.rowsAffected > 0) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-                this.closeMenu();
+                  var status = (results.rowsAffected > 0);
+                  resolve(status);
                 }
               );
             }
@@ -109,20 +81,14 @@ export default class Database{
 
     //Add Exercise
     createExercise(minutes, action_date){
-      console.log('here');
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
             tx.executeSql(
                 'INSERT INTO exercises (minutes, action_date) VALUES (?, ?)',
                 [minutes, action_date],
                 (tx, results) => {
-                if (results.rowsAffected > 0) {
-                  console.log(results);
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-                this.closeMenu();
+                  var status = (results.rowsAffected > 0);
+                  resolve(status);
                 }
             );
         });
@@ -135,14 +101,14 @@ export default class Database{
         this.db.transaction(function(tx) {
           tx.executeSql('DELETE FROM exercises WHERE action_date = ?', 
           [action_date], (tx, results) => {
-            resolve(results);
+            resolve();
           });
         });
       });
     }
 
     //Today's date in DATETIME formatting
-    getTodayFullDate(){
+    getTodayDateTime(){
       var date = new Date(); 
       var todaydate = date.getFullYear();
       todaydate += "-" + ("0" + (date.getMonth() + 1)).slice(-2);
@@ -154,7 +120,7 @@ export default class Database{
     getExercise(action_date = false){
       //Default to today's date
       if (!action_date){
-        action_date = this.getTodayFullDate();
+        action_date = this.getTodayDateTime();
       }
 
       return new Promise((resolve) => {
@@ -176,7 +142,7 @@ export default class Database{
     }
 
     //Get a yearly list of exercises saved
-    getYearlyMarkedDates = ({year}) => {
+    getYearlyMarkedDates = (year) => {
       var start_date = year + "-01-01 00:00:00";  
       var end_date = year + "-12-31 23:59:59";
       return new Promise((resolve) => {
@@ -202,7 +168,6 @@ export default class Database{
           );
         });
       });
-
     }
 
     //Returns numbers of days between two DateTime strings.

@@ -83,7 +83,7 @@ export default class CalendarScreen extends Component {
   updateCalendarChanges = () => {
     var that = this;
     var year = new Date().getFullYear();
-    db.getYearlyMarkedDates({year}).then((marked_dates) => {
+    db.getYearlyMarkedDates(year).then((marked_dates) => {
       that.setState({ markedDates : marked_dates });
       that.dayInfoElement.current.getTodayMinutes();
     }).catch((err) => {

@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import Database from './Database';
+import Weather from './Weather';
 import Geolocation from 'react-native-geolocation-service';
 import { Permissions, PermissionsAndroid } from 'react-native';
 
 
 const db = new Database();
+const weather = new Weather();
 
 const DIstyles = StyleSheet.create({
   dayInfo: {
@@ -120,11 +122,11 @@ class DayInfo extends Component {
       )
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         //Get weather from geolocation.
-        this.getWeatherTemp();
+        this.weatherApiCall();
       } else {
         //Permission denied.
         alert('Location needed for weather updates.');
-        this.getWeatherTemp();
+        this.weatherApiCall();
       }
     } catch (err) {
       console.warn(err)
@@ -182,27 +184,9 @@ class DayInfo extends Component {
     });
   }
 
-  getWeatherTemp = () => {
+  weatherApiCall = () => {
     var that = this;
-    Geolocation.getCurrentPosition(
-      (position) => {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        that.weatherApiCall(lat, lon);
-      },
-      (error) => {
-        console.log(error.code, error.message);
-        var lat = 0.00;
-        var lon = 0.00;
-        that.weatherApiCall(lat, lon);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  }
-
-  weatherApiCall = (lat, lon) => {
-    var that = this;
-    db.getWeatherFromAPI(lat, lon).then((data) => {
+    weather.getWeather().then((data) => {
       that.setState({
         weatherdata : data
       });
@@ -211,7 +195,7 @@ class DayInfo extends Component {
       that.setState = {
         weatherdata : {}
       }
-    }); 
+    });
   }
 
   getHeartImg = (minutes) => {
@@ -229,43 +213,10 @@ class DayInfo extends Component {
     }
   }
 
-  //Need to add more icons
-  getWeatherImg = () => {
-    var main = this.state.weatherdata.weather[0].main;
-    var id = this.state.weatherdata.weather[0].id;
-    
-    switch (main){
-      case 'Clouds':
-        //Cloudy or partial cloudy check.
-        if ((id == 801) || (id == 802)){
-          return require('../assets/images/mostlysunny.png');
-        } else if (id == 803){
-          return require('../assets/images/mostlycloudy.png');
-        } else {
-          return require('../assets/images/cloudy.png');
-        }
-      break;
-      case 'Rain':
-      case 'Drizzle':
-      case 'Thunderstorm':
-        return require('../assets/images/rainy.png');
-      break;
-      case 'Clear':
-        return require('../assets/images/sunny.png');
-      break;
-      case 'Snow':
-        return require('../assets/images/snowy.png');
-      break;
-      default:
-        return require('../assets/images/sunny.png');
-      break;
-    }
-  }
-
-
   render() {
-    var weathername = this.state.weatherdata.weather[0].main;
-    var weatherImage = this.getWeatherImg();
+    var weatherName = this.state.weatherdata.weather[0].main;
+    var id = this.state.weatherdata.weather[0].id;
+    var weatherImage = weather.getWeatherImg(weatherName, id);
 
     return (
         <View style={DIstyles.dayInfo}>
@@ -276,7 +227,7 @@ class DayInfo extends Component {
               <Text style={DIstyles.datetextend}> {this.state.todayEndingStr}</Text>
             </View>
             <View style={DIstyles.weathercontainer}>
-              <Text style={DIstyles.weathertextname}>{weathername}</Text>
+              <Text style={DIstyles.weathertextname}>{weatherName}</Text>
               <ImageBackground source={weatherImage} style={DIstyles.weatherBackground}>
               <Text style={DIstyles.weathertexttemp}>{this.state.weatherdata.main.temp.toFixed(0)}F</Text>
               </ImageBackground>
