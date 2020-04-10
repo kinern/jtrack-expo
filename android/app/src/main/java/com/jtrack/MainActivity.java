@@ -1,4 +1,4 @@
-package com.jumptrack;
+package com.jtrack;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "JumpTrack";
+    return "JTrack";
   }
 }

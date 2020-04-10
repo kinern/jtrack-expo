@@ -1,4 +1,4 @@
-package com.jumptrack;
+package com.jtrack;
 
 import android.app.Application;
 import android.content.Context;

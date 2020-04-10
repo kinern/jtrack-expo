@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
-import JumpLineGraph from '../components/JumpLineGraph';
+import ExerciseLineGraph from '../components/ExerciseLineGraph';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 
@@ -67,7 +67,7 @@ export default class StatsScreen extends Component {
   constructor(props){
     super(props);
     var date = new Date();
-    this.jumpLineGraphElement = React.createRef();
+    this.ExerciseLineGraphElement = React.createRef();
     this.state = {
       selectedMonth: this.getMonthStr(date.getMonth()),
       selectedMonthNum: date.getMonth(),
@@ -96,21 +96,21 @@ export default class StatsScreen extends Component {
     }
     var newMonth = this.getMonthStr(newMonthNum);
 
-    this.jumpLineGraphElement.current.updateDates({newMonth, newMonthNum, newYear})
+    this.ExerciseLineGraphElement.current.updateDates({newMonth, newMonthNum, newYear})
     .then(() => {
       this.setState({
         selectedMonthNum: newMonthNum,
         selectedYear: newYear,
         selectedMonth: newMonth,
       });
-      this.jumpLineGraphElement.current.updateGraph();
+      this.ExerciseLineGraphElement.current.updateGraph();
     }).catch((err) => {
       console.log(err);
     });
   } 
 
   updateGraph = () => {
-    this.jumpLineGraphElement.current.updateGraph();
+    this.ExerciseLineGraphElement.current.updateGraph();
   }
 
 
@@ -136,8 +136,8 @@ export default class StatsScreen extends Component {
             </View>
           </View>
           <View>
-            <JumpLineGraph 
-            ref={this.jumpLineGraphElement}
+            <ExerciseLineGraph 
+            ref={this.ExerciseLineGraphElement}
             selectedMonth={this.state.selectedMonth} 
             selectedMonthNum = {this.state.selectedMonthNum} 
             selectedYear={this.state.selectedYear}

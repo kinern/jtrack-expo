@@ -63,11 +63,11 @@ const DIstyles = StyleSheet.create({
     color: '#000',
     fontSize: 22,
   },
-  todayJumps: {
+  todayMinutes: {
     fontSize: 35,
     marginTop:-5,
   },
-  todayJumpsText: {
+  todayMinutesText: {
     fontSize:12,
     marginTop:-5,
   },
@@ -106,7 +106,7 @@ class DayInfo extends Component {
     this.state = {
       todayDay: '',
       todayMonth: '',
-      todayJumps: '0',
+      todayMinutes: '0',
       weatherdata: {main: {temp: 60}, weather: [{main: 'Clear', description : 'clear sky', id: 800}]}
     };
   }
@@ -146,17 +146,17 @@ class DayInfo extends Component {
     return str;
   }
 
-  //Get Today's Jumps From The Database
-  getTodayJumps = () => {
+  //Get Today's Minutess From The Database
+  getTodayMinutes = () => {
     var that = this;
-    db.getJumps().then((newTodayJumps) => {
+    db.getExercise().then((newTodayMinutes) => {
       that.setState({
-        todayJumps : newTodayJumps
+        todayMinutes : newTodayMinutes
       });
     }).catch((err) => {
       console.log(err);
       that.setState = {
-        todayJumps : '0'
+        todayMinutes : '0'
       }
     });
   }
@@ -194,15 +194,15 @@ class DayInfo extends Component {
     }); 
   }
 
-  getHeartImg = (jumps) => {
-    jumps = parseInt(jumps);
-    if (jumps < 10 ) {
+  getHeartImg = (minutes) => {
+    minutes = parseInt(minutes);
+    if (minutes < 10 ) {
       return require('../assets/images/heart1.png');
-    } else if (jumps < 20 ) {
+    } else if (minutes < 20 ) {
       return require('../assets/images/heart2.png');
-    } else if (jumps < 30 ) {
+    } else if (minutes < 30 ) {
       return require('../assets/images/heart3.png');
-    } else if (jumps < 40  ) {
+    } else if (minutes < 40  ) {
       return require('../assets/images/heart4.png');
     } else {
       return require('../assets/images/heart5.png');
@@ -263,9 +263,9 @@ class DayInfo extends Component {
             </View>
           </View>
           <View style={DIstyles.rightcontainer}>
-            <ImageBackground source={this.getHeartImg(this.state.todayJumps)} style={DIstyles.imageBackground}>
-              <Text style={DIstyles.todayJumps}>{this.state.todayJumps}</Text>
-              <Text style={DIstyles.todayJumpsText}>Minutes</Text> 
+            <ImageBackground source={this.getHeartImg(this.state.todayMinutes)} style={DIstyles.imageBackground}>
+              <Text style={DIstyles.todayMinutes}>{this.state.todayMinutes}</Text>
+              <Text style={DIstyles.todayMinutesText}>Minutes</Text> 
             </ImageBackground>
           </View>
         </View>

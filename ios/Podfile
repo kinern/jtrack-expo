@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'JumpTrack' do
-  # Pods for JumpTrack
+target 'JTrack' do
+  # Pods for JTrack
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -36,7 +36,7 @@ target 'JumpTrack' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  target 'JumpTrackTests' do
+  target 'JTrackTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -44,10 +44,10 @@ target 'JumpTrack' do
   use_native_modules!
 end
 
-target 'JumpTrack-tvOS' do
-  # Pods for JumpTrack-tvOS
+target 'JTrack-tvOS' do
+  # Pods for JTrack-tvOS
 
-  target 'JumpTrack-tvOSTests' do
+  target 'JTrack-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

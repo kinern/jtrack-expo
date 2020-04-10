@@ -1,8 +1,8 @@
 import SQLite from "react-native-sqlite-storage";
 import { weather_api_key } from '../../api';
 
-const database_name = "JumpTrackerDatabase.db";
-const database_displayname = "JumpTracker SQLite React Offline Database";
+const database_name = "JTrackDatabase.db";
+const database_displayname = "JTrack SQLite React Offline Database";
 const database_size = 200000;
 
 
@@ -15,24 +15,24 @@ export default class Database{
       return new Promise((resolve) => {
         this.db.transaction(function(txn) {
             txn.executeSql(
-              "SELECT name FROM sqlite_master WHERE type='table' AND name='table_jumps'",
+              "SELECT name FROM sqlite_master WHERE type='table' AND name='excercises'",
               [],
               function(tx, res) {
                 if (res.rows.length == 0) {
-                  txn.executeSql('DROP TABLE IF EXISTS table_jumps', []);
+                  txn.executeSql('DROP TABLE IF EXISTS excercises', []);
                   txn.executeSql(
-                    'CREATE TABLE IF NOT EXISTS table_jumps(id INTEGER PRIMARY KEY AUTOINCREMENT, jumps INTEGER, action_date DATETIME)',
+                    'CREATE TABLE IF NOT EXISTS excercises(id INTEGER PRIMARY KEY AUTOINCREMENT, minutes INTEGER, action_date DATETIME)',
                     []
                   );
                   /*
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (10, "2020-03-16 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (10, "2020-03-17 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (40, "2020-03-18 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (40, "2020-03-19 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (20, "2020-03-20 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (45, "2020-04-21 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (30, "2020-04-22 00:00:00")');
-                  txn.executeSql('INSERT INTO table_jumps (jumps, action_date)  VALUES (10, "2020-04-23 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-03-16 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-03-17 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (40, "2020-03-18 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (40, "2020-03-19 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (20, "2020-03-20 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (45, "2020-04-21 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (30, "2020-04-22 00:00:00")');
+                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-04-23 00:00:00")');
                   */
                 }
               }
@@ -66,18 +66,18 @@ export default class Database{
       return jsonData;
     }
 
-    //Save Jumps
-    saveJumps(jumps, action_date){
+    //Save Excercise
+    saveExcercise(minutes, action_date){
       return new Promise((resolve) => {
         var that = this;
-        if (jumps < 1){
-          that.deleteJumps(action_date);
+        if (minutes < 1){
+          that.deleteExcercises(action_date);
           resolve(true);
         } 
         else {
-          that.updateJumps(jumps, action_date).then((data) => {
+          that.updateExcerises(minutes, action_date).then((data) => {
             if (!data) {
-              that.createJumps(jumps, action_date).then((data) => {
+              that.createExcercises(minutes, action_date).then((data) => {
                 resolve(true);
               }).catch((err) => {
                 console.log(err);
@@ -94,18 +94,18 @@ export default class Database{
       });
     }
 
-    //Update Jumps
-    updateJumps = (jumps, action_date) => {
+    //Update Excercise
+    updateExcercise = (minutes, action_date) => {
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
-          tx.executeSql('SELECT jumps FROM table_jumps WHERE action_date = ?', 
+          tx.executeSql('SELECT minutes FROM excercises WHERE action_date = ?', 
           [action_date], 
           (tx, results) => {
             len = results.rows.length;
             if (len > 0){
               tx.executeSql(
-                'UPDATE table_jumps SET jumps = ? WHERE action_date = ?',
-                [jumps, action_date],
+                'UPDATE excercises SET minutes = ? WHERE action_date = ?',
+                [minutes, action_date],
                 (tx, results) => {
                 if (results.rowsAffected > 0) {
                     resolve(true);
@@ -124,13 +124,13 @@ export default class Database{
       });
     }
 
-    //Add Jumps
-    createJumps(jumps, action_date){
+    //Add Excercise
+    createExcercise(minutes, action_date){
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
             tx.executeSql(
-                'INSERT INTO table_jumps (jumps, action_date) VALUES (?, ?)',
-                [jumps, action_date],
+                'INSERT INTO exercises (minutes, action_date) VALUES (?, ?)',
+                [minutes, action_date],
                 (tx, results) => {
                 if (results.rowsAffected > 0) {
                     resolve(true);
@@ -144,11 +144,11 @@ export default class Database{
       });
     }
 
-    //Delete Jumps
-    deleteJumps(action_date){
+    //Delete Excercise
+    deleteExcercise(action_date){
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
-          tx.executeSql('DELETE FROM table_jumps WHERE action_date = ?', 
+          tx.executeSql('DELETE FROM excercises WHERE action_date = ?', 
           [action_date], (tx, results) => {
             resolve(results);
           });
@@ -166,7 +166,7 @@ export default class Database{
       return todaydate;
     }
 
-    getJumps(action_date = false){
+    getExcercise(action_date = false){
       //Default to today's date
       if (!action_date){
         action_date = this.getTodayFullDate();
@@ -175,12 +175,12 @@ export default class Database{
       return new Promise((resolve) => {
         this.db.transaction(tx => {
           tx.executeSql(
-            'SELECT jumps FROM table_jumps where action_date = ?',
+            'SELECT minutes FROM exercises where action_date = ?',
             [action_date],
             (tx, results) => {
               var len = results.rows.length;
               if (len > 0) {
-                resolve(results.rows.item(0).jumps);
+                resolve(results.rows.item(0).minutes);
               } else {
                 resolve(0);
               }
@@ -190,14 +190,14 @@ export default class Database{
       });
     }
 
-    //Get a yearly list of jumps saved
+    //Get a yearly list of exercises saved
     getYearlyMarkedDates = ({year}) => {
       var start_date = year + "-01-01 00:00:00";  
       var end_date = year + "-12-31 23:59:59";
       return new Promise((resolve) => {
         this.db.transaction(tx => {
           tx.executeSql(
-            'SELECT jumps, SUBSTR (action_date, 1 ,10) AS action_date, id FROM table_jumps where action_date > ? AND action_date < ?',
+            'SELECT minutes, SUBSTR (action_date, 1 ,10) AS action_date, id FROM exercises where action_date > ? AND action_date < ?',
             [start_date, end_date],
             (tx, results) => {
               var len = results.rows.length;
@@ -205,9 +205,9 @@ export default class Database{
               if (len > 0) {
                 for (let i = 0; i < len; i++) {
                   let row = results.rows.item(i);
-                  jumps = row.jumps;
+                  minutes = row.minutes;
                   action_date = row.action_date;
-                  json_marked_dates[row.action_date] = {selected: true, jumps: jumps};  
+                  json_marked_dates[row.action_date] = {selected: true, minutes: minutes};  
                 }
                 resolve(json_marked_dates);
               } else {
@@ -241,7 +241,7 @@ export default class Database{
       return new Promise((resolve) => {
       this.db.transaction(tx => {
           tx.executeSql(
-            'SELECT jumps, SUBSTR (action_date, 1 ,10) AS action_date, id FROM table_jumps where action_date > ? AND action_date < ? ORDER BY action_date DESC',
+            'SELECT minutes, SUBSTR (action_date, 1 ,10) AS action_date, id FROM exercises where action_date > ? AND action_date < ? ORDER BY action_date DESC',
             [startDate, endDate],
             (tx, results) => {
               var len = results.rows.length;
@@ -254,9 +254,9 @@ export default class Database{
               if (len > 0) {
                 for (let i = 0; i < len; i++) {
                   let row = results.rows.item(i);
-                  jumps = row.jumps;
+                  minutes = row.minutes;
                   action_date = row.action_date;
-                  dateArray[action_date] = jumps; 
+                  dateArray[action_date] = minutes; 
                 }
               }
 

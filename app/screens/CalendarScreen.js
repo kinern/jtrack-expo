@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { StyleSheet, ImageBackground, View, Text, TouchableOpacity, Alert } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import DayInfo from '../components/DayInfo';
-import JumpMenu from '../components/JumpMenu';
+import ExerciseMenu from '../components/ExerciseMenu';
 import Database from '../components/Database';
 
 const db = new Database();
@@ -55,7 +55,7 @@ export default class CalendarScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.jumpMenuElement = React.createRef();
+    this.ExerciseMenuElement = React.createRef();
     this.dayInfoElement = React.createRef();
     this.state = {
       markedDates : {},
@@ -66,7 +66,7 @@ export default class CalendarScreen extends Component {
   componentDidMount() {
     this.databaseSetup();
     this.updateCalendarChanges();
-    this.dayInfoElement.current.getTodayJumps();
+    this.dayInfoElement.current.getTodayMinutes();
   }
 
   //Set up database and get marked dates for calendar
@@ -85,22 +85,22 @@ export default class CalendarScreen extends Component {
     var year = new Date().getFullYear();
     db.getYearlyMarkedDates({year}).then((marked_dates) => {
       that.setState({ markedDates : marked_dates });
-      that.dayInfoElement.current.getTodayJumps();
+      that.dayInfoElement.current.getTodayMinutes();
     }).catch((err) => {
       console.log(err);
     });
   }
 
-  getHeartImg = (jumps) => {
-    jumps = parseInt(jumps);
+  getHeartImg = (minutes) => {
+    minutes = parseInt(minutes);
 
-    if (jumps < 10 ) {
+    if (minutes < 10 ) {
       return require('../assets/images/heart1.png');
-    } else if (jumps < 20 ) {
+    } else if (minutes < 20 ) {
       return require('../assets/images/heart2.png');
-    } else if (jumps < 30 ) {
+    } else if (minutes < 30 ) {
       return require('../assets/images/heart3.png');
-    } else if (jumps < 40  ) {
+    } else if (minutes < 40  ) {
       return require('../assets/images/heart4.png');
     } else {
       return require('../assets/images/heart5.png');
@@ -132,7 +132,7 @@ export default class CalendarScreen extends Component {
               //Use marking to show hearts or not.
               var dayContent =  <Text >{day}</Text>;
               if (marking.selected){
-                var color = this.getHeartImg(marking.jumps);
+                var color = this.getHeartImg(marking.minutes);
                 dayContent = (
                   <ImageBackground style={styles.dayHeart} source={color}>
                     <Text> {day} </Text>
@@ -144,11 +144,11 @@ export default class CalendarScreen extends Component {
                   onPress={() => { 
                     var datestr = year + "-" + ("0" + (month)).slice(-2) + "-" + ("0" + day).slice(-2);
                     if (this.state.todayDate >= datestr){
-                      this.jumpMenuElement.current.openNewMenu({year, month, day}); 
+                      this.ExerciseMenuElement.current.openNewMenu({year, month, day}); 
                     } else {
                       Alert.alert(
                         false,
-                        'Cannot enter jumps for future dates.',
+                        'Cannot enter exercise for future dates.',
                         [{text: 'OK'},],
                         { cancelable: false }
                       )
@@ -169,7 +169,7 @@ export default class CalendarScreen extends Component {
                 textMonthFontSize: 20,
             }}
             />
-            <JumpMenu ref={this.jumpMenuElement} updateJumpChanges={this.updateCalendarChanges}/>
+            <ExerciseMenu ref={this.ExerciseMenuElement} updateMinuteChanges={this.updateCalendarChanges}/>
         </ImageBackground>
       </View>
     );

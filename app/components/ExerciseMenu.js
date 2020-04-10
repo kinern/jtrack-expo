@@ -6,34 +6,34 @@ import Database from './Database';
 const db = new Database();
 
 const JMenuStyles = StyleSheet.create({
-    jumpinput: {
+    minuteInput: {
         borderWidth: 1,
         borderColor: 'gray',
         backgroundColor: '#FFFFFF',
         margin: 10,
         padding: 0 
     },
-    jumpmodalbox: {
+    MinuteModalBox: {
         backgroundColor: '#fff',
 
     },
-    jumpmodaltitle: {
+    MinuteModalTitle: {
         color: '#2c2a3b',
         backgroundColor: '#fff',
     }
 });
 
 
-class JumpMenu extends Component {
+class ExerciseMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
           visible: false,
-          jumps: '',
+          minutes: '',
           year: '',
           month: '',
           day: '',
-          jumpinput: ''
+          minutesInput: ''
         };
     }
 
@@ -43,13 +43,13 @@ class JumpMenu extends Component {
         return year + '-' + month + '-' + day + ' 00:00:00';
     }
 
-    //Open Jump Menu
+    //Open Exercise Menu
     openNewMenu = ({year, month, day}) => {
         var that = this;
         action_date = that.createDateTimeStr(year, month, day);
-        db.getJumps(action_date).then((data) => {
+        db.getExercise(action_date).then((data) => {
           that.setState({
-            jumps : data,
+            minutes : data,
             year: year,
             month: month,
             day: day,
@@ -61,23 +61,23 @@ class JumpMenu extends Component {
             year: year,
             month: month,
             day: day,
-            jumps : '0',
+            minutes : '0',
             visible : true
           }
         });
     }
 
-    //Save Jumps from jumpinput
-    saveJumps = () => {
+    //Save Exercise from minuteInput
+    saveExercise = () => {
         var that = this;
-        if (this.state.jumpinput == this.state.jumps) {
-            this.props.updateJumpChanges();
+        if (this.state.minutesInput == this.state.minutes) {
+            this.props.updateMinuteChanges();
             that.closeMenu();
             return;
         }
         var action_date = that.createDateTimeStr(this.state.year, this.state.month, this.state.day);
-        db.saveJumps(this.state.jumpinput, action_date).then((data) => {
-            this.props.updateJumpChanges();
+        db.saveExercise(this.state.minutesInput, action_date).then((data) => {
+            this.props.updateMinuteChanges();
         });
         that.closeMenu();
     }
@@ -94,8 +94,8 @@ class JumpMenu extends Component {
                 style={JMenuStyles.modal}
                 visible={this.state.visible}
                 modalTitle={
-                <ModalTitle style={JMenuStyles.jumpmodaltitle}
-                title={'Jumps For ' + this.state.month + '/' + this.state.day} />
+                <ModalTitle style={JMenuStyles.minuteModalTitle}
+                title={'Minutes For ' + this.state.month + '/' + this.state.day} />
                 }
                 swipeDirection={['up', 'down']} // can be string or an array
                 swipeThreshold={200} // default 100
@@ -103,16 +103,16 @@ class JumpMenu extends Component {
                 this.setState({ visible: false });
                 }}
             >
-                <ModalContent style={JMenuStyles.jumpmodalbox}>
+                <ModalContent style={JMenuStyles.minuteModalBox}>
                 <TextInput 
-                name="jumpinput"
-                onChange={(event) => this.setState({jumpinput: event.nativeEvent.text}) }
+                name="minutesInput"
+                onChange={(event) => this.setState({minutesInput: event.nativeEvent.text}) }
                 keyboardType={'numeric'} 
-                style={JMenuStyles.jumpinput}
-                placeholder={this.state.jumps.toString()} 
+                style={JMenuStyles.minuteInput}
+                placeholder={this.state.minutes.toString()} 
                 />
                 <Button color="#394e7d"
-                title="Submit" onPress={this.saveJumps} />
+                title="Submit" onPress={this.saveExercise} />
                 </ModalContent>
             </Modal>
             </View>
@@ -120,4 +120,4 @@ class JumpMenu extends Component {
     }
 }
 
-export default JumpMenu;
+export default ExerciseMenu;

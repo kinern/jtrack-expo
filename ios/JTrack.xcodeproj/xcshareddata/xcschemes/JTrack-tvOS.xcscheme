@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "JumpTrack-tvOS.app"
-               BlueprintName = "JumpTrack-tvOS"
-               ReferencedContainer = "container:JumpTrack.xcodeproj">
+               BuildableName = "JTrack-tvOS.app"
+               BlueprintName = "JTrack-tvOS"
+               ReferencedContainer = "container:JTrack.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "JumpTrack-tvOSTests.xctest"
-               BlueprintName = "JumpTrack-tvOSTests"
-               ReferencedContainer = "container:JumpTrack.xcodeproj">
+               BuildableName = "JTrack-tvOSTests.xctest"
+               BlueprintName = "JTrack-tvOSTests"
+               ReferencedContainer = "container:JTrack.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "JumpTrack-tvOSTests.xctest"
-               BlueprintName = "JumpTrack-tvOSTests"
-               ReferencedContainer = "container:JumpTrack.xcodeproj">
+               BuildableName = "JTrack-tvOSTests.xctest"
+               BlueprintName = "JTrack-tvOSTests"
+               ReferencedContainer = "container:JTrack.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "JumpTrack-tvOS.app"
-            BlueprintName = "JumpTrack-tvOS"
-            ReferencedContainer = "container:JumpTrack.xcodeproj">
+            BuildableName = "JTrack-tvOS.app"
+            BlueprintName = "JTrack-tvOS"
+            ReferencedContainer = "container:JTrack.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "JumpTrack-tvOS.app"
-            BlueprintName = "JumpTrack-tvOS"
-            ReferencedContainer = "container:JumpTrack.xcodeproj">
+            BuildableName = "JTrack-tvOS.app"
+            BlueprintName = "JTrack-tvOS"
+            ReferencedContainer = "container:JTrack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "JumpTrack-tvOS.app"
-            BlueprintName = "JumpTrack-tvOS"
-            ReferencedContainer = "container:JumpTrack.xcodeproj">
+            BuildableName = "JTrack-tvOS.app"
+            BlueprintName = "JTrack-tvOS"
+            ReferencedContainer = "container:JTrack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

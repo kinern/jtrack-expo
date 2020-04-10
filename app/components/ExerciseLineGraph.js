@@ -5,7 +5,7 @@ import Database from '../components/Database';
 
 const db = new Database();
 
-class JumpLineGraph extends Component {
+class ExerciseLineGraph extends Component {
   constructor(props){
     super(props);
     var date = new Date();
@@ -105,4 +105,4 @@ class JumpLineGraph extends Component {
     }
 }
  
-export default JumpLineGraph;
+export default ExerciseLineGraph;
