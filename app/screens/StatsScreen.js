@@ -72,6 +72,7 @@ export default class StatsScreen extends Component {
       selectedMonth: this.getMonthStr(date.getMonth()),
       selectedMonthNum: date.getMonth(),
       selectedYear: date.getFullYear(),
+      isLoading: false,
     };
   }
 
@@ -80,11 +81,12 @@ export default class StatsScreen extends Component {
     return monthnames[monthint];
   }
 
-  changeDate = (type) => {
+
+  //Increments or decements month and year
+  getNewDateValues(type){
     var monthCheck = (type == 'inc')? 11 : 0;
     var diffYearMonth = (type == 'inc')? 0 : 11;
     var changeNum = (type == 'inc')? 1 : -1;
-
     var newMonthNum = this.state.selectedMonthNum;
     var newYear = this.state.selectedYear;
 
@@ -95,18 +97,33 @@ export default class StatsScreen extends Component {
       newMonthNum = newMonthNum + changeNum;
     }
     var newMonth = this.getMonthStr(newMonthNum);
+    return ({newMonth, newMonthNum, newYear});
+  }
 
-    this.ExerciseLineGraphElement.current.updateDates({newMonth, newMonthNum, newYear})
-    .then(() => {
-      this.setState({
-        selectedMonthNum: newMonthNum,
-        selectedYear: newYear,
-        selectedMonth: newMonth,
+  
+  changeDate = (type) => {
+    if (!this.state.isLoading){
+      this.setState({ isLoading : true});
+      var newDateValues = this.getNewDateValues(type);
+      var newMonth = newDateValues.newMonth;
+      var newMonthNum = newDateValues.newMonthNum;
+      var newYear = newDateValues.newYear;
+
+      this.ExerciseLineGraphElement.current.updateDates({newMonth, newMonthNum, newYear})
+      .then(() => {
+        this.setState({
+          selectedMonthNum: newMonthNum,
+          selectedYear: newYear,
+          selectedMonth: newMonth,
+        });
+        this.ExerciseLineGraphElement.current.updateGraph().then(()=>{
+          this.setState({isLoading: false});
+        });
+      }).catch((err) => {
+        console.log(err);
+        this.setState({isLoading: false});
       });
-      this.ExerciseLineGraphElement.current.updateGraph();
-    }).catch((err) => {
-      console.log(err);
-    });
+    }
   } 
 
   updateGraph = () => {

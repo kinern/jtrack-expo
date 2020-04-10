@@ -15,42 +15,25 @@ export default class Database{
       return new Promise((resolve) => {
         this.db.transaction(function(txn) {
             txn.executeSql(
-              "SELECT name FROM sqlite_master WHERE type='table' AND name='excercises'",
+              "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
               [],
               function(tx, res) {
                 if (res.rows.length == 0) {
-                  txn.executeSql('DROP TABLE IF EXISTS excercises', []);
+                  txn.executeSql('DROP TABLE IF EXISTS exercises', []);
                   txn.executeSql(
-                    'CREATE TABLE IF NOT EXISTS excercises(id INTEGER PRIMARY KEY AUTOINCREMENT, minutes INTEGER, action_date DATETIME)',
+                    'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, minutes INTEGER, action_date DATETIME)',
                     []
                   );
                   /*
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-03-16 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-03-17 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (40, "2020-03-18 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (40, "2020-03-19 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (20, "2020-03-20 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (45, "2020-04-21 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (30, "2020-04-22 00:00:00")');
-                  txn.executeSql('INSERT INTO excercises (minutes, action_date)  VALUES (10, "2020-04-23 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-03-16 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-03-17 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (40, "2020-03-18 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (40, "2020-03-19 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (20, "2020-03-20 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (45, "2020-04-21 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (30, "2020-04-22 00:00:00")');
+                  txn.executeSql('INSERT INTO exercises (minutes, action_date)  VALUES (10, "2020-04-23 00:00:00")');
                   */
-                }
-              }
-            );
-            txn.executeSql(
-              "SELECT name FROM sqlite_master WHERE type='table' AND name='table_weather'",
-              [],
-              function(tx, res) {
-                if (res.rows.length == 0) {
-                  txn.executeSql('DROP TABLE IF EXISTS table_weather', []);
-                  txn.executeSql(
-                    'CREATE TABLE IF NOT EXISTS table_weather(id INTEGER PRIMARY KEY AUTOINCREMENT, weather TEXT, temp TEXT, city TEXT, state TEXT, call_date DATETIME)',
-                    [],
-                    function(tx, res) {
-                      var weatherjson = this.getWeatherFromAPI();
-                      console.log(weatherjson);
-                      resolve(true);
-                  });
                 }
               }
             );
@@ -66,18 +49,18 @@ export default class Database{
       return jsonData;
     }
 
-    //Save Excercise
-    saveExcercise(minutes, action_date){
+    //Save Exercise
+    saveExercise(minutes, action_date){
       return new Promise((resolve) => {
         var that = this;
         if (minutes < 1){
-          that.deleteExcercises(action_date);
+          that.deleteExercise(action_date);
           resolve(true);
         } 
         else {
-          that.updateExcerises(minutes, action_date).then((data) => {
+          that.updateExercise(minutes, action_date).then((data) => {
             if (!data) {
-              that.createExcercises(minutes, action_date).then((data) => {
+              that.createExercise(minutes, action_date).then((data) => {
                 resolve(true);
               }).catch((err) => {
                 console.log(err);
@@ -94,17 +77,17 @@ export default class Database{
       });
     }
 
-    //Update Excercise
-    updateExcercise = (minutes, action_date) => {
+    //Update Exercise
+    updateExercise = (minutes, action_date) => {
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
-          tx.executeSql('SELECT minutes FROM excercises WHERE action_date = ?', 
+          tx.executeSql('SELECT minutes FROM exercises WHERE action_date = ?', 
           [action_date], 
           (tx, results) => {
             len = results.rows.length;
             if (len > 0){
               tx.executeSql(
-                'UPDATE excercises SET minutes = ? WHERE action_date = ?',
+                'UPDATE exercises SET minutes = ? WHERE action_date = ?',
                 [minutes, action_date],
                 (tx, results) => {
                 if (results.rowsAffected > 0) {
@@ -124,8 +107,9 @@ export default class Database{
       });
     }
 
-    //Add Excercise
-    createExcercise(minutes, action_date){
+    //Add Exercise
+    createExercise(minutes, action_date){
+      console.log('here');
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
             tx.executeSql(
@@ -133,6 +117,7 @@ export default class Database{
                 [minutes, action_date],
                 (tx, results) => {
                 if (results.rowsAffected > 0) {
+                  console.log(results);
                     resolve(true);
                 } else {
                     resolve(false);
@@ -144,11 +129,11 @@ export default class Database{
       });
     }
 
-    //Delete Excercise
-    deleteExcercise(action_date){
+    //Delete Exercise
+    deleteExercise(action_date){
       return new Promise((resolve) => {
         this.db.transaction(function(tx) {
-          tx.executeSql('DELETE FROM excercises WHERE action_date = ?', 
+          tx.executeSql('DELETE FROM exercises WHERE action_date = ?', 
           [action_date], (tx, results) => {
             resolve(results);
           });
@@ -166,7 +151,7 @@ export default class Database{
       return todaydate;
     }
 
-    getExcercise(action_date = false){
+    getExercise(action_date = false){
       //Default to today's date
       if (!action_date){
         action_date = this.getTodayFullDate();

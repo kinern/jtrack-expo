@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native'; 
-import { LineChart, BarChart } from 'react-native-chart-kit';
-import Database from '../components/Database';
+import { LineChart } from 'react-native-chart-kit';
+import Database from './Database';
 
 const db = new Database();
 
@@ -33,12 +33,14 @@ class ExerciseLineGraph extends Component {
   }
 
   updateGraph = () => {
-    console.log('update triggered');
+    return new Promise((resolve) => {
     var month = this.state.selectedMonthNum;
     var year = this.state.selectedYear;
     var startDate = this.getStartDate({month, year});
     var endDate = this.getEndDate({month, year});
     this.getStats({startDate, endDate});
+    resolve();
+    });
   }
 
   getStartDate = ({month, year}) =>{
