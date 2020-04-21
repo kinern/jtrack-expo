@@ -75,31 +75,26 @@ class ExerciseLineGraph extends Component {
                   data: this.state.graphData
                 }]
               }}
-              width={Dimensions.get("window").width - 30} // from react-native
-              height={320}
+              width={Dimensions.get("window").width} // from react-native
+              height={400}
               yAxisLabel=""
               yAxisSuffix=""
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: "#394e7d",
-                backgroundGradientFrom: "#394e7d",
-                backgroundGradientTo: "#394e7d",
+                backgroundColor: "#fff",
+                backgroundGradientFrom: "#fff",
+                backgroundGradientTo: "#fff",
                 decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 16
-                },
+                color: (opacity = 1) => `rgba(168, 9, 171, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(47, 50, 88, ${opacity})`,
                 propsForDots: {
                   r: "2",
                   strokeWidth: "2",
-                  stroke: "#fff"
+                  stroke: "#a809ab"
                 }
               }}
               bezier
               style={{
-                marginVertical: 8,
-                borderRadius: 16
               }}
             />
         </View> 

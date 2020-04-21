@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Image } from 'react-native';
 import Database from './Database';
 import Weather from './Weather';
 import Geolocation from 'react-native-geolocation-service';
@@ -11,90 +11,62 @@ const weather = new Weather();
 
 const DIstyles = StyleSheet.create({
   dayInfo: {
-    width: '95%',
-    height: 120,
-    marginBottom: 20,
-    backgroundColor: '#86BBD8', //'#336699'
-    flexDirection: 'row',
+    width: '100%',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    borderColor: '#ffffff',
-    borderWidth: 1,
-    borderRadius: 3,
-    elevation : 10,
+    justifyContent: "center",
     marginTop: -15,
   },
-  leftcolumn: { 
-    display:'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    width: 200,
-  },
-  datecontainer:{
-    display:'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: 150,
-    marginLeft: -5,
-  },
-  datetext: {
-    color: '#fff',
+  todaytext: {
+    color: "#fff",
     fontSize: 24,
-
+    textAlign: 'center',
+    fontWeight: "700",
+  },
+  todayMinutes : {
+    color: '#fff',
+    fontSize: 28,
+    marginTop: -10,
+    fontWeight: "700",
+  },
+  todayMinutesText: {
+    color: '#fff',
+    fontSize: 18,
   },
   datetextend: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
-    marginLeft: -5,
   },
   weathercontainer:{
     display:'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
-    width: 180,
+    alignItems: 'flex-end',
+    width: '100%',
+    marginBottom: 5,
   },
-  weathertextname: {
+  weathertexttemp: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
   },
-  weathertexttemp: {
-    color: '#000',
-    fontSize: 22,
-  },
-  todayMinutes: {
-    fontSize: 35,
-    marginTop:-5,
-  },
-  todayMinutesText: {
-    fontSize:12,
-    marginTop:-5,
-  },
-  dayTemp: {
-    fontSize: 35,
-    fontWeight: "700",
-    margin:0,
-    padding:0,
-  },
   imageBackground: {
-    width: 100,
+    width: 140,
     height: 100,
-    flexDirection: 'column', 
+    flexDirection: 'row', 
     justifyContent: 'center', 
     alignItems: 'center',
-    marginLeft: -20,
   },
   weatherBackground: {
-    width: 70,
-    height: 70,
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    marginLeft: 20,
+    width: 30,
+    height: 30,
+  },
+  leftweather: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+    alignItems: 'flex-end',
   }
 });
 
@@ -201,15 +173,15 @@ class DayInfo extends Component {
   getHeartImg = (minutes) => {
     minutes = parseInt(minutes);
     if (minutes < 10 ) {
-      return require('../assets/images/heart1.png');
+      return require('../assets/images/today-heart.png');
     } else if (minutes < 20 ) {
-      return require('../assets/images/heart2.png');
+      return require('../assets/images/today-heart.png');
     } else if (minutes < 30 ) {
-      return require('../assets/images/heart3.png');
+      return require('../assets/images/today-heart.png');
     } else if (minutes < 40  ) {
-      return require('../assets/images/heart4.png');
+      return require('../assets/images/today-heart.png');
     } else {
-      return require('../assets/images/heart5.png');
+      return require('../assets/images/today-heart.png');
     }
   }
 
@@ -220,24 +192,19 @@ class DayInfo extends Component {
 
     return (
         <View style={DIstyles.dayInfo}>
-          <View style={DIstyles.leftcolumn}>
-            <View style={DIstyles.datecontainer}>
-              <Text style={DIstyles.datetext}> {this.state.todayMonth}</Text>
-              <Text style={DIstyles.datetext}> {this.state.todayDay}</Text>
-              <Text style={DIstyles.datetextend}> {this.state.todayEndingStr}</Text>
-            </View>
-            <View style={DIstyles.weathercontainer}>
-              <Text style={DIstyles.weathertextname}>{weatherName}</Text>
-              <ImageBackground source={weatherImage} style={DIstyles.weatherBackground}>
-              <Text style={DIstyles.weathertexttemp}>{this.state.weatherdata.main.temp.toFixed(0)}F</Text>
-              </ImageBackground>
-            </View>
-          </View>
-          <View style={DIstyles.rightcontainer}>
+          <View>
+            <Text style={DIstyles.todaytext}>TODAY</Text>
             <ImageBackground source={this.getHeartImg(this.state.todayMinutes)} style={DIstyles.imageBackground}>
               <Text style={DIstyles.todayMinutes}>{this.state.todayMinutes}</Text>
-              <Text style={DIstyles.todayMinutesText}>Minutes</Text> 
+              <Text style={DIstyles.todayMinutesText}>Min</Text> 
             </ImageBackground>
+          </View>
+          <View style={DIstyles.weathercontainer}>
+            <View style={DIstyles.leftweather}>
+              <Image source={weatherImage} style={DIstyles.weatherBackground} />
+              <Text style={DIstyles.weathertexttemp}>{this.state.weatherdata.main.temp.toFixed(0)}F</Text>
+            </View>
+            <Text style={DIstyles.weathertexttemp}>{weatherName}</Text>
           </View>
         </View>
     );

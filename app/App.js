@@ -20,12 +20,15 @@ function App() {
       }}
       tabBarOptions={{
         showLabel: false,
-        activeTintColor: '#336699',
+        activeTintColor: '#a944ab',
         activeBackgroundColor: '#ffffff',
-        inactiveTintColor: '#2c2a3b',
-        inactiveBackgroundColor: '#394e7d',
+        inactiveTintColor: '#a8bfe6',
+        inactiveBackgroundColor: '#ffffff',
+        border: 'none',
         style: {
           backgroundColor: 'white',
+          shadowColor: 'transparent',
+          elevation: 0,
         },
       }}
       

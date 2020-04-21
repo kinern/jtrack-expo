@@ -5,18 +5,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 
 const statsStyles = StyleSheet.create({
-  title: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: 'center',
-    margin: 10,
-    marginTop: 0,
-  },
   topcontainer: {
-    backgroundColor: '#86BBD8',
-    color: '#fff',
-    width: '95%',
+    backgroundColor: '#fff',
+    color: '#2F4858',
     marginBottom: 10,
     borderColor: 'white',
     borderRadius: 3,
@@ -26,17 +17,22 @@ const statsStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  titletext: {
+    color: "#fff",
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: "700",
+  },
   graphcontainer: {
-    width: '95%',
-    height: '80%',
+    width: '100%',
+    height: '95%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    borderColor: 'white',
-    borderRadius: 3,
-    borderWidth: 1,
-    backgroundColor: "#394e7d"
+    borderRadius: 15,
+    backgroundColor: "#fff",
+    marginBottom: -30,
   },
   graphnavicontainer: {
     width: '100%',
@@ -54,11 +50,12 @@ const statsStyles = StyleSheet.create({
     alignItems: 'center'
   },
   nextbutton: {
-    fontSize: 20,
+    fontSize: 14,
   },
   monthname: {
-    color: '#fff',
-    fontSize: 24
+    color: '#2F4858',
+    fontSize: 20,
+    fontWeight: "700",
   }
 });
 
@@ -134,17 +131,18 @@ export default class StatsScreen extends Component {
   render() {
     return (
       <View>
-        <ImageBackground style= { statsStyles.statsBackground } source={require(`../assets/images/hpgradient.jpg`)}>
+        <ImageBackground style= { statsStyles.statsBackground } source={require(`../assets/images/purple-pink-bg.png`)}>
+        <Text style={statsStyles.titletext}>STATISTICS</Text>
         <View style={statsStyles.graphcontainer}>
           <View>
             <View style={statsStyles.graphnavicontainer}>
-              <TouchableOpacity
+              <TouchableOpacity style={{padding: 10}}
               onPress={() => { this.changeDate('dec'); }}
-              ><FontAwesome name="caret-left" color={'#fff'} size={30} /></TouchableOpacity>
+              ><FontAwesome name="caret-left" color={'#a8bfe6'} size={18} /></TouchableOpacity>
               <Text style={statsStyles.monthname}>{this.state.selectedMonth} {this.state.selectedYear}</Text>
-              <TouchableOpacity
+              <TouchableOpacity style={{padding: 10}}
               onPress={() => { this.changeDate('inc'); }}
-              ><FontAwesome name="caret-right" color={'#fff'} size={30} /></TouchableOpacity>
+              ><FontAwesome name="caret-right" color={'#a8bfe6'} size={18} /></TouchableOpacity>
             </View>
           </View>
           <View>

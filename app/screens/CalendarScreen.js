@@ -12,15 +12,13 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: "flex-start", 
     alignItems: "center",
-    backgroundColor: "#336699",
   },
   calendarContainer: {
-    height: 350,
-    width: '95%',
+    height: 400,
+    marginBottom: -70,
+    width: '100%',
     backgroundColor: '#FFFFFF',
-    //borderColor: '#86BBD8',
-    borderRadius: 3,
-    //borderWidth: 1,
+    borderRadius: 15,
     elevation : 10,
   },
   dayHeart: {
@@ -120,7 +118,7 @@ export default class CalendarScreen extends Component {
 
     return (
       <View style={styles.mainContainer}>
-        <ImageBackground style= { styles.backgroundImage } source={require(`../assets/images/hpgradient.jpg`)}>
+        <ImageBackground style= { styles.backgroundImage } source={require(`../assets/images/purple-pink-bg.png`)}>
             <DayInfo ref={this.dayInfoElement} />
             <Calendar 
             markedDates = {this.state.markedDates}
@@ -162,9 +160,9 @@ export default class CalendarScreen extends Component {
                 calendarBackground: '#FFFFFF',
                 textSectionTitleColor: '#2F4858',
                 dayTextColor: '#2F4858',
-                arrowColor: '#2F4858',
+                arrowColor: '#a8bfe6',
                 monthTextColor: '#2F4858',
-                textDayHeaderFontWeight: '700',
+                textDayHeaderFontWeight: '400',
                 textMonthFontWeight: '700',
                 textMonthFontSize: 20,
             }}
