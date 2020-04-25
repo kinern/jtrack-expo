@@ -13,7 +13,7 @@ class ExerciseLineGraph extends Component {
       selectedMonth: this.props.selectedMonth,
       selectedMonthNum: this.props.selectedMonthNum,
       selectedYear: this.props.selectedYear,
-      graphData: [100,100,200,300,400,400,100,400,400,400,400,0,0,0,100,200,300,400,400,400,0,0,0,100,200,300,400,400,400,]
+      graphData: [0,0,0]
     };
   }
 

@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
     elevation : 10,
   },
   dayHeart: {
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
     flexDirection: 'column', 
     justifyContent: 'center', 
     alignItems: 'center',
@@ -93,15 +93,15 @@ export default class CalendarScreen extends Component {
     minutes = parseInt(minutes);
 
     if (minutes < 10 ) {
-      return require('../assets/images/heart1.png');
+      return require('../assets/images/calendar/star1.png');
     } else if (minutes < 20 ) {
-      return require('../assets/images/heart2.png');
+      return require('../assets/images/calendar/star2.png');
     } else if (minutes < 30 ) {
-      return require('../assets/images/heart3.png');
+      return require('../assets/images/calendar/star3.png');
     } else if (minutes < 40  ) {
-      return require('../assets/images/heart4.png');
+      return require('../assets/images/calendar/star4.png');
     } else {
-      return require('../assets/images/heart5.png');
+      return require('../assets/images/calendar/star5.png');
     }
   }
 

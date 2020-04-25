@@ -53,26 +53,26 @@ export default class Weather {
         case 'Clouds':
             //Cloudy or partial cloudy check.
             if ((id == 801) || (id == 802)){
-            return require('../assets/images/mostlysunny.png');
+            return require('../assets/images/weather/mostlysunny.png');
             } else if (id == 803){
-            return require('../assets/images/mostlycloudy.png');
+            return require('../assets/images/weather/mostlycloudy.png');
             } else {
-            return require('../assets/images/cloudy.png');
+            return require('../assets/images/weather/cloudy.png');
             }
         break;
         case 'Rain':
         case 'Drizzle':
         case 'Thunderstorm':
-            return require('../assets/images/rainy.png');
+            return require('../assets/images/weather/rainy.png');
         break;
         case 'Clear':
-            return require('../assets/images/sunny.png');
+            return require('../assets/images/weather/sunny.png');
         break;
         case 'Snow':
-            return require('../assets/images/snowy.png');
+            return require('../assets/images/weather/snowy.png');
         break;
         default:
-            return require('../assets/images/sunny.png');
+            return require('../assets/images/weather/sunny.png');
         break;
         }
     }

@@ -26,17 +26,13 @@ const DIstyles = StyleSheet.create({
   todayMinutes : {
     color: '#fff',
     fontSize: 28,
-    marginTop: -10,
+    marginTop: -20,
     fontWeight: "700",
   },
   todayMinutesText: {
     color: '#fff',
     fontSize: 18,
-  },
-  datetextend: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '700',
+    marginTop: -15,
   },
   weathercontainer:{
     display:'flex',
@@ -170,31 +166,18 @@ class DayInfo extends Component {
     });
   }
 
-  getHeartImg = (minutes) => {
-    minutes = parseInt(minutes);
-    if (minutes < 10 ) {
-      return require('../assets/images/today-heart.png');
-    } else if (minutes < 20 ) {
-      return require('../assets/images/today-heart.png');
-    } else if (minutes < 30 ) {
-      return require('../assets/images/today-heart.png');
-    } else if (minutes < 40  ) {
-      return require('../assets/images/today-heart.png');
-    } else {
-      return require('../assets/images/today-heart.png');
-    }
-  }
 
   render() {
     var weatherName = this.state.weatherdata.weather[0].main;
     var id = this.state.weatherdata.weather[0].id;
     var weatherImage = weather.getWeatherImg(weatherName, id);
+    var jumpropeImg = require('../assets/images/calendar/jumprope.png');
 
     return (
         <View style={DIstyles.dayInfo}>
           <View>
             <Text style={DIstyles.todaytext}>TODAY</Text>
-            <ImageBackground source={this.getHeartImg(this.state.todayMinutes)} style={DIstyles.imageBackground}>
+            <ImageBackground source={jumpropeImg} style={DIstyles.imageBackground}>
               <Text style={DIstyles.todayMinutes}>{this.state.todayMinutes}</Text>
               <Text style={DIstyles.todayMinutesText}>Min</Text> 
             </ImageBackground>
