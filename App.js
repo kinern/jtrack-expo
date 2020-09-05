@@ -1,21 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
 
-export default function App() {
+import CalendarScreen from './src/screens/CalendarScreen.js';
+import OptionsScreen from './src/screens/OptionsScreen';
+import StatsScreen from './src/screens/StatsScreen';
+import AddExerciseScreen from './src/screens/AddExerciseScreen.js';
+
+
+import {Provider as WeatherProvider} from './src/context/weatherContext';
+import {Provider as ExerciseProvider} from './src/context/exerciseContext';
+
+const switchNavigator = createSwitchNavigator({
+  mainFlow: createBottomTabNavigator({
+    Calendar: CalendarScreen,
+    Options: OptionsScreen,
+    Stats: StatsScreen
+  }),
+  AddExercise : AddExerciseScreen
+});
+
+const App = createAppContainer(switchNavigator);
+
+export default () =>{
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ExerciseProvider>
+      <WeatherProvider>
+        <App />
+      </WeatherProvider>
+    </ExerciseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
