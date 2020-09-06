@@ -9,12 +9,21 @@ const exerciseReducer = (state, action)=>{
     switch(action.type){
         case 'fetch_exercises':
             return {...state, exercises: action.payload};
+        case 'save_exercise':
+            return {...state, exercises: action.payload};    
         default:
             return state;
     }
 };
 
-const fetchExercises = dispatch => async () => {
+const fetchExercises = dispatch => async (month = 1) => {
+    const exercises = {
+        '2020-09-17': {marked: true, minutes: 10},
+        '2020-09-18': {marked: true, minutes: 20},
+        '2020-09-06': {marked: true, minutes: 30},
+        '2020-09-05': {marked: true, minutes: 50}
+    };
+    dispatch({type:'fetch_exercises', payload: exercises});
     /*
     try{
         const result = await DBFetchExercises();
@@ -48,8 +57,14 @@ const saveExercise = dispatch => async (date, minutes, callback) => {
    callback();
 }
 
+let defaultDate = new Date();
+let month = String(defaultDate.getMonth()+1).padStart(2, '0');
+let day = String(defaultDate.getDate()).padStart(2, '0');
+let year = defaultDate.getFullYear();
+defaultDate = year +'-'+ month +'-'+ day;
+
 export const {Context, Provider } = createDataContext(
     exerciseReducer,
     {fetchExercises, fetchExercise, saveExercise},
-    {exercises: []}
+    {selectedDate: defaultDate, exercises: {}}
 );

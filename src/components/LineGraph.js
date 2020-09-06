@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import { LineChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
 import * as scale from 'd3-scale'
+import {Context as ExerciseContext} from '../context/exerciseContext';
 
 const LineGraph = () => {
+
+    const {state, fetchExercises} = useContext(ExerciseContext);
+
+    const stateData = state.exercises;
+
     const data = [
         {time: 50, date: new Date(2014, 8, 1, 0, 0)}, 
         {time: 10, date: new Date(2014, 8, 2, 0, 0)}, 

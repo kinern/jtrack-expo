@@ -1,24 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useContext} from 'react';
 import { StyleSheet} from 'react-native';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
-import {getTodayDate} from '../commonDate';
 import CalendarDay from './CalendarDay';
+import {Context as ExerciseContext} from '../context/exerciseContext';
 
 const Calendar = ({navigation}) =>{
 
-  const [markedDates, setMarkedDates] = useState({
-      '2020-09-17': {marked: true, minutes: 10},
-      '2020-09-18': {marked: true, minutes: 20},
-      '2020-09-06': {marked: true, minutes: 30},
-      '2020-09-05': {marked: true, minutes: 50},
-    });
-  const [todayDate, setTodayDate] = useState(getTodayDate());
+  const {state, fetchExercises} = useContext(ExerciseContext);
+
+  useEffect(()=>{
+    fetchExercises();
+    console.log(state.exercises);
+  }, []);
 
   //TODO: useEffect to fetch exercises from database and assign with setMarkedDates
 
   return (
     <ReactCalendar 
-    markedDates = {markedDates}
+    current={state.selectedDate}
+    markedDates = {state.exercises}
     dayComponent={({ date, marking }) => {
         return ( 
         <CalendarDay date={date} marking={marking} navigation={navigation}/>

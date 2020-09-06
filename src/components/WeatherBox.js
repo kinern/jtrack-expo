@@ -1,12 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, LayoutAnimation, NativeModules} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {Context as WeatherContext} from '../context/weatherContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
-const { UIManager } = NativeModules;
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 
 const WeatherBox = () => {
@@ -22,12 +17,6 @@ const WeatherBox = () => {
     }, []);
 
     const toggleBox = () =>{
-        LayoutAnimation.configureNext(
-            LayoutAnimation.create(
-              1000,
-              LayoutAnimation.Types.spring
-            )
-          );
         setToggle((toggle)? false : true);
     }
 
