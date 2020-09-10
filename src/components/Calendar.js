@@ -10,7 +10,6 @@ const Calendar = ({navigation}) =>{
 
   useEffect(()=>{
     fetchExercises();
-    console.log(state.exercises);
   }, []);
 
   //TODO: useEffect to fetch exercises from database and assign with setMarkedDates
@@ -24,7 +23,7 @@ const Calendar = ({navigation}) =>{
         <CalendarDay date={date} marking={marking} navigation={navigation}/>
         );
     }}
-    style={styles.calendar}
+    //style={styles.calendar}
     theme={calendarTheme}
     />
   );

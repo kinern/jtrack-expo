@@ -1,24 +1,39 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Context as WeatherContext} from '../context/weatherContext';
+import {Context as ExerciseContext} from '../context/exerciseContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as Location from 'expo-location';
 
 
 const WeatherBox = () => {
 
-    //Have Weather box be expandable component
-    //Toggle with onpress
-
     const {state, fetchWeather} = useContext(WeatherContext);
+    const {fetchExercise} = useContext(ExerciseContext);
     const [toggle, setToggle] = useState(false);
+    const [err, setErr] = useState('');
+
 
     useEffect(()=>{
-        fetchWeather();
+        (async () => {
+            try {
+                if (Location.requestPermissionsAsync){
+                    await Location.requestPermissionsAsync();
+                }
+                const loc = await Location.getCurrentPositionAsync();
+                const {latitude, longitude } = loc.coords;
+                fetchWeather(latitude, longitude);
+            } catch (e){
+                setErr('Error getting weather.');
+            }
+        })();
     }, []);
+
 
     const toggleBox = () =>{
         setToggle((toggle)? false : true);
     }
+
 
     if (!toggle){
         return (
@@ -30,6 +45,7 @@ const WeatherBox = () => {
         </TouchableOpacity>);
     }
 
+
     return (
         <View style={styles.openContainer}>
             <TouchableOpacity
@@ -40,11 +56,13 @@ const WeatherBox = () => {
             </TouchableOpacity>
             <Text>Today's Exercise Time</Text>
             <Text>10min</Text>
-            <Text>95F</Text>
+            {(state.weather? <Text>{state.weather.main.temp}F</Text>: null)}
+            {(state.weather? <Text>{state.weather.weather[0].main}</Text>: null)}
             <Text>Great day to get fit!</Text>
         </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     closedContainer: {
@@ -69,5 +87,6 @@ const styles = StyleSheet.create({
         fontWeight: "700"
     }
 });
+
 
 export default WeatherBox;
