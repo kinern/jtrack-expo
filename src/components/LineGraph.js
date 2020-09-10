@@ -7,7 +7,6 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 const LineGraph = () => {
 
     const {state, fetchExercises} = useContext(ExerciseContext);
-
     const stateData = state.exercises;
 
     const data = [
