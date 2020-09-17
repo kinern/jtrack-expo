@@ -19,10 +19,11 @@ body {
 
 #home {
 	background: aquamarine url("landing-bg.jpg") no-repeat fixed center;
-	background-size:     cover;
+	background-size: cover;
 	justify-content: center;
     align-items: center;
 	color: white;
+	text-align: center;
 	text-shadow: 0 0 5px black;
 }
 
@@ -88,6 +89,7 @@ body {
 
 .screenshots {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	padding: 20px;
