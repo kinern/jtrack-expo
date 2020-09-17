@@ -1,0 +1,156 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+	position: relative;
+}
+
+#home {
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+}
+
+#inquiry {
+	display:flex;
+	flex-direction: column;
+}
+
+#home {
+	background: aquamarine url("landing-bg.jpg") no-repeat fixed center;
+	background-size:     cover;
+	justify-content: center;
+    align-items: center;
+	color: white;
+	text-shadow: 0 0 5px black;
+}
+
+#home h1 {
+    font-size: 60;
+}
+
+#features {
+	min-height: 100vh;
+    background-color: cornsilk;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.features{
+	display:flex;
+    flex-direction: column;
+	justify-content: flex-start;
+    align-items: center;
+}
+
+.intro-text {
+	max-width: 800px;
+	text-align: center;
+	margin-bottom:100px;
+}
+
+.features hr {
+	width: 100%;
+	margin-top:20px;
+	margin-bottom:40px;
+}
+
+.features .row {
+	margin-bottom: 50px;
+}
+
+.features .col-4 {
+	text-align:center;
+}
+
+
+#inquiry {
+    background-color: teal;
+    justify-content: center;
+    align-items: center;
+    padding-top: 70px;
+    padding-bottom: 100px;
+}
+
+#gallery {
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: white;
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+
+#gallery h1 {
+	margin-bottom:50px
+}
+
+.screenshots {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	background-color: lightseagreen;
+}
+.screenshots img {
+	margin: 10px;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+}
+
+.inquiry-form {
+    background-color: white;
+    padding:20px;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inquiry-form hr {
+    width: 100%;
+}
+
+.inquiry-submit {
+	color: white;
+	background-color: lightseagreen;
+	border: none;
+	transition: 0.4s;
+}
+
+.inquiry-submit:hover {
+	background-color: teal;
+}
+
+.return-top {
+    padding: 10px 20px 10px 20px;
+    font-size: 18px;
+    background: lightseagreen;
+    position:absolute; bottom: 60px; right:20px;
+    border-radius: 3px;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+    color: white;
+	text-decoration: none;
+	transition: 0.4s
+}
+
+.return-top:hover {
+	background-color: #41b0b0;
+    color: white;
+	text-decoration: none;
+}
+
+
+footer {
+    width: 100wh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 10px;
+    font-weight: 700;
+}

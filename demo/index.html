@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/main.css">
+	
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	
+    <title>JTrack - Exercise Mobile App</title>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="-50">
+    <nav class="navbar navbar-expand-sm navbar-light sticky-top">
+        <a class="navbar-brand" href="#home">JTrack</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="nav navbar-nav">
+				<a class="nav-item nav-link" href="#features">Features</a>
+				<a class="nav-item nav-link" href="#gallery">Screenshots</a>
+				<a class="nav-item nav-link" href="#inquiry">Inquiry</a>
+            </div>
+        </div>
+    </nav>
+
+	<div class="scroll-area" data-spy="scroll" data-target=".navbar" data-offset="0">
+
+    <div id="home">
+        <h1 data-aos="flip-left" data-aos-duration="1000">JTrack</h1>
+        <h4 data-aos="flip-left" data-aos-duration="1000">Colorful exercise tracking application using React Native</h4>
+    </div>
+
+    <div id="features" >
+		<div class="container-fluid features">
+			<h6 class="intro-text">
+			JTrack is a Don't Break The Chain style exercise tracking application. 
+			At the moment I am doing some fixes, adding the options section and testing using Expo.<br />
+			These changes are in the repo <i>jtrack-expo</i>, and will be added back to the <i>jtrack</i> repository.
+			</h6>
+			<h1 data-aos="fade-up">Features</h1>
+			<hr data-aos="fade-up" />
+			<div class="container-fluid">
+				<div class="row" data-aos="fade-up">
+					<div class="col-4">
+						<h4>Weather Widget</h4>
+					</div>
+					<div class="col-8">
+						<h5>Instantly find out the weather before exercising</h5>
+						<p>
+						If you are inside, you can find out the weather and tempurature outside by looking at the mini weather widget.
+						It uses geolocation and OpenWeatherAPI service to retrieve information.
+						Next to the tempurature is a colorful icon to indicate what kind of weather is happening.
+						</p>
+					</div>
+				</div>
+				<div class="row" data-aos="fade-up">
+					<div class="col-4">
+						<h4>Monthly Calendar</h4>
+					</div>
+					<div class="col-8">
+						<h5>Build exercise routines using the Don't Break The Chain method</h5>
+						<p>
+						The main part of the exercise app is the calendar. 
+						You can tap on a date to enter the number of minutes exercised for that day.
+						After saving your exercise time, a star will show behind that day.
+						The color of the star cooresponds to the ammount of time entered.
+						This calendar is a <strong>Don't Break The Chain</strong> style tool to help you build a routine.
+						</p>
+					</div>
+				</div>
+				<div class="row" data-aos="fade-up">
+					<div class="col-4">
+						<h4>Progress Graph</h4>
+					</div>
+					<div class="col-8">
+						<h5>Get an alternate view of your progress using the Graph Screen</h5>
+						<p>
+						The graph page shows a monthly view of your progress. 
+						It is a line graph with markings for each day.
+						The arrows at the top of the screen are used to change the month viewed.
+						</p>
+					</div>
+				</div>
+				<div class="row" data-aos="fade-up">
+					<div class="col-4">
+						<h4>Extra Features</h4>
+					</div>
+					<div class="col-8">
+						<h5>Manage your exercise data and weather settings</h5>
+						<p>The following extra features are part of the Options Screen:</p>
+						<ul>
+							<li>Change Degrees for Weather (C or F)</li>
+							<li>Import And Export Exercise Data</li>
+							<li>Reset All Exercise Data</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+
+	<div id="gallery">
+		<h1 data-aos="fade-up">Screenshots</h1>
+		<div class="screenshots" data-aos="fade-up">
+			<img src="assets/jtrack-calendar.png" alt="Calendar Screen"/>
+			<img src="assets/jtrack-graph.png" alt="Graph Screen">
+		</div>
+	</div>
+
+    <div id="inquiry">
+        <div class="inquiry-form" data-aos="zoom-out">
+            <h1>Inquiry</h1>
+            <p>Have questions about JTrack? Feel free to send me a message on Github or using the form below.</p>
+            <hr />
+            <form 
+			action="https://formspree.io/mqkyjqwn"
+			method="POST"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="col-sm-12">
+                <div class="form-group row">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" name="name" placeholder="Name">
+                </div>
+                </div>
+                <div class="form-group row">
+                <div class="col-sm-12">
+                    <input type="email" class="form-control" name="_replyto" placeholder="Email">
+                </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                    <textarea class="form-control" name="message" placeholder="Comment"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-primary inquiry-submit">Send</button>
+                </div>
+                </div>
+            </form>
+          </div>
+    </div>
+	
+	</div>
+	
+	<a class="return-top" href="#home">
+		<div>Return To Top</div>
+	</a>
+    <footer>
+        JTrack by Natalie Kiner 2020
+    </footer>
+</body>
+
+<script>
+  AOS.init();
+</script>
+
+</html>
