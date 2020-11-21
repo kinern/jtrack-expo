@@ -41,7 +41,7 @@ const StatsScreen = () =>{
                     <Text>Next</Text>
                 </TouchableOpacity>
             </View>
-            <LineGraph style={styles.graph}/>
+            <LineGraph style={styles.graph} navDate={navDate} />
         </View>
     );
 }

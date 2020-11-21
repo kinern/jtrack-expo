@@ -9,13 +9,15 @@ const Calendar = ({navigation}) =>{
   const {state, fetchExercises} = useContext(ExerciseContext);
 
   useEffect(()=>{
-    fetchExercises();
+    fetchExercises('','','calendar');
+    console.log('use effect calendar');
   }, []);
 
   //TODO: useEffect to fetch exercises from database and assign with setMarkedDates
 
   return (
     <ReactCalendar 
+    style={styles.calendar}
     current={state.selectedDate}
     markedDates = {state.exercises}
     dayComponent={({ date, marking }) => {

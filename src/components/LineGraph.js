@@ -1,32 +1,39 @@
-import React, {useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import { LineChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
 import * as scale from 'd3-scale'
 import {Context as ExerciseContext} from '../context/exerciseContext';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
-const LineGraph = () => {
+const LineGraph = ({navDate}) => {
 
+
+    //TODO: Graph data should be moved to parent component and passed as a prop,
+    //because the top month navigation buttons are there.
     const {state, fetchExercises} = useContext(ExerciseContext);
-    const stateData = state.exercises;
+    //const nextMonth = new Date(navDate.setMonth(navDate.getMonth()+1));
+    //fetchExercises(navDate, nextMonth, 'graph');
+    const [loading, setLoading] = useState(true);
 
-    const data = [
-        {time: 50, date: new Date(2014, 8, 1, 0, 0)}, 
-        {time: 10, date: new Date(2014, 8, 2, 0, 0)}, 
-        {time: 40, date: new Date(2014, 8, 3, 0, 0)}, 
-        {time: 20, date: new Date(2014, 8, 4, 0, 0)}, 
-        {time: 40, date: new Date(2014, 8, 5, 0, 0)}, 
-        {time: 70, date: new Date(2014, 8, 6, 0, 0)}, 
-        {time: 15, date: new Date(2014, 8, 7, 0, 0)}, 
+    useEffect(()=>{
+        getGraphStats();
+    }, []);
 
-    ]
+    const getGraphStats = () =>{
+        const nextMonth = new Date(navDate.setMonth(navDate.getMonth()+1));
+        fetchExercises(navDate, nextMonth, 'graph');
+        setLoading(false);
+    }
 
     const contentInset = { top: 20, bottom: 20, left: 5, right: 20 }
 
-    return (
-        <View style={{padding: 30}}>
+    const renderGraph = () => {
+        
+        return (
+            <View style={{padding: 30}}>
             <View style={{ height: 200, flexDirection: 'row' }}>
                 <YAxis
-                    data={data.map(item=>item.time)}
+                    data={state.exercises.map(item=>item.time)}
                     contentInset={contentInset}
                     svg={{fill: 'grey', fontSize: 10}}
                     numberOfTicks={10}
@@ -34,7 +41,7 @@ const LineGraph = () => {
                 />
                 <LineChart
                     style={{ flex: 1 }}
-                    data={ data }
+                    data={ state.exercises }
                     yAccessor={ ({ item }) => item.time }
                     xAccessor={ ({ item }) => item.date }
                     xScale={ scale.scaleTime }
@@ -45,7 +52,7 @@ const LineGraph = () => {
                 </LineChart>
             </View>
         <XAxis
-            data={data}
+            data={state.exercises}
             xAccessor={ ({ item }) => item.date }
             scale={ scale.scaleTime }
             formatLabel={(date)=>{return date.getDate()}}
@@ -53,7 +60,23 @@ const LineGraph = () => {
             svg={{ fontSize: 10, fill: 'black' }}
         />
         </View>
-    )
+        );
+    }
+
+    const renderLoading = () => {
+        return (
+            <View>
+                <Text>Loading Graph...</Text>
+            </View>
+        );
+    }
+
+    return (
+        <React.Fragment>{
+            (loading)? renderLoading() : renderGraph()
+            }
+        </React.Fragment>
+    );
 }
 const styles = StyleSheet.create({});
 
