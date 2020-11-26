@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import {Text, Input, Button} from 'react-native-elements';
@@ -6,16 +6,8 @@ import {Text, Input, Button} from 'react-native-elements';
 
 const ExerciseForm = ({date, callback}) =>{
     //Navigator getParams('date') to get clicked on date
-    const {fetchExercise, saveExercise} = useContext(ExerciseContext);
-    const [minutes, setMinutes] = useState('0');
-
-    //Get the saved number of minutes if it exists
-    useEffect(function(){
-        const result = fetchExercise();
-        if (result){
-            setMinutes(result.minutes);
-        }
-    },[]);
+    const {state, saveExercise} = useContext(ExerciseContext);
+    const [minutes, setMinutes] = useState(state.exercise.time);
 
     return (
         <View style={styles.container}>

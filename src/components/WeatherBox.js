@@ -10,6 +10,7 @@ const WeatherBox = () => {
 
     const {state, fetchWeather} = useContext(WeatherContext);
     const {fetchExercise} = useContext(ExerciseContext);
+    const {weather, setWeather} = useState({});
     const [toggle, setToggle] = useState(false);
     const [err, setErr] = useState('');
 
@@ -23,6 +24,7 @@ const WeatherBox = () => {
                 const loc = await Location.getCurrentPositionAsync();
                 const {latitude, longitude } = loc.coords;
                 fetchWeather(latitude, longitude);
+                setWeather(state.weather);
             } catch (e){
                 setErr('Error getting weather.');
             }
@@ -62,7 +64,6 @@ const WeatherBox = () => {
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     closedContainer: {

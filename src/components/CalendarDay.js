@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {TouchableOpacity, StyleSheet, Text, ImageBackground, Alert} from 'react-native';
 import { getTodayDate } from '../commonDate';
-
+import {Context as ExerciseContext} from '../context/exerciseContext';
 
 
 const CalendarDay = ({date, marking, navigation}) =>{
 
+    const {fetchExerciseFromDateStr} = useContext(ExerciseContext);
     const {day, month, year} = date;
     const datestr = year + "-" + ("0" + (month)).slice(-2) + "-" + ("0" + day).slice(-2);
     const todayDate = getTodayDate();
-
 
     const getHeartImage = () => {
         const minutes = parseInt(marking.minutes);
@@ -25,7 +25,7 @@ const CalendarDay = ({date, marking, navigation}) =>{
         } else {
           return require('../assets/images/calendar/star5.png');
         }
-    }
+    };
 
     const renderDateContent = () =>{
         const color = getHeartImage(marking.minutes);
@@ -34,22 +34,20 @@ const CalendarDay = ({date, marking, navigation}) =>{
         ? <ImageBackground style={styles.heart} source={color}><Text>{day}</Text></ImageBackground> 
         : <Text style={dayTextStyle}>{day}</Text>
         ;
-    }
+    };
 
     const onDayPress = () => {
         if (todayDate >= datestr){
-            //Todo -> Open add minutes module
-            console.log('day pressed');
-            navigation.navigate('AddExercise', {date:todayDate});
+            fetchExerciseFromDateStr(datestr);
+            navigation.navigate('AddExercise', {date:datestr});
         } else {
-            console.log('future date');
             alert(
-            'Cannot enter exercise for future dates.',
-            [{text: 'OK'},],
-            { cancelable: false }
+                'Cannot enter time for future dates.',
+                [{text: 'OK'},],
+                { cancelable: false }
             )
         }
-    } 
+    };
 
     return (
         <TouchableOpacity 

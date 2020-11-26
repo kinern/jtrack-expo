@@ -104,16 +104,31 @@ export const saveExercise = async (time, date) =>{
 }
 
 //Save a database dump file to the download folder.
+//TODO: Figure out for android and ios
 export const exportData = () => {
 
 }
 
 //Given a filepath, import data.
+//TODO: Figure out for android and ios
 export const importData = () => {
 
 }
 
 //Empty the database.
-export const clearAllData = () => {
-
+export const clearAllData = async () => {
+    await db.transcation(
+        function (t) {
+            t.executeSql('DROP TABLE IF EXISTS exercises', []);
+            t.executeSql(
+                'CREATE TABLE IF NOT EXISTS exercises( '+
+                'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+                'time INT(10), ' + 
+                'date DATETIME, '+
+                ')'
+                ,[]
+            );
+        } 
+        ,[]
+    );
 }

@@ -1,21 +1,56 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-elements';
+import {Context as WeatherContext} from '../context/weatherContext';
+import * as Location from 'expo-location';
+
 
 const OptionsScreen = () =>{
+
+    const {state, setDegrees, fetchWeather} = useContext(WeatherContext);
+    const selectedFStyle = (state.degrees == 'metric')? null : {backgroundColor:'red'};
+    const selectedCStyle = (state.degrees == 'metric')? {backgroundColor:'teal'}: null;
+
+    const updateDegrees = async (name) =>{
+        setDegrees(name);
+        const loc = await Location.getCurrentPositionAsync();
+        const {latitude, longitude } = loc.coords;
+        fetchWeather(latitude, longitude);
+    }
+
+    const renderDegreeToggle = () =>{
+        return (
+            <View style={{flexDirection:'row' }}>
+                <TouchableOpacity 
+                onPress={()=>{updateDegrees('metric')}}
+                style={[styles.degreeBtnC, selectedCStyle]}>
+                    <Text style={styles.btnText}>C</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                onPress={()=>{updateDegrees('imperial')}}
+                style={[styles.degreeBtnF, selectedFStyle]}>
+                    <Text style={styles.btnText}>F</Text>
+                </TouchableOpacity>
+            </View> 
+        );
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Options</Text>
             <View style={styles.degreeMenu}>
                 <Text h4>Weather Degrees</Text>
-                <View style={{flexDirection:'row' }}>
-                    <TouchableOpacity style={styles.degreeBtnC}><Text style={styles.btnText}>C</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.degreeBtnF}><Text style={styles.btnText}>F</Text></TouchableOpacity>
-                </View>
+                {renderDegreeToggle()}
             </View>
-            <TouchableOpacity style={styles.btn}><Text style={styles.btnText}>Export Data</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btn}><Text style={styles.btnText}>Import Data</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btn}><Text style={styles.btnText}>Clear Data</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnText}>Export Data</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnText}>Import Data</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnText}>Clear Data</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -37,7 +72,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         width: 50,
         alignItems: 'center',
-        backgroundColor: 'pink',
+        backgroundColor: 'lightblue',
         elevation: 2
     },
     degreeBtnF:{
@@ -45,7 +80,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         width: 50,
         alignItems: 'center',
-        backgroundColor: 'lightblue',
+        backgroundColor: 'coral',
         elevation: 2
     },
     btn: {

@@ -91,10 +91,11 @@ const SQLDateToJSDate = (sqldate) => {
 };
 
 //Returns exercise info given a date.
-const fetchExercise = dispatch => async (date) => {
+const fetchExerciseFromDateStr = dispatch => async (date) => {
     try{
-        const result = await DBfetchExercise(date);
-        const exercise = result.rows[0];
+        //const result = await DBfetchExercise(date);
+        //let exercise = result.rows[0];
+        let exercise = {time: 10, date: '2020-11-25 00:00:00'};
         dispatch({type: 'fetch_exercise', payload: exercise});
     } catch (err){
         dispatch({type: 'error', payload: 'Fetch Failed.'});
@@ -104,6 +105,7 @@ const fetchExercise = dispatch => async (date) => {
 const saveExercise = dispatch => async (date, minutes, callback) => {
     try {
         const result = await DBSaveExercise(date, minutes);
+        console.log('saved exercise:', date, minutes);
         dispatch({type: 'exercise_saved', payload: result});
     } catch(err) {
         dispatch({type: 'error', payload: 'Save Failed.'});
@@ -119,6 +121,6 @@ defaultDate = year +'-'+ month +'-'+ day;
 
 export const {Context, Provider} = createDataContext(
     exerciseReducer,
-    {fetchCalendarExercises, fetchGraphExercises, fetchExercise, saveExercise},
-    {selectedDate: defaultDate, calendarExercises: null, graphExercises: null}
+    {fetchCalendarExercises, fetchGraphExercises, fetchExerciseFromDateStr, saveExercise},
+    {selectedDate: defaultDate, calendarExercises: null, graphExercises: null, exercise: {time: 0, date: '2020-01-01 00:00:00'}}
 );
