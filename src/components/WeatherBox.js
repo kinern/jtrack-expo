@@ -54,7 +54,7 @@ const WeatherBox = () => {
             >
                 <Text style={styles.toggleText}>[X]</Text>
             </TouchableOpacity>
-            <Text>Today's Exercise Time</Text>
+            <Text style={styles.openTitle}>Today's Exercise Time</Text>
             <Text>10min</Text>
             {(state.weather? <Text>{state.weather.main.temp}F</Text>: null)}
             {(state.weather? <Text>{state.weather.weather[0].main}</Text>: null)}
@@ -72,13 +72,26 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        margin: 10,
+        backgroundColor: '#fff',
+        elevation: 5,
     },
     openContainer: {
-        borderWidth:3,
-        borderColor: 'skyblue',
+        borderWidth: 0,
+        borderColor: 'lightgray',
         borderRadius: 10,
-        padding: 10
+        width: '98%',
+        marginLeft: '1%',
+        marginRight: '1%',
+        padding: 10,
+        margin: 10,
+        backgroundColor: '#fff',
+        elevation: 2,
+    },
+    openTitle: {
+        fontWeight: '700',
+        alignSelf: 'center'
     },
     closeBtn: {
         alignSelf: 'flex-end',

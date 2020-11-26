@@ -44,12 +44,12 @@ const calendarTheme = {
 
 const styles = StyleSheet.create({
     calendar: {
-        height: 400,
-        marginBottom: -70,
-        width: '100%',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 15,
-        elevation : 10,
+        height: 450,
+        width: '98%',
+        //backgroundColor: '#FFFFFF',
+        //borderRadius: 15,
+        margin: '1%',
+        //elevation : 2,
     }
 });
 

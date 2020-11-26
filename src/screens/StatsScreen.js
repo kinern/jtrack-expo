@@ -28,6 +28,7 @@ const StatsScreen = () =>{
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Stats</Text>
             <View style={styles.dateMenu}>
                 <TouchableOpacity
                 onPress={()=>changeMonth(-1)}
@@ -49,7 +50,13 @@ const StatsScreen = () =>{
 
 const styles = StyleSheet.create({
     container:{
-        paddingTop: 20
+        marginTop:30
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: 'gray',
+        alignSelf: 'center'
     },
     dateText: {
         alignSelf:'center',
@@ -60,6 +67,10 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     dateMenu: {
+        borderColor: 'lightgray',
+        borderWidth: 1,
+        padding: 10,
+        marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'

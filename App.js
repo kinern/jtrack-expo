@@ -11,12 +11,26 @@ import AddExerciseScreen from './src/screens/AddExerciseScreen.js';
 import {Provider as WeatherProvider} from './src/context/weatherContext';
 import {Provider as ExerciseProvider} from './src/context/exerciseContext';
 
+const mainFlowNav = createBottomTabNavigator({
+  Calendar: {screen : CalendarScreen},
+  Options: OptionsScreen,
+  Stats: StatsScreen
+}, {
+  tabBarOptions: {
+    activeTintColor: '#52c2ff',
+    inactiveTintColor: '#b5b5b5',
+    labelStyle: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    style: {
+      backgroundColor: '#fff',
+    }
+  }
+});
+
 const switchNavigator = createSwitchNavigator({
-  mainFlow: createBottomTabNavigator({
-    Calendar: CalendarScreen,
-    Options: OptionsScreen,
-    Stats: StatsScreen
-  }),
+  mainFlow: mainFlowNav,
   AddExercise : AddExerciseScreen
 });
 
