@@ -12,12 +12,15 @@ Expo version of Jtrack, a React Native exercise application
 - Line graph for recorded times
 
 #### Options
-- Import/Export exercise data
 - Change degrees
-- Set location (defaults to local area)
+- Clear data
 
 ## In Progress / Features To Add
 - Timer for record/add to time for current day
+- Set weather (defaults to local)
+- Weather background for menu toggle menu
+- Styles for screens
+
 --- 
 ## Images
 
