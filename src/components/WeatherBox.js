@@ -4,6 +4,7 @@ import {Context as WeatherContext} from '../context/weatherContext';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Location from 'expo-location';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const WeatherBox = () => {
@@ -31,11 +32,29 @@ const WeatherBox = () => {
         })();
     }, []);
 
+    const renderWeather = () => {
+        if (!state.weather){
+            return (
+                <View style={styles.weatherLine}>
+                    <Text>Loading weather...</Text>
+                </View>
+                );
+        }
+        return (
+            <View style={styles.weatherLine}>
+                {(state.weather? <Text>{state.weather.main.temp}F</Text>: null)}
+                <Text> - </Text>
+                {(state.weather? <Text>{state.weather.weather[0].main}</Text>: null)}
+                <Text> - </Text>
+                <Text>Great day to get fit!</Text>
+            </View>
+        );
+    }
+
 
     const toggleBox = () =>{
         setToggle((toggle)? false : true);
     }
-
 
     if (!toggle){
         return (
@@ -47,20 +66,18 @@ const WeatherBox = () => {
         </TouchableOpacity>);
     }
 
-
     return (
         <View style={styles.openContainer}>
             <TouchableOpacity
             onPress={toggleBox}
             style={styles.closeBtn}
             >
-                <Text style={styles.toggleText}>[X]</Text>
+                <Icon name="times-circle" size={30} color="gray" />
             </TouchableOpacity>
-            <Text style={styles.openTitle}>Today's Exercise Time</Text>
-            <Text>10min</Text>
-            {(state.weather? <Text>{state.weather.main.temp}F</Text>: null)}
-            {(state.weather? <Text>{state.weather.weather[0].main}</Text>: null)}
-            <Text>Great day to get fit!</Text>
+            <Text style={[styles.openTitle, {fontSize:18}]}>Today's Exercise Time</Text>
+            
+            <Text style={styles.openTitle}>10min</Text>
+            {renderWeather()}
         </View>
     )
 }
@@ -79,26 +96,35 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     openContainer: {
-        borderWidth: 0,
+        borderWidth: 1,
         borderColor: 'lightgray',
         borderRadius: 10,
         width: '98%',
         marginLeft: '1%',
         marginRight: '1%',
-        padding: 10,
+        padding: 5,
         margin: 10,
         backgroundColor: '#fff',
         elevation: 2,
     },
     openTitle: {
         fontWeight: '700',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        color: 'rgb(47, 72, 88)'
     },
     closeBtn: {
         alignSelf: 'flex-end',
+        color: 'rgb(47, 72, 88)'
     },
     toggleText: {
-        fontWeight: "700"
+        fontWeight: "700",
+    },
+    weatherLine: {
+        padding: 10,
+        flexDirection: 'row',
+        width: '%100',
+        justifyContent: 'center',
+        color: 'rgb(47, 72, 88)'
     }
 });
 

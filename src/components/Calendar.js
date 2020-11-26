@@ -1,14 +1,23 @@
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Calendar as ReactCalendar } from 'react-native-calendars';
 import CalendarDay from './CalendarDay';
 import { Context as ExerciseContext } from '../context/exerciseContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const Calendar = ({navigation}) =>{
 
   const { state } = useContext(ExerciseContext);
 
-  //TODO: useEffect to fetch exercises from database and assign with setMarkedDates
+  const renderArrowButton = (direction) => {
+    const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
+    return (
+    <View>
+      <Icon name={path} size={30} color="gray" />
+    </View>
+    );
+  }
 
   return (
     <ReactCalendar 
@@ -20,6 +29,7 @@ const Calendar = ({navigation}) =>{
         <CalendarDay date={date} marking={marking} navigation={navigation}/>
         );
     }}
+    renderArrow={(direction) => (renderArrowButton(direction))}
     //style={styles.calendar}
     theme={calendarTheme}
     />
@@ -30,7 +40,6 @@ const calendarTheme = {
   calendarBackground: '#FFFFFF',
   textSectionTitleColor: '#2F4858',
   dayTextColor: '#2F4858',
-  arrowColor: '#a8bfe6',
   monthTextColor: '#2F4858',
   textDayHeaderFontWeight: '400',
   textMonthFontWeight: '700',

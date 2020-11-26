@@ -31,7 +31,7 @@ const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
         {date: '2020-11-17 00:00:00', time: 10},
         {date: '2020-11-18 00:00:00', time: 20},
         {date: '2020-11-06 00:00:00', time: 30},
-        {date: '2020-11-05 00:00:00', time: 40}
+        {date: '2020-12-05 00:00:00', time: 40}
     ];
     const exercisesObj = {};
     results.map((item)=>{
@@ -53,12 +53,15 @@ const fetchGraphExercises = dispatch => async (startDate, endDate) =>{
             {date: '2020-11-17 00:00:00', time: 10},
             {date: '2020-11-18 00:00:00', time: 20},
             {date: '2020-11-06 00:00:00', time: 30},
-            {date: '2020-11-05 00:00:00', time: 40}
+            {date: '2020-12-05 00:00:00', time: 40}
         ];
         const resultsObj = {};
         results.map((item)=>{
-            let day = parseInt(item.date.slice(8, -9));
-            resultsObj[day] = {time: item.time, date: SQLDateToJSDate(item.date)};
+            let newDate = SQLDateToJSDate(item.date);
+            if (newDate.getMonth() == startDate.getMonth()-1){
+                let day = parseInt(item.date.slice(8, -9));
+                resultsObj[day] = {time: item.time, date: newDate};
+            }
         });
     
         const resultsArray = [];
