@@ -13,17 +13,14 @@ const StatsScreen = () =>{
     const startDate = new Date();
     const [navDate, setNavDate] = useState(new Date());
     const [dateStr, setDateStr] = useState(`${monthNames[startDate.getMonth()]} / ${startDate.getFullYear()}`);
+    const {state, fetchGraphExercises} = useContext(ExerciseContext);
     
-    /*
-    const {state, fetchExercises} = useContext(ExerciseContext);
-    useEffect(()=>{
-        fetchExercises();
-    }, []);
-    */
     
     const changeMonth = (amount) => {
         setNavDate(new Date(navDate.setMonth(navDate.getMonth()+amount)));
         setDateStr(`${monthNames[navDate.getMonth()]} / ${navDate.getFullYear()}`);
+        const nextMonth = new Date(navDate.setMonth(navDate.getMonth()+1));
+        fetchGraphExercises(navDate, nextMonth);
     }
 
     return (
@@ -42,7 +39,7 @@ const StatsScreen = () =>{
                     <Text>Next</Text>
                 </TouchableOpacity>
             </View>
-            <LineGraph style={styles.graph} navDate={navDate} />
+            <LineGraph style={styles.graph} navDate={navDate} data={state.graphExercises} />
         </View>
     );
 }

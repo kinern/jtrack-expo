@@ -3,9 +3,21 @@ import {View, StyleSheet, Text} from 'react-native';
 import WeatherBox from '../components/WeatherBox';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
+import {setupDatabase} from '../api/database';
 
 
 const CalendarScreen = ({navigation}) =>{
+
+    const {fetchCalendarExercises, fetchGraphExercises} = useContext(ExerciseContext);
+    const startMonth = new Date();
+    const nextMonth = new Date(startMonth.setMonth(startMonth.getMonth()+1));
+
+    //TODO: Move database setup and data gathering outside of calendar screen.
+    useEffect(()=>{
+        //setupDatabase();
+        fetchCalendarExercises(startMonth, nextMonth);
+        fetchGraphExercises(startMonth, nextMonth);
+    }, []);
 
     return (
         <View style={styles.main}>

@@ -1,17 +1,12 @@
-import React, {useEffect, useContext} from 'react';
-import { StyleSheet} from 'react-native';
-import {Calendar as ReactCalendar} from 'react-native-calendars';
+import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
+import { Calendar as ReactCalendar } from 'react-native-calendars';
 import CalendarDay from './CalendarDay';
-import {Context as ExerciseContext} from '../context/exerciseContext';
+import { Context as ExerciseContext } from '../context/exerciseContext';
 
 const Calendar = ({navigation}) =>{
 
-  const {state, fetchExercises} = useContext(ExerciseContext);
-
-  useEffect(()=>{
-    fetchExercises('','','calendar');
-    console.log('use effect calendar');
-  }, []);
+  const { state } = useContext(ExerciseContext);
 
   //TODO: useEffect to fetch exercises from database and assign with setMarkedDates
 
@@ -19,7 +14,7 @@ const Calendar = ({navigation}) =>{
     <ReactCalendar 
     style={styles.calendar}
     current={state.selectedDate}
-    markedDates = {state.exercises}
+    markedDates = {state.calendarExercises}
     dayComponent={({ date, marking }) => {
         return ( 
         <CalendarDay date={date} marking={marking} navigation={navigation}/>
