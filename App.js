@@ -17,13 +17,14 @@ const mainFlowNav = createBottomTabNavigator({
   Stats: StatsScreen
 }, {
   tabBarOptions: {
-    activeTintColor: '#52c2ff',
+    activeTintColor: 'rgb(134, 65, 244)',
     inactiveTintColor: '#b5b5b5',
     labelStyle: {
       fontSize: 18,
       marginBottom: 10,
     },
     style: {
+      borderColor: 'lightgray',
       backgroundColor: '#fff',
     }
   }

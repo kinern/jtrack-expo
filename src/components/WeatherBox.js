@@ -85,14 +85,15 @@ const WeatherBox = () => {
 const styles = StyleSheet.create({
     closedContainer: {
         borderWidth:3,
-        borderColor: 'skyblue',
+        borderColor: '#876f94',
         width: 50,
         height: 50,
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10,
-        backgroundColor: '#fff',
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#b491c7',
         elevation: 5,
     },
     openContainer: {
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
         color: 'rgb(47, 72, 88)'
     },
     toggleText: {
+        color: 'white',
         fontWeight: "700",
     },
     weatherLine: {

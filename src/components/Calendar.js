@@ -12,13 +12,11 @@ const Calendar = ({navigation}) =>{
 
   const renderArrowButton = (direction) => {
     const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
-
-    //If state.selectedDate == currentDate, replace arrow and disable;
-
+    const arrowColor = ((direction == 'right')&&(isTodayAfterSelected()))? "lightgray": "gray";
     return (
-    <View>
-      <Icon name={path} size={30} color="gray" />
-    </View>
+      <View>
+        <Icon name={path} size={30} color={arrowColor} />
+      </View>
     );
   }
 
