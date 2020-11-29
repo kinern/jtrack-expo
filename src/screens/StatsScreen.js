@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
 import LineGraph from '../components/LineGraph';
@@ -11,22 +11,19 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 const StatsScreen = () =>{
 
-    const startDate = new Date();
-    const [navDate, setNavDate] = useState(new Date());
-    const [dateStr, setDateStr] = useState(`${monthNames[startDate.getMonth()]} / ${startDate.getFullYear()}`);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
     const {state, fetchGraphExercises} = useContext(ExerciseContext);
-    
-    
-    const changeMonth = (amount) => {
-        setNavDate(new Date(navDate.setMonth(navDate.getMonth()+amount)));
-        setDateStr(`${monthNames[navDate.getMonth()]} / ${navDate.getFullYear()}`);
-        const nextMonth = new Date(navDate.setMonth(navDate.getMonth()+1));
-        fetchGraphExercises(navDate, nextMonth);
+
+    const changeMonth = (amount) => { 
+        let newDate = new Date(selectedDate.setMonth(selectedDate.getMonth() + amount));
+        setSelectedDate(newDate);
+        fetchGraphExercises(newDate);
     }
 
     const renderArrowButton = (direction) => {
-        const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
-        const monthDiff = (direction == 'left')? -1 : 1;
+        const path = (direction === 'left')? "angle-double-left" : "angle-double-right";
+        const monthDiff = (direction === 'left')? -1 : 1;
         return (
         <TouchableOpacity
         style={styles.arrowbtn}
@@ -45,7 +42,7 @@ const StatsScreen = () =>{
                 <Text style={styles.dateText}>{dateStr}</Text>
                 {renderArrowButton('right')}
             </View>
-            <LineGraph style={styles.graph} navDate={navDate} data={state.graphExercises} />
+            <LineGraph data={state.graphExercises} />
         </View>
     );
 }

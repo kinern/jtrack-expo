@@ -1,17 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
 import { LineChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
 import * as scale from 'd3-scale'
-import {Context as ExerciseContext} from '../context/exerciseContext';
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 const LineGraph = ({data}) => {
+
+    console.log('data:', data);
 
 
     const contentInset = { top: 20, bottom: 20, left: 5, right: 20 }
 
     const renderGraph = () => {
-        console.log('data before graph:',data);
         return (
             <View style={{padding: 30}}>
             <View style={{ height: 200, flexDirection: 'row' }}>
@@ -40,7 +39,7 @@ const LineGraph = ({data}) => {
             scale={ scale.scaleTime }
             formatLabel={(date)=>{return date.getDate()}}
             contentInset={{right: 20, left: 20}}
-            svg={{ fontSize: 10, fill: 'black' }}
+            svg={{ fontSize: 10, fill: 'gray' }}
         />
         </View>
         );

@@ -10,13 +10,12 @@ const CalendarScreen = ({navigation}) =>{
 
     const {fetchCalendarExercises, fetchGraphExercises} = useContext(ExerciseContext);
     const startMonth = new Date();
-    const nextMonth = new Date(startMonth.setMonth(startMonth.getMonth()+1));
 
-    //TODO: Move database setup and data gathering outside of calendar screen.
+    //Since Calendar is the default screen, fetch initial database data.
     useEffect(()=>{
         //setupDatabase();
-        fetchCalendarExercises(startMonth, nextMonth);
-        fetchGraphExercises(startMonth, nextMonth);
+        fetchCalendarExercises(startMonth);
+        fetchGraphExercises(startMonth);
     }, []);
 
     return (

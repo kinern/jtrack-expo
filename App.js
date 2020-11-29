@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 import CalendarScreen from './src/screens/CalendarScreen.js';
-import OptionsScreen from './src/screens/OptionsScreen';
+//import OptionsScreen from './src/screens/OptionsScreen';
 import StatsScreen from './src/screens/StatsScreen';
 import AddExerciseScreen from './src/screens/AddExerciseScreen.js';
 
@@ -13,7 +13,7 @@ import {Provider as ExerciseProvider} from './src/context/exerciseContext';
 
 const mainFlowNav = createBottomTabNavigator({
   Calendar: {screen : CalendarScreen},
-  Options: OptionsScreen,
+  //Options: OptionsScreen,
   Stats: StatsScreen
 }, {
   tabBarOptions: {
@@ -35,6 +35,8 @@ const switchNavigator = createSwitchNavigator({
 });
 
 const App = createAppContainer(switchNavigator);
+
+
 
 export default () =>{
   return (

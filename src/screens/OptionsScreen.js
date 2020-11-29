@@ -43,12 +43,6 @@ const OptionsScreen = () =>{
                 {renderDegreeToggle()}
             </View>
             <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnText}>Export Data</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnText}>Import Data</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
                 <Text style={styles.btnText}>Clear Data</Text>
             </TouchableOpacity>
         </View>

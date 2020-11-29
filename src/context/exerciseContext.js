@@ -5,6 +5,8 @@ import {
     fetchExercise as DBFetchExercise
 } from '../api/database';
 
+import testExerciseData from '../testExerciseData';
+
 const exerciseReducer = (state, action)=>{
     switch(action.type){
         case 'fetch_graph_ex':
@@ -26,56 +28,53 @@ const exerciseReducer = (state, action)=>{
 const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
 
     try {
-    //let results = DBfetchExercises(startDate, endDate);
-    let results = [
-        {date: '2020-11-17 00:00:00', time: 10},
-        {date: '2020-11-18 00:00:00', time: 20},
-        {date: '2020-11-06 00:00:00', time: 30},
-        {date: '2020-12-05 00:00:00', time: 40}
-    ];
-    const exercisesObj = {};
-    results.map((item)=>{
-        let date = item.date.slice(0, -9);
-        exercisesObj[date] = {marked: true, minutes: item.time};
-    }); 
-    dispatch({type:'fetch_calendar_ex', payload: exercisesObj});
+        //let results = DBfetchExercises(startDate, endDate);
+        let results = testExerciseData;
+        
+        const exercisesObj = {};
+        results.map((item)=>{
+            let date = item.date.slice(0, -9);
+            exercisesObj[date] = {marked: true, minutes: item.time};
+        }); 
+        dispatch({type:'fetch_calendar_ex', payload: exercisesObj});
     } catch (err){
         dispatch({type: 'error', payload: 'Fetch Calendar Data Failed.'});
     }
 };
 
-//Get exercises for graph screen.
-const fetchGraphExercises = dispatch => async (startDate, endDate) =>{
+//Graph Screen Exercises
+const fetchGraphExercises = dispatch => async (startDate) =>{
 
     try{
         //let results = DBfetchExercises(startDate, endDate);
-        let results = [
-            {date: '2020-11-17 00:00:00', time: 10},
-            {date: '2020-11-18 00:00:00', time: 20},
-            {date: '2020-11-06 00:00:00', time: 30},
-            {date: '2020-12-05 00:00:00', time: 40}
-        ];
+        let results = testExerciseData;
+
+        //Formatting database results to work wth line graph component.
         const resultsObj = {};
         results.map((item)=>{
             let newDate = SQLDateToJSDate(item.date);
-            if (newDate.getMonth() == startDate.getMonth()-1){
+            if (
+                newDate.getMonth() === (startDate.getMonth()) &&
+                (newDate.getFullYear() == startDate.getFullYear())
+                ){
                 let day = parseInt(item.date.slice(8, -9));
                 resultsObj[day] = {time: item.time, date: newDate};
             }
         });
-    
+
+        //Inserting default date data for line graph data points.
         const resultsArray = [];
-        for (let day = 1; day <= daysInMonth(startDate.getMonth(), startDate.getFullYear()); day++){
+        const daysInMonth = getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+        for (let day = 1; day <= daysInMonth; day++){
             if (resultsObj[day]){
-                //Add object to array
                 resultsArray.push(resultsObj[day]);
             } else {
-                //Insert entry with 0 minutes
-                let zeroEntry = {time: 0, date: new Date(startDate.getFullYear(), startDate.getMonth()-1, day, 0,0)};
+                let zeroDate = new Date(startDate.getFullYear(), startDate.getMonth(), day, 0,0);
+                let zeroEntry = {time: 0, date: zeroDate};
                 resultsArray.push(zeroEntry);
             }
         }
-    
+
         dispatch({type:'fetch_graph_ex', payload: resultsArray});
     } catch (err){
         dispatch({type: 'error', payload: 'Fetch Graph Data Failed.'});
@@ -83,10 +82,12 @@ const fetchGraphExercises = dispatch => async (startDate, endDate) =>{
 
 };
 
-function daysInMonth (month, year) {
+//Helper function to get number of days in the month.
+function getDaysInMonth (month, year) {
     return new Date(year, month, 0).getDate();
 };
 
+//Helper function to convert a SQL DATETIME string to Javascript DateTime object.
 const SQLDateToJSDate = (sqldate) => {
     const t = sqldate.split(/[- :]/);
     const d = new Date(t[0], t[1]-1, t[2], 0, 0);
@@ -98,6 +99,7 @@ const fetchExerciseFromDateStr = dispatch => async (date) => {
     try{
         //const result = await DBfetchExercise(date);
         //let exercise = result.rows[0];
+        //let convertedDate = SQLDateToJSDate(results.rows[0].item.date);
         let exercise = {time: 10, date: '2020-11-25 00:00:00'};
         dispatch({type: 'fetch_exercise', payload: exercise});
     } catch (err){
@@ -125,5 +127,10 @@ defaultDate = year +'-'+ month +'-'+ day;
 export const {Context, Provider} = createDataContext(
     exerciseReducer,
     {fetchCalendarExercises, fetchGraphExercises, fetchExerciseFromDateStr, saveExercise},
-    {selectedDate: defaultDate, calendarExercises: null, graphExercises: null, exercise: {time: 0, date: '2020-01-01 00:00:00'}}
+    {
+        selectedDate: defaultDate, 
+        calendarExercises: null, 
+        graphExercises: null, 
+        exercise: {time: 0, date: '2020-01-01 00:00:00'}
+    }
 );
