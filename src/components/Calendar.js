@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Calendar as ReactCalendar } from 'react-native-calendars';
 import CalendarDay from './CalendarDay';
 import { Context as ExerciseContext } from '../context/exerciseContext';
@@ -8,10 +8,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Calendar = ({navigation}) =>{
 
-  const { state } = useContext(ExerciseContext);
+  const { state, updateSelectedDate } = useContext(ExerciseContext);
 
   const renderArrowButton = (direction) => {
     const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
+
+    //If state.selectedDate == currentDate, replace arrow and disable;
+
     return (
     <View>
       <Icon name={path} size={30} color="gray" />
@@ -19,16 +22,43 @@ const Calendar = ({navigation}) =>{
     );
   }
 
+  const updateMonth = (changeMonth, amount) => {
+    if ((amount == 1) && isTodayAfterSelected()){
+      return;
+    }
+    updateSelectedDate(state.selectedDate, amount);
+    changeMonth();
+  }
+
+  //Compare today to state.selectedDate
+  const isTodayAfterSelected = () => {
+    const today = new Date();
+    const selectedMonth = ('0' + (state.selectedDate.getMonth()+1)).slice(-2);
+    const selectedComp = state.selectedDate.getFullYear().toString() + selectedMonth.toString();
+    const todayMonth = ('0' + (today.getMonth()+1)).slice(-2);
+    const todayComp = today.getFullYear().toString() + todayMonth;
+    return (selectedComp >= todayComp);
+  }
+
+  const formatSelectedDate = (date) => {
+    let month = String(date.getMonth()+1).padStart(2, '0');
+    let day = String(date.getDate()).padStart(2, '0');
+    let year = date.getFullYear();
+    return (year +'-'+ month +'-'+ day);
+};
+
   return (
     <ReactCalendar 
     style={styles.calendar}
-    current={state.selectedDate}
+    current={formatSelectedDate(state.selectedDate)}
     markedDates = {state.calendarExercises}
     dayComponent={({ date, marking }) => {
         return ( 
         <CalendarDay date={date} marking={marking} navigation={navigation}/>
         );
     }}
+    onPressArrowLeft={(subtractMonth)=>{updateMonth(subtractMonth, -1)}}
+    onPressArrowRight={(addMonth)=>{updateMonth(addMonth, 1)}}
     renderArrow={(direction) => (renderArrowButton(direction))}
     //style={styles.calendar}
     theme={calendarTheme}

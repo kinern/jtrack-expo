@@ -17,6 +17,8 @@ const exerciseReducer = (state, action)=>{
             return {...state, exercise: action.payload};
         case 'save_exercise':
             return state;
+        case 'update_selected_date':
+            return {...state, selectedDate: action.payload};
         case 'error':
             return {...state, error:action.payload}; 
         default:
@@ -41,6 +43,12 @@ const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
         dispatch({type: 'error', payload: 'Fetch Calendar Data Failed.'});
     }
 };
+
+//Changes the selectedDate state variable by a given amount of months.
+const updateSelectedDate = dispatch => async (date, numOfMonths) => {
+    date.setMonth(date.getMonth() + numOfMonths);
+    dispatch({type: 'update_selected_date', payload: date});
+}
 
 //Graph Screen Exercises
 const fetchGraphExercises = dispatch => async (startDate) =>{
@@ -118,15 +126,19 @@ const saveExercise = dispatch => async (date, minutes, callback) => {
    callback();
 };
 
-let defaultDate = new Date();
-let month = String(defaultDate.getMonth()+1).padStart(2, '0');
-let day = String(defaultDate.getDate()).padStart(2, '0');
-let year = defaultDate.getFullYear();
-defaultDate = year +'-'+ month +'-'+ day;
+
+
+const defaultDate = new Date();
 
 export const {Context, Provider} = createDataContext(
     exerciseReducer,
-    {fetchCalendarExercises, fetchGraphExercises, fetchExerciseFromDateStr, saveExercise},
+    {
+        fetchCalendarExercises, 
+        fetchGraphExercises, 
+        fetchExerciseFromDateStr, 
+        saveExercise,
+        updateSelectedDate
+    },
     {
         selectedDate: defaultDate, 
         calendarExercises: null, 
