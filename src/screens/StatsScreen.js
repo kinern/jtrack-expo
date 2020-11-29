@@ -21,16 +21,34 @@ const StatsScreen = () =>{
         fetchGraphExercises(newDate);
     }
 
+    const isTodayAfterSelected = () => {
+        const today = new Date();
+        const selectedMonth = ('0' + (selectedDate.getMonth()+1)).slice(-2);
+        const selectedComp = selectedDate.getFullYear().toString() + selectedMonth.toString();
+        const todayMonth = ('0' + (today.getMonth()+1)).slice(-2);
+        const todayComp = today.getFullYear().toString() + todayMonth;
+        return (selectedComp >= todayComp);
+    }
+
     const renderArrowButton = (direction) => {
         const path = (direction === 'left')? "angle-double-left" : "angle-double-right";
         const monthDiff = (direction === 'left')? -1 : 1;
+
+        if ((direction === 'right') && isTodayAfterSelected()){
+            return (
+                <div style={{paddingLeft: 20, paddingRight: 20}} >
+                    <Icon name={path} size={30} color="lightgray" />
+                </div>
+            );
+        }
+
         return (
-        <TouchableOpacity
-        style={styles.arrowbtn}
-        onPress={()=>changeMonth(monthDiff)}
-        >
-            <Icon name={path} size={30} color="gray" />
-        </TouchableOpacity>
+            <TouchableOpacity
+            style={styles.arrowbtn}
+            onPress={()=>changeMonth(monthDiff)}
+            >
+                <Icon name={path} size={30} color="gray" />
+            </TouchableOpacity>
         );
     }
 
