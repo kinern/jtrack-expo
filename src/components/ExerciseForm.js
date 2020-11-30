@@ -4,17 +4,21 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 import {Text, Input, Button} from 'react-native-elements';
 
 
-const ExerciseForm = ({date, callback}) =>{
-    //Navigator getParams('date') to get clicked on date
-    const {state, saveExercise} = useContext(ExerciseContext);
-    const [minutes, setMinutes] = useState(state.exercise.time);
+const ExerciseForm = ({date, callback}) => {
+
+    const {saveExercise} = useContext(ExerciseContext);
+    const [newMinutes, setMinutes] = useState(date.minutes);
+
+    const submitForm = () => {
+        saveExercise(date.date, newMinutes, callback);
+    }
 
     return (
         <View style={styles.container}>
-            <Text h3>{date}</Text>
+            <Text h3>{date.date}</Text>
             <Text>How many minutes did you exercise today?</Text>
-            <Input value={minutes} onChangeText={setMinutes}/>
-            <Button title="Submit" onPress={()=>{saveExercise(date, minutes, callback)}} />
+            <Input value={newMinutes} onChangeText={setMinutes}/>
+            <Button title="Submit" onPress={()=>{submitForm()}} />
         </View>
     );
 }

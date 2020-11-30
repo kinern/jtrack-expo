@@ -10,11 +10,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const WeatherBox = () => {
 
     const {state, fetchWeather} = useContext(WeatherContext);
-    const {fetchExercise} = useContext(ExerciseContext);
     const {weather, setWeather} = useState({});
     const [toggle, setToggle] = useState(false);
     const [err, setErr] = useState('');
-
 
     useEffect(()=>{
         (async () => {
@@ -50,7 +48,6 @@ const WeatherBox = () => {
             </View>
         );
     }
-
 
     const toggleBox = () =>{
         setToggle((toggle)? false : true);
@@ -97,14 +94,17 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     openContainer: {
+        position: 'absolute',
+        zIndex: 100,
         borderWidth: 1,
         borderColor: 'lightgray',
         borderRadius: 10,
+        height: 200,
         width: '98%',
+        marginTop: 50,
         marginLeft: '1%',
         marginRight: '1%',
         padding: 5,
-        margin: 10,
         backgroundColor: '#fff',
         elevation: 2,
     },

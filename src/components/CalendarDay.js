@@ -6,7 +6,6 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 
 const CalendarDay = ({date, marking, navigation}) =>{
 
-    const {fetchExerciseFromDateStr} = useContext(ExerciseContext);
     const {day, month, year} = date;
     const datestr = year + "-" + ("0" + (month)).slice(-2) + "-" + ("0" + day).slice(-2);
     const todayDate = getTodayDate();
@@ -38,8 +37,8 @@ const CalendarDay = ({date, marking, navigation}) =>{
 
     const onDayPress = () => {
         if (todayDate >= datestr){
-            fetchExerciseFromDateStr(datestr);
-            navigation.navigate('AddExercise', {date:datestr});
+            const minutes = parseInt(marking.minutes);
+            navigation.navigate('AddExercise', {date:{date: datestr, minutes: minutes}});
         } else {
             alert(
                 'Cannot enter time for future dates.',

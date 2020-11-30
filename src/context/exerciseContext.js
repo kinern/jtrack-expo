@@ -1,11 +1,12 @@
 import createDataContext from './createDataContext';
 import {
     fetchExercises as DBfetchExercises,
-    saveExercise as DBSaveExercise,
-    fetchExercise as DBFetchExercise
+    saveExercise as DBSaveExercise
 } from '../api/database';
 
 import testExerciseData from '../testExerciseData';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const exerciseReducer = (state, action)=>{
     switch(action.type){
@@ -26,13 +27,25 @@ const exerciseReducer = (state, action)=>{
     }
 };
 
+
+//Default state.selectedDate value.
+const defaultDate = new Date();
+
+
+//Changes the selectedDate state variable by a given amount of months.
+const updateSelectedDate = dispatch => async (date, numOfMonths) => {
+    date.setMonth(date.getMonth() + numOfMonths);
+    dispatch({type: 'update_selected_date', payload: date});
+}
+
+
 //Get exercises data for calendar screen.
 const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
 
     try {
-        //let results = DBfetchExercises(startDate, endDate);
-        let results = testExerciseData;
-        
+        let results = DBfetchExercises(startDate);
+        results = testExerciseData;
+
         const exercisesObj = {};
         results.map((item)=>{
             let date = item.date.slice(0, -9);
@@ -42,20 +55,17 @@ const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
     } catch (err){
         dispatch({type: 'error', payload: 'Fetch Calendar Data Failed.'});
     }
+
 };
 
-//Changes the selectedDate state variable by a given amount of months.
-const updateSelectedDate = dispatch => async (date, numOfMonths) => {
-    date.setMonth(date.getMonth() + numOfMonths);
-    dispatch({type: 'update_selected_date', payload: date});
-}
 
 //Graph Screen Exercises
 const fetchGraphExercises = dispatch => async (startDate) =>{
 
     try{
-        //let results = DBfetchExercises(startDate, endDate);
-        let results = testExerciseData;
+        let results = DBfetchExercises(startDate);
+        console.log(results);
+        results = testExerciseData;
 
         //Formatting database results to work wth line graph component.
         const resultsObj = {};
@@ -90,10 +100,29 @@ const fetchGraphExercises = dispatch => async (startDate) =>{
 
 };
 
+
+//Saves a single exercise record to the database. 
+const saveExercise = dispatch => async (date, minutes, callback) => {
+    
+    try {
+        date = new Date(date);
+        const saved = await DBSaveExercise(date, minutes);
+        const results = await DBfetchExercises(date);
+        dispatch({type: 'exercise_saved', payload: result});
+    } catch(err) {
+        dispatch({type: 'error', payload: 'Save Failed.'});
+    }
+    
+    //Navigation related callback function to return from exercise form to calendar screen.
+    callback();
+};
+
+
 //Helper function to get number of days in the month.
 function getDaysInMonth (month, year) {
     return new Date(year, month, 0).getDate();
 };
+
 
 //Helper function to convert a SQL DATETIME string to Javascript DateTime object.
 const SQLDateToJSDate = (sqldate) => {
@@ -102,40 +131,12 @@ const SQLDateToJSDate = (sqldate) => {
     return d;
 };
 
-//Returns exercise info given a date.
-const fetchExerciseFromDateStr = dispatch => async (date) => {
-    try{
-        //const result = await DBfetchExercise(date);
-        //let exercise = result.rows[0];
-        //let convertedDate = SQLDateToJSDate(results.rows[0].item.date);
-        let exercise = {time: 10, date: '2020-11-25 00:00:00'};
-        dispatch({type: 'fetch_exercise', payload: exercise});
-    } catch (err){
-        dispatch({type: 'error', payload: 'Fetch Failed.'});
-    }
-};
-
-const saveExercise = dispatch => async (date, minutes, callback) => {
-    try {
-        const result = await DBSaveExercise(date, minutes);
-        console.log('saved exercise:', date, minutes);
-        dispatch({type: 'exercise_saved', payload: result});
-    } catch(err) {
-        dispatch({type: 'error', payload: 'Save Failed.'});
-    }
-   callback();
-};
-
-
-
-const defaultDate = new Date();
 
 export const {Context, Provider} = createDataContext(
     exerciseReducer,
     {
         fetchCalendarExercises, 
         fetchGraphExercises, 
-        fetchExerciseFromDateStr, 
         saveExercise,
         updateSelectedDate
     },

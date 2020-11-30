@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import { LineChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
 import * as scale from 'd3-scale'
 
@@ -12,8 +12,9 @@ const LineGraph = ({data}) => {
 
     const renderGraph = () => {
         return (
-            <View style={{padding: 30}}>
-            <View style={{ height: 200, flexDirection: 'row' }}>
+            <ScrollView style={styles.scrollview} horizontal={true} persistentScrollbar={true}>
+            <View style={{width: 1000, padding: 30}}>
+            <View style={{height: 200, flexDirection: 'row' }}>
                 <YAxis
                     data={data.map(item=>item.time)}
                     contentInset={contentInset}
@@ -42,6 +43,7 @@ const LineGraph = ({data}) => {
             svg={{ fontSize: 10, fill: 'gray' }}
         />
         </View>
+        </ScrollView>
         );
     }
 
@@ -52,6 +54,9 @@ const LineGraph = ({data}) => {
         </React.Fragment>
     );
 }
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    scrollview: {
+    }
+});
 
 export default LineGraph;

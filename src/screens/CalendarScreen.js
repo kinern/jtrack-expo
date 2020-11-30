@@ -3,7 +3,7 @@ import {View, StyleSheet, Text} from 'react-native';
 import WeatherBox from '../components/WeatherBox';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
-//import {setupDatabase} from '../api/database';
+import {setupDatabase} from '../api/database';
 
 
 const CalendarScreen = ({navigation}) =>{
@@ -13,7 +13,7 @@ const CalendarScreen = ({navigation}) =>{
 
     //Since Calendar is the default screen, fetch initial database data.
     useEffect(()=>{
-        //setupDatabase();
+        setupDatabase();
         fetchCalendarExercises(startMonth);
         fetchGraphExercises(startMonth);
     }, []);

@@ -36,9 +36,9 @@ const StatsScreen = () =>{
 
         if ((direction === 'right') && isTodayAfterSelected()){
             return (
-                <div style={{paddingLeft: 20, paddingRight: 20}} >
+                <View style={{paddingLeft: 20, paddingRight: 20}} >
                     <Icon name={path} size={30} color="lightgray" />
-                </div>
+                </View>
             );
         }
 
@@ -61,6 +61,11 @@ const StatsScreen = () =>{
                 {renderArrowButton('right')}
             </View>
             <LineGraph data={state.graphExercises} />
+            <View style={styles.swipeTextView}>
+                <Icon name="angle-double-left" size={24} color="gray" />
+                <Text style={styles.swipeText}>Swipe To Scroll Graph</Text>
+                <Icon name="angle-double-right" size={24} color="gray" />
+            </View>
         </View>
     );
 }
@@ -75,6 +80,19 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: 'gray',
         alignSelf: 'center'
+    },
+    swipeTextView: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    swipeText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: 'gray',
+        marginRight:10,
+        marginLeft: 10
     },
     arrowbtn: {
         paddingRight: 20, 
