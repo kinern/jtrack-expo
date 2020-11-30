@@ -1,5 +1,5 @@
 # jtrack-expo
-Expo version of Jtrack, a React Native exercise application
+An Exercise Tracking App Using React Native, SQLite, And Expo
 --- 
 ## Screens
 
