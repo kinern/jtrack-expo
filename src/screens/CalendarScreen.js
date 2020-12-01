@@ -15,7 +15,6 @@ const CalendarScreen = ({navigation}) =>{
     //Since Calendar is the default screen, fetch initial database data.
     useEffect(()=>{
         fullySetupDatabase();
-
     }, []);
 
     const db = new DB();

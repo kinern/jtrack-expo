@@ -1,49 +1,78 @@
-import React, {useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {Text} from 'react-native-elements';
-import {Context as WeatherContext} from '../context/weatherContext';
-import * as Location from 'expo-location';
+import {Context as ExerciseContext} from '../context/exerciseContext';
 
 
 const OptionsScreen = () =>{
 
-    const {state, setDegrees, fetchWeather} = useContext(WeatherContext);
-    const selectedFStyle = (state.degrees == 'metric')? null : {backgroundColor:'red'};
-    const selectedCStyle = (state.degrees == 'metric')? {backgroundColor:'teal'}: null;
+    const { 
+        state, 
+        clearDatabase, 
+        insertTestData,
+        fetchCalendarExercises,
+        fetchGraphExercises
+    } = useContext(ExerciseContext);
+    const [exercises, setExercises] = useState(null);
 
-    const updateDegrees = async (name) =>{
-        setDegrees(name);
-        const loc = await Location.getCurrentPositionAsync();
-        const {latitude, longitude } = loc.coords;
-        fetchWeather(latitude, longitude);
+    const confirmChange = (callback, type) => {
+        const title = (type=="clear")? "Clearing Data" : "Adding Test Data";
+        const message = (type=="clear")? "This will clear the database. Continue?": "This will alter current data. Continue?";
+        Alert.alert(
+            title,
+            message,
+            [
+                {
+                text: "Cancel",
+                style: "cancel"
+                },
+                { text: "OK", onPress: () => {callback()} }
+            ]
+        );
     }
 
-    const renderDegreeToggle = () =>{
-        return (
-            <View style={{flexDirection:'row' }}>
-                <TouchableOpacity 
-                onPress={()=>{updateDegrees('metric')}}
-                style={[styles.degreeBtnC, selectedCStyle]}>
-                    <Text style={styles.btnText}>C</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                onPress={()=>{updateDegrees('imperial')}}
-                style={[styles.degreeBtnF, selectedFStyle]}>
-                    <Text style={styles.btnText}>F</Text>
-                </TouchableOpacity>
-            </View> 
-        );
+    const clearData = async () => {
+        try{
+            const result = await clearDatabase();
+            Alert.alert("Database has been cleared.");
+            reloadData();
+        } catch(err){
+            console.log(err);
+        }
+
+    }
+
+    const addTestData = async () => {
+        try{
+            const result = await insertTestData();
+            Alert.alert("Test data has been added.");
+            reloadData();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const reloadData = async () => {
+        try {
+            await fetchGraphExercises(state.selectedDate);
+            await fetchCalendarExercises(state.selectedDate);
+        } catch (err){
+            console.log(err);
+        }
     }
 
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Options</Text>
-            <View style={styles.degreeMenu}>
-                <Text h4>Weather Degrees</Text>
-                {renderDegreeToggle()}
-            </View>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity 
+            onPress={()=>{confirmChange(clearData, "clear")}}
+            style={styles.btn}>
                 <Text style={styles.btnText}>Clear Data</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+            onPress={()=>{confirmChange(addTestData, "add")}}
+            style={styles.btn}>
+                <Text style={styles.btnText}>Add Test Data</Text>
             </TouchableOpacity>
         </View>
     );

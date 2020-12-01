@@ -22,11 +22,7 @@ export default class DB{
                           'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
                           ,[]
                           ,(txn, results)=>{
-                            txn.executeSql( testTableInserts
-                                ,[]
-                                ,(txn, result)=>{resolve('setup and inserts completed')}
-                                ,(txn, err)=>{reject(err)}
-                            );
+                              resolve('setup and inserts completed');
                           }
                           ,(txn, err)=>{reject(err)}
                         );
@@ -74,10 +70,76 @@ export default class DB{
         });
     }
 
-    saveExercise  (date, time) {
-
+    //Get single exercise record given a date.
+    fetchExercise (date) {
         const sqlDate = this.dateTimeToSQLString(date);
-    
+        return new Promise((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql(
+                        'SELECT * FROM exercises WHERE date = ?'
+                        [sqlDate]
+                        ,(txn, res)=>{
+                            const foundDate = {date: date, time: "0"};
+                            if (res.rows.length > 0){
+                                const firstRow = res.rows.item(0);
+                                foundDate = {date: date, time: firstRow.time};
+                            }
+                            resolve(foundDate);
+                        }
+                        ,(txn, err)=>{
+                            reject(err);
+                        }
+                    );
+                }, 
+                (err)=>{console.log(err)}, 
+                ()=>{console.log('fetch transaction success callback')}
+            );
+        });
+    }
+
+    clearDatabaseData () {
+        console.log('clear database data');
+        return new Promise((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql('DROP TABLE IF EXISTS exercises');
+                    txn.executeSql(
+                        'CREATE TABLE IF NOT EXISTS exercises (id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
+                        ,[]
+                        ,(txn, results)=>{
+                            resolve('cleared');
+                        }
+                        ,(txn, err)=>{reject(err)}
+                    );
+                },
+                (err)=>{console.log(err)}, 
+                ()=>{console.log('drop/create transaction success callback')}
+            );
+        });
+    }
+
+    insertTestData () {
+        return new Promise((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql( 
+                        testTableInserts
+                        ,[]
+                        ,(txn, results)=>{
+                            resolve('added test records');
+                        }
+                        ,(txn, err)=>{reject(err)}
+                    );
+                },
+                (err)=>{console.log(err)}, 
+                ()=>{console.log('insert transaction success callback')}
+            );
+        });
+    }
+
+    saveExercise  (date, time) {
+        const sqlDate = this.dateTimeToSQLString(date);
         return new Promise((resolve)=>{ 
             this.db.transaction(
                 txn => {

@@ -15,6 +15,8 @@ const exerciseReducer = (state, action)=>{
             return {...state, exercise: action.payload};
         case 'save_exercise':
             return state;
+        case 'cleared_data':
+            return state;
         case 'update_selected_date':
             return {...state, selectedDate: action.payload};
         case 'error':
@@ -98,7 +100,7 @@ const fetchGraphExercises = dispatch => (startDate) =>{
 
 
 //Saves a single exercise record to the database. 
-const saveExercise = dispatch => async (date, minutes, callback) => {
+const saveExercise = dispatch => (date, minutes, callback) => {
 
     date = new Date(date);
     db.saveExercise(date, minutes).then((saved)=>{
@@ -112,6 +114,28 @@ const saveExercise = dispatch => async (date, minutes, callback) => {
         callback();
     });
 };
+
+const clearDatabase = dispatch => () => {
+    console.log('clear exercise context');
+    db.clearDatabaseData()
+    .then((results)=>{
+        dispatch({type: 'cleared_data', payload: results});
+    }).catch((err)=>{
+        console.log(err);
+        dispatch({type: 'error', payload: 'Clear Failed.'});
+    });
+}
+
+const insertTestData = dispatch => () => {
+    console.log('insert test data context');
+    db.insertTestData()
+    .then((results)=>{
+        dispatch({type: 'exercise_saved', payload: results});
+    }).catch((err)=>{
+        console.log(err);
+        dispatch({type: 'error', payload: 'Insert Failed.'});
+    });
+}
 
 
 //Helper function to get number of days in the month.
@@ -134,7 +158,9 @@ export const {Context, Provider} = createDataContext(
         fetchCalendarExercises, 
         fetchGraphExercises, 
         saveExercise,
-        updateSelectedDate
+        updateSelectedDate,
+        clearDatabase,
+        insertTestData
     },
     {
         selectedDate: defaultDate, 
