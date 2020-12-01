@@ -1,5 +1,5 @@
 # jtrack-expo
-Expo version of Jtrack, a React Native exercise application
+An Exercise Tracking App Using React Native, SQLite, And Expo
 --- 
 ## Screens
 
@@ -10,6 +10,7 @@ Expo version of Jtrack, a React Native exercise application
 
 #### Statistics
 - Line graph for recorded times
+- Horizontal scroll to view whole month
 
 ## In Progress / Features To Add
 - Timer for record/add to time for current day
@@ -20,7 +21,15 @@ Expo version of Jtrack, a React Native exercise application
 
 ## Images
 
-#### To Be Added
+#### Calendar Screen
+
+<p float="left">
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/calendar_screen.png?raw=true" alt="calendar screen"/>
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/calendar_screen_toggle.png?raw=true" alt="calendar screen"/>
+</p>
+
+#### Statistics Screen
+
 
 ## How to use
 
