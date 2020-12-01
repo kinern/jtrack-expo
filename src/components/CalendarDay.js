@@ -37,7 +37,7 @@ const CalendarDay = ({date, marking, navigation}) =>{
 
     const onDayPress = () => {
         if (todayDate >= datestr){
-            const minutes = parseInt(marking.minutes);
+            const minutes = (marking.minutes)? marking.minutes.toString() : "0";
             navigation.navigate('AddExercise', {date:{date: datestr, minutes: minutes}});
         } else {
             alert(

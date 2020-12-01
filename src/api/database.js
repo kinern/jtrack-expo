@@ -16,7 +16,7 @@ export default class DB{
                     "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
                     [],
                     function(txn, res) {
-                      if (res.rows.length != 0) {
+                      if (res.rows.length == 0) {
                         txn.executeSql('DROP TABLE IF EXISTS exercises', []);
                         txn.executeSql(
                           'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
@@ -76,7 +76,6 @@ export default class DB{
 
     saveExercise  (date, time) {
 
-        const results = [];
         const sqlDate = this.dateTimeToSQLString(date);
     
         return new Promise((resolve)=>{ 
@@ -84,24 +83,38 @@ export default class DB{
                 txn => {
                     //Check if record exists for date
                     txn.executeSql(
-                        'SELECT * FROM exercises WHERE date = ?;',
-                        [date],
+                        'SELECT * FROM exercises WHERE date = ?',
+                        [sqlDate],
                         (tx, res) => {
                             if (res.rows.length == 0){
                                 //Add new record
                                 tx.executeSql(
-                                    'INSERT INTO exercises (time, date) VALUES (?,?);'
-                                ,[time, sqlDate]);
+                                    'INSERT INTO exercises (time, date) VALUES (?,?)'
+                                ,[time, sqlDate],
+                                (txn, res)=>{
+                                    resolve('inserted');
+                                },
+                                (txn, err)=>{
+                                    reject(err);
+                                });
                             } else {
                                 //Update existing record
                                 tx.executeSql(
-                                    'UPDATE exercises SET time = ? WHERE date = ?;'
-                                ,[time, sqlDate]);
+                                    'UPDATE exercises SET time = ? WHERE date = ?'
+                                ,[time, sqlDate], 
+                                (txn, res)=>{
+                                    resolve('updated');
+                                },
+                                (txn, err)=>{
+                                    reject(err);
+                                });
                             }
-                            resolve(fetchExercises(date));
                         }
                     );
-            });
+                },
+                (err)=>{console.log(err)}, 
+                ()=>{console.log('fetch transaction success callback')}
+            );
         });
     }
 

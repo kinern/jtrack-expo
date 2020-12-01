@@ -5,7 +5,7 @@ import {Text, Input, Button} from 'react-native-elements';
 
 
 const ExerciseForm = ({date, callback}) => {
-
+    
     const {saveExercise} = useContext(ExerciseContext);
     const [newMinutes, setMinutes] = useState(date.minutes);
 

@@ -61,8 +61,6 @@ const fetchGraphExercises = dispatch => (startDate) =>{
 
     db.fetchExercises(startDate)
     .then((results)=>{
-        console.log('results-g:', results);
-
         //Formatting database results to work wth line graph component.
         const resultsObj = {};
         results.map((item)=>{
@@ -101,19 +99,18 @@ const fetchGraphExercises = dispatch => (startDate) =>{
 
 //Saves a single exercise record to the database. 
 const saveExercise = dispatch => async (date, minutes, callback) => {
-    
-    try {
-        date = new Date(date);
-        const saved = await db.saveExercise(date, minutes);
-        const results = await db.fetchExercises(date);
-        dispatch({type: 'exercise_saved', payload: result});
-    } catch(err) {
+
+    date = new Date(date);
+    db.saveExercise(date, minutes).then((saved)=>{
+        return db.fetchExercises(date);
+    }).then((results)=>{
+        dispatch({type: 'exercise_saved', payload: results});
+        callback();
+    }).catch((err)=>{
         console.log(err);
         dispatch({type: 'error', payload: 'Save Failed.'});
-    }
-    
-    //Navigation related callback function to return from exercise form to calendar screen.
-    callback();
+        callback();
+    });
 };
 
 
