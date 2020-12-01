@@ -8,7 +8,12 @@ import DB from '../api/database';
 
 const CalendarScreen = ({navigation}) =>{
 
-    const {state, fetchCalendarExercises, fetchGraphExercises} = useContext(ExerciseContext);
+    const {
+        state, 
+        fetchCalendarExercises, 
+        fetchGraphExercises, 
+        fetchTodayExercise
+    } = useContext(ExerciseContext);
     const [modalVisible, setModalVisible] = useState(false);
     const startMonth = new Date();
 
@@ -20,14 +25,18 @@ const CalendarScreen = ({navigation}) =>{
     const db = new DB();
 
     const fullySetupDatabase = () => {
+        
         db.setupDatabase()
         .then((res)=>{
             return fetchCalendarExercises(startMonth);
         })
         .then((res)=>{
             return fetchGraphExercises(startMonth);
+        }).then(()=>{
+            //return fetchTodayExercise();
         })
         .catch((err)=>{console.log('err:', err)});
+        
     }
 
     const renderModalButton = () => {

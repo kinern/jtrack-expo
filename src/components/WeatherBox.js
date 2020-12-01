@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const WeatherBox = ({modalVisible, changeModalVisible}) => {
 
     const {state: weatherState, fetchWeather} = useContext(WeatherContext);
-    //const {state: exerciseState} = useContext(ExerciseContext);
+    const {state: exerciseState} = useContext(ExerciseContext);
     const {weather, setWeather} = useState({});
     const [err, setErr] = useState('');
 
@@ -69,7 +69,7 @@ const WeatherBox = ({modalVisible, changeModalVisible}) => {
                     </TouchableOpacity>
                     <Text style={[styles.openTitle, {fontSize:18}]}>Today's Exercise Time</Text>
                     
-                    <Text style={styles.exerciseTime}>10min</Text>
+                    <Text style={styles.exerciseTime}>{exerciseState.todayExercise.time}</Text>
                     {renderWeather()}
                 </View>
             </View>

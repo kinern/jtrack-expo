@@ -77,11 +77,11 @@ export default class DB{
             this.db.transaction(
                 txn => {
                     txn.executeSql(
-                        'SELECT * FROM exercises WHERE date = ?'
-                        [sqlDate]
+                        'SELECT * FROM exercises WHERE date = ? LIMIT 1'
+                        ,[sqlDate]
                         ,(txn, res)=>{
                             const foundDate = {date: date, time: "0"};
-                            if (res.rows.length > 0){
+                            if (res.rows.length != 0){
                                 const firstRow = res.rows.item(0);
                                 foundDate = {date: date, time: firstRow.time};
                             }
@@ -93,7 +93,7 @@ export default class DB{
                     );
                 }, 
                 (err)=>{console.log(err)}, 
-                ()=>{console.log('fetch transaction success callback')}
+                ()=>{console.log('fetchExercise transaction success callback')}
             );
         });
     }

@@ -19,6 +19,8 @@ const exerciseReducer = (state, action)=>{
             return state;
         case 'update_selected_date':
             return {...state, selectedDate: action.payload};
+        case 'fetch_today_exercise':
+            return {...state, todayExercise: action.payload};
         case 'error':
             return {...state, error:action.payload}; 
         default:
@@ -116,7 +118,6 @@ const saveExercise = dispatch => (date, minutes, callback) => {
 };
 
 const clearDatabase = dispatch => () => {
-    console.log('clear exercise context');
     db.clearDatabaseData()
     .then((results)=>{
         dispatch({type: 'cleared_data', payload: results});
@@ -127,13 +128,22 @@ const clearDatabase = dispatch => () => {
 }
 
 const insertTestData = dispatch => () => {
-    console.log('insert test data context');
     db.insertTestData()
     .then((results)=>{
         dispatch({type: 'exercise_saved', payload: results});
     }).catch((err)=>{
         console.log(err);
         dispatch({type: 'error', payload: 'Insert Failed.'});
+    });
+}
+
+const fetchTodayExercise = dispatch => () => {
+    const today = new Date();
+    db.fetchExercise(today).then((result)=>{
+        dispatch({type: 'fetch_today_exercise', payload: result});
+    }).catch((err)=>{
+        console.log('Error occured:', err);
+        dispatch({type: 'error', payload: 'Fetch Failed.'});
     });
 }
 
@@ -160,12 +170,13 @@ export const {Context, Provider} = createDataContext(
         saveExercise,
         updateSelectedDate,
         clearDatabase,
-        insertTestData
+        insertTestData,
+        fetchTodayExercise
     },
     {
         selectedDate: defaultDate, 
         calendarExercises: null, 
         graphExercises: null, 
-        exercise: {time: 0, date: '2020-01-01 00:00:00'}
+        todayExercise: {time: 0, date: '2020-01-01 00:00:00'}
     }
 );

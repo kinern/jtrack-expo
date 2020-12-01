@@ -13,7 +13,7 @@ const CalendarDay = ({date, marking, navigation}) =>{
     const getHeartImage = () => {
         const minutes = parseInt(marking.minutes);
     
-        if (minutes < 10 ) {
+        if (minutes > 0 && minutes < 10 ) {
           return require('../assets/images/calendar/star1.png');
         } else if (minutes < 20 ) {
           return require('../assets/images/calendar/star2.png');

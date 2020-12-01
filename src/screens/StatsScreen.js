@@ -11,9 +11,9 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 const StatsScreen = () =>{
 
+    const {state, fetchGraphExercises} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
-    const {state, fetchGraphExercises} = useContext(ExerciseContext);
 
     const changeMonth = (amount) => { 
         let newDate = new Date(selectedDate.setMonth(selectedDate.getMonth() + amount));
