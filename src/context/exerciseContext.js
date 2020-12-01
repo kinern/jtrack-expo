@@ -1,12 +1,9 @@
 import createDataContext from './createDataContext';
-import {
-    fetchExercises as DBfetchExercises,
-    saveExercise as DBSaveExercise
-} from '../api/database';
+import DB from '../api/database';
 
 import testExerciseData from '../testExerciseData';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
+const db = new DB();
 
 const exerciseReducer = (state, action)=>{
     switch(action.type){
@@ -33,39 +30,38 @@ const defaultDate = new Date();
 
 
 //Changes the selectedDate state variable by a given amount of months.
-const updateSelectedDate = dispatch => async (date, numOfMonths) => {
+const updateSelectedDate = dispatch => (date, numOfMonths) => {
     date.setMonth(date.getMonth() + numOfMonths);
     dispatch({type: 'update_selected_date', payload: date});
 }
 
 
 //Get exercises data for calendar screen.
-const fetchCalendarExercises = dispatch => async (startDate, endDate) =>{
+const fetchCalendarExercises = dispatch => (startDate) =>{
 
-    try {
-        let results = DBfetchExercises(startDate);
-        results = testExerciseData;
-
+    db.fetchExercises(startDate)
+    .then((results)=>{
         const exercisesObj = {};
         results.map((item)=>{
             let date = item.date.slice(0, -9);
             exercisesObj[date] = {marked: true, minutes: item.time};
         }); 
         dispatch({type:'fetch_calendar_ex', payload: exercisesObj});
-    } catch (err){
+    })
+    .catch((err)=>{
+        console.log(err);
         dispatch({type: 'error', payload: 'Fetch Calendar Data Failed.'});
-    }
+    });
 
 };
 
 
 //Graph Screen Exercises
-const fetchGraphExercises = dispatch => async (startDate) =>{
+const fetchGraphExercises = dispatch => (startDate) =>{
 
-    try{
-        let results = DBfetchExercises(startDate);
-        console.log(results);
-        results = testExerciseData;
+    db.fetchExercises(startDate)
+    .then((results)=>{
+        console.log('results-g:', results);
 
         //Formatting database results to work wth line graph component.
         const resultsObj = {};
@@ -94,9 +90,11 @@ const fetchGraphExercises = dispatch => async (startDate) =>{
         }
 
         dispatch({type:'fetch_graph_ex', payload: resultsArray});
-    } catch (err){
+    })
+    .catch((err)=>{
+        console.log(err);
         dispatch({type: 'error', payload: 'Fetch Graph Data Failed.'});
-    }
+    });
 
 };
 
@@ -106,10 +104,11 @@ const saveExercise = dispatch => async (date, minutes, callback) => {
     
     try {
         date = new Date(date);
-        const saved = await DBSaveExercise(date, minutes);
-        const results = await DBfetchExercises(date);
+        const saved = await db.saveExercise(date, minutes);
+        const results = await db.fetchExercises(date);
         dispatch({type: 'exercise_saved', payload: result});
     } catch(err) {
+        console.log(err);
         dispatch({type: 'error', payload: 'Save Failed.'});
     }
     

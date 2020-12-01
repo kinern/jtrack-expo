@@ -3,20 +3,33 @@ import {View, StyleSheet, Text} from 'react-native';
 import WeatherBox from '../components/WeatherBox';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
-import {setupDatabase} from '../api/database';
+import DB from '../api/database';
 
 
 const CalendarScreen = ({navigation}) =>{
 
-    const {fetchCalendarExercises, fetchGraphExercises} = useContext(ExerciseContext);
+    const {state, fetchCalendarExercises, fetchGraphExercises} = useContext(ExerciseContext);
     const startMonth = new Date();
 
     //Since Calendar is the default screen, fetch initial database data.
     useEffect(()=>{
-        setupDatabase();
-        fetchCalendarExercises(startMonth);
-        fetchGraphExercises(startMonth);
+        fullySetupDatabase();
+
     }, []);
+
+    const db = new DB();
+
+    const fullySetupDatabase = () => {
+        db.setupDatabase()
+        .then((res)=>{
+            return fetchCalendarExercises(startMonth);
+        })
+        .then((res)=>{
+            return fetchGraphExercises(startMonth);
+        })
+        .catch((err)=>{console.log('err2:', err)});
+    }
+    
 
     return (
         <View style={styles.main}>

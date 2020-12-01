@@ -37,8 +37,6 @@ const switchNavigator = createSwitchNavigator({
 
 const App = createAppContainer(switchNavigator);
 
-
-
 export default () =>{
   return (
     <ExerciseProvider>

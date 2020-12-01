@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Calendar = ({navigation}) =>{
 
-  const { state, updateSelectedDate } = useContext(ExerciseContext);
+  const { state, updateSelectedDate, fetchCalendarExercises } = useContext(ExerciseContext);
 
   const renderArrowButton = (direction) => {
     const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
@@ -25,6 +25,7 @@ const Calendar = ({navigation}) =>{
       return;
     }
     updateSelectedDate(state.selectedDate, amount);
+    fetchCalendarExercises(state.selectedDate);
     changeMonth();
   }
 

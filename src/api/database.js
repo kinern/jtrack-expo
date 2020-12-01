@@ -1,109 +1,117 @@
 import * as SQLite from 'expo-sqlite';
 import testTableInserts from '../testTableInserts';
 
-export const setupDatabase = async () => {
+const database_name = 'jtrack.db';
 
-    const db = SQLite.openDatabase({ name: 'jtrack.db' });
-
-    try{
-        console.log('before transaction');
-        console.log(db.transaction);
-        db.transcation(
-            tx => {
-                console.log('tx:', tx);
-                console.log('transaction started...');
-                //Clear old data.
-                tx.executeSql('DROP TABLE IF EXISTS exercises', []);
-                //Create new database.
-                tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS exercises( '+
-                    'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-                    'time INT(10), ' + 
-                    'date DATETIME, '+
-                    ')', 
-                    []
-                );
-                //Test data for exercise table.
-                tx.executeSql( testTableInserts );
-            }
-        );
-    } catch (err) {
-        console.log('dbsetup error:', err);
-        return 'db.transaction failed';
+export default class DB{
+    constructor(){
+        this.db = SQLite.openDatabase(database_name);
     }
-};
 
-export const fetchExercises = async (startDate) => {
+    setupDatabase = async () => {
 
-    const db = SQLite.openDatabase({ name: 'jtrack.db' });
-    let results;
-
-    //Ensures starting data for selection is first day of month.
-    startDate.setDate(1);
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth()+1, 0);
-    const startDateStr = dateTimeToSQLString(startDate);
-    const endDateStr = dateTimeToSQLString(endDate);
-
-    try {
-        await db.transcation(
-            function (t) {
-                t.executeSql(
-                    "SELECT time, date FROM sqlite_master WHERE type='table' AND name='exercises' WHERE date >= ? AND date <= ?",
-                    [startDateStr, endDateStr],
-                    function (tx, res){
-                        results = res.rows;
+        return new Promise((resolve, reject)=> {
+            this.db.transaction((txn) => {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
+                    [],
+                    function(txn, res) {
+                      if (res.rows.length != 0) {
+                        txn.executeSql('DROP TABLE IF EXISTS exercises', []);
+                        txn.executeSql(
+                          'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
+                          ,[]
+                          ,(txn, results)=>{
+                            txn.executeSql( testTableInserts
+                                ,[]
+                                ,(txn, result)=>{resolve('setup and inserts completed')}
+                                ,(txn, err)=>{reject(err)}
+                            );
+                          }
+                          ,(txn, err)=>{reject(err)}
+                        );
+                      } else {
+                          resolve("found exercise table.");
+                      }
+                    },
+                    (txn, err)=>{
+                        console.log(err);
                     }
                 );
-            }
-        , []);
-        return results;
-    } catch (err){
-        return 'db.transaction failed.';
+            });
+        }, (err)=>{console.log(err)}, ()=>{console.log('transaction success callback')});
     }
-};
 
-//Records new time and date for exercise.
-export const saveExercise = async (time, date) => {
+    fetchExercises (startDate)  {
 
-    const results = [];
-    const db = SQLite.openDatabase({ name: 'jtrack.db' });
-    const sqlDate = dateTimeToSQLString(date);
-
-    try {
-        await db.transaction(
-            function(t){
-                //Check if record exists for date
-                t.executeSql(
-                    "SELECT * FROM exercises WHERE date = ?",
-                    [date],
-                    function(tx, res){
-                        if (res.rows.length == 0){
-                            //Add new record
-                            tx.executeSql(
-                                "INSERT INTO exercises (time, date) VALUES (?,?)"
-                            ,[time, sqlDate]);
-                        } else {
-                            //Update existing record
-                            tx.executeSql(
-                                "UPDATE exercises SET time = ? WHERE date = ?"
-                            ,[time, sqlDate]);
+        //Ensures starting data for selection is first day of month.
+        startDate.setDate(1);
+        const endDate = new Date(startDate.getFullYear(), startDate.getMonth()+1, 0);
+        const startDateStr = this.dateTimeToSQLString(startDate);
+        const endDateStr = this.dateTimeToSQLString(endDate);
+    
+        return new Promise ((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql(
+                        'SELECT * FROM exercises WHERE date >= ? AND date <= ?',
+                        [startDateStr, endDateStr],
+                        (txn, results) => {
+                            let res = [];
+                            for (let i = 0; i < results.rows.length; i++){
+                                res.push({...results.rows.item(i)});
+                            }
+                            resolve(res);
+                        },
+                        (txn, err)=>{
+                            reject(err);
                         }
-                        results = fetchExercises(date);
-                    }
-                );
-            }
-        ,[]);
-        return results;
-    } catch (err) {
-        return 'db.transaction failed.';
+                    );
+                }, 
+                (err)=>{console.log(err)}, 
+                ()=>{console.log('fetch transaction success callback')}
+            );
+        });
     }
-};
 
-//Helper function to convert a Javascript DateTime object to a SQL DATETIME string.
-const dateTimeToSQLString = (date) => {
-    const pad = function(num) { return ('00'+num).slice(-2) };
-    return date.getUTCFullYear() + '-' + 
-        pad(date.getUTCMonth() + 1) + '-' + 
-        pad(date.getUTCDate()) + " 00:00:00";
-};
+    saveExercise  (date, time) {
 
+        const results = [];
+        const sqlDate = this.dateTimeToSQLString(date);
+    
+        return new Promise((resolve)=>{ 
+            this.db.transaction(
+                txn => {
+                    //Check if record exists for date
+                    txn.executeSql(
+                        'SELECT * FROM exercises WHERE date = ?;',
+                        [date],
+                        (tx, res) => {
+                            if (res.rows.length == 0){
+                                //Add new record
+                                tx.executeSql(
+                                    'INSERT INTO exercises (time, date) VALUES (?,?);'
+                                ,[time, sqlDate]);
+                            } else {
+                                //Update existing record
+                                tx.executeSql(
+                                    'UPDATE exercises SET time = ? WHERE date = ?;'
+                                ,[time, sqlDate]);
+                            }
+                            resolve(fetchExercises(date));
+                        }
+                    );
+            });
+        });
+    }
+
+    //Helper function to convert a Javascript DateTime object to a SQL DATETIME string.
+    dateTimeToSQLString (date) {
+        const pad = function(num) { return ('00'+num).slice(-2) };
+        return date.getUTCFullYear() + '-' + 
+            pad(date.getUTCMonth() + 1) + '-' + 
+            pad(date.getUTCDate()) + " 00:00:00";
+    }
+
+}
+ 
