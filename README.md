@@ -9,7 +9,7 @@ An Exercise Tracking App Using React Native, SQLite, And Expo
 - Local weather toggle menu using OpenWeatherAPI.
 - Clickable days on calendar to record time exercised.
 
-### Options Screen
+#### Options Screen
 - Option to clear all data from database.
 - Option to add test data to database.
 
