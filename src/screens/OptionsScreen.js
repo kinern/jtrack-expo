@@ -4,6 +4,11 @@ import {Text} from 'react-native-elements';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 
 
+/*
+Options Screen
+
+Has options to clear database and insert test data.
+*/
 const OptionsScreen = () =>{
 
     const { 
@@ -15,6 +20,8 @@ const OptionsScreen = () =>{
     } = useContext(ExerciseContext);
     const [exercises, setExercises] = useState(null);
 
+
+    //Confirmation box before making changes to database.
     const confirmChange = (callback, type) => {
         const title = (type=="clear")? "Clearing Data" : "Adding Test Data";
         const message = (type=="clear")? "This will clear the database. Continue?": "This will alter current data. Continue?";
@@ -31,6 +38,8 @@ const OptionsScreen = () =>{
         );
     }
 
+    
+    //Calls context function to clear data.
     const clearData = async () => {
         try{
             const result = await clearDatabase();
@@ -39,9 +48,10 @@ const OptionsScreen = () =>{
         } catch(err){
             console.log(err);
         }
-
     }
 
+
+    //Calls context function to add in test data.
     const addTestData = async () => {
         try{
             const result = await insertTestData();
@@ -52,6 +62,9 @@ const OptionsScreen = () =>{
         }
     }
 
+
+    //After change of data, update the graphExercises 
+    //and calendarExercises state values by calling context functions.
     const reloadData = async () => {
         try {
             await fetchGraphExercises(state.selectedDate);
@@ -60,6 +73,7 @@ const OptionsScreen = () =>{
             console.log(err);
         }
     }
+
 
     return (
         <View style={styles.container}>

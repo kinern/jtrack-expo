@@ -6,6 +6,12 @@ import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
+/*
+WeatherBox Component
+
+Displays modal box with the minutes exercised today, and the local weather.
+
+*/
 const WeatherBox = ({modalVisible, changeModalVisible}) => {
 
     const {state: weatherState, fetchWeather} = useContext(WeatherContext);

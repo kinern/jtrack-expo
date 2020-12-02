@@ -6,6 +6,17 @@ import { Context as ExerciseContext } from '../context/exerciseContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
+/*
+Calendar Component
+
+Displays a monthly calendar with month changing arrows.
+
+Uses CalendarDay component for displaying the days on the calendar and 
+onPress functionality.
+The navigation props variable is passed down to the CalendarDay component to be 
+used with the AddExerciseScreen component.
+
+*/
 const Calendar = ({navigation}) =>{
 
   const { state, updateSelectedDate, fetchCalendarExercises } = useContext(ExerciseContext);
@@ -20,6 +31,7 @@ const Calendar = ({navigation}) =>{
     );
   }
 
+
   const updateMonth = (changeMonth, amount) => {
     if ((amount == 1) && isTodayAfterSelected()){
       return;
@@ -28,6 +40,7 @@ const Calendar = ({navigation}) =>{
     fetchCalendarExercises(state.selectedDate);
     changeMonth();
   }
+
 
   //Compare today to state.selectedDate
   const isTodayAfterSelected = () => {
@@ -39,13 +52,15 @@ const Calendar = ({navigation}) =>{
     return (selectedComp >= todayComp);
   }
 
+
   const formatSelectedDate = (date) => {
     let month = String(date.getMonth()+1).padStart(2, '0');
     let day = String(date.getDate()).padStart(2, '0');
     let year = date.getFullYear();
     return (year +'-'+ month +'-'+ day);
-};
+  };
 
+  
   return (
     <ReactCalendar 
     style={styles.calendar}

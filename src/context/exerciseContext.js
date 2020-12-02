@@ -1,10 +1,17 @@
 import createDataContext from './createDataContext';
 import DB from '../api/database';
 
-import testExerciseData from '../testExerciseData';
-
 const db = new DB();
 
+
+/*
+exerciseContext Context
+
+Contains reducer function, reducer actions, and default state object.
+These are all parameters for createDataContext, which sets up and returns
+a Context and Provider pair of Components.
+
+*/
 const exerciseReducer = (state, action)=>{
     switch(action.type){
         case 'fetch_graph_ex':
@@ -29,18 +36,24 @@ const exerciseReducer = (state, action)=>{
 };
 
 
-//Default state.selectedDate value.
-const defaultDate = new Date();
-
-
 //Changes the selectedDate state variable by a given amount of months.
+/*
+Note:
+The syntax for these action functions are simplified from the following:
+const actionName = (dispatch) => {
+    return (params) => {
+        ...
+        dispatch({});
+    }
+}
+*/
 const updateSelectedDate = dispatch => (date, numOfMonths) => {
     date.setMonth(date.getMonth() + numOfMonths);
     dispatch({type: 'update_selected_date', payload: date});
 }
 
 
-//Get exercises data for calendar screen.
+//Fetches exercises and formats records to be compatible with the calendar component.
 const fetchCalendarExercises = dispatch => (startDate) =>{
 
     db.fetchExercises(startDate)
@@ -60,7 +73,7 @@ const fetchCalendarExercises = dispatch => (startDate) =>{
 };
 
 
-//Graph Screen Exercises
+//Fetches exercises and formats records to be compatible with the graph component.
 const fetchGraphExercises = dispatch => (startDate) =>{
 
     db.fetchExercises(startDate)
@@ -117,6 +130,8 @@ const saveExercise = dispatch => (date, minutes, callback) => {
     });
 };
 
+
+//Empties the database of all records.
 const clearDatabase = dispatch => () => {
     db.clearDatabaseData()
     .then((results)=>{
@@ -127,6 +142,8 @@ const clearDatabase = dispatch => () => {
     });
 }
 
+
+//Inserts test data to database.
 const insertTestData = dispatch => () => {
     db.insertTestData()
     .then((results)=>{
@@ -137,6 +154,8 @@ const insertTestData = dispatch => () => {
     });
 }
 
+
+//Fetches a single exercise record.
 const fetchTodayExercise = dispatch => () => {
     const today = new Date();
     db.fetchExercise(today).then((result)=>{
@@ -162,6 +181,15 @@ const SQLDateToJSDate = (sqldate) => {
 };
 
 
+//Default value for state object's selectedDate value.
+const defaultDate = new Date();
+
+
+/*
+Creates new Context and Provider pair,
+using the above reducer function, action functions,
+and default state object.
+*/
 export const {Context, Provider} = createDataContext(
     exerciseReducer,
     {

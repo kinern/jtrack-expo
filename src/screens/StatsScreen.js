@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
 import LineGraph from '../components/LineGraph';
@@ -9,18 +9,26 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
+
+/*
+StatsScreen Component
+
+Displays a LineGraph Component and buttons to change the month being shown.
+*/
 const StatsScreen = () =>{
 
     const {state, fetchGraphExercises} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
 
+    //Calls the context fetchGraphExercises function to get new data for the graph.
     const changeMonth = (amount) => { 
         let newDate = new Date(selectedDate.setMonth(selectedDate.getMonth() + amount));
         setSelectedDate(newDate);
         fetchGraphExercises(newDate);
     }
 
+    //Prevents user from accessing months in the future.
     const isTodayAfterSelected = () => {
         const today = new Date();
         const selectedMonth = ('0' + (selectedDate.getMonth()+1)).slice(-2);

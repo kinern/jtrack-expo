@@ -5,7 +5,18 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
 import DB from '../api/database';
 
+const db = new DB();
 
+/*
+Calendar Screen Component
+
+The default screen for the application. Does intial database queries to get saved
+exercise data which will be be displayed on the calendar and line graph.
+
+Displays Calendar component and "Today" button which toggles the WeatherBox 
+modal component.
+
+*/
 const CalendarScreen = ({navigation}) =>{
 
     const {
@@ -17,15 +28,16 @@ const CalendarScreen = ({navigation}) =>{
     const [modalVisible, setModalVisible] = useState(false);
     const startMonth = new Date();
 
-    //Since Calendar is the default screen, fetch initial database data.
+
+    //useEffect is called one time before screen renders.
     useEffect(()=>{
         fullySetupDatabase();
     }, []);
 
-    const db = new DB();
 
+    //Sets up new database if it doesn't exist, and then retrieve data for
+    //calendar and graph.
     const fullySetupDatabase = () => {
-        
         db.setupDatabase()
         .then((res)=>{
             return fetchCalendarExercises(startMonth);
@@ -35,10 +47,11 @@ const CalendarScreen = ({navigation}) =>{
         }).then(()=>{
             //return fetchTodayExercise();
         })
-        .catch((err)=>{console.log('err:', err)});
-        
+        .catch((err)=>{console.log('err:', err)}); 
     }
 
+
+    //Renders the "Today" toggle button next to the title.
     const renderModalButton = () => {
         return(
             <TouchableOpacity
@@ -49,6 +62,7 @@ const CalendarScreen = ({navigation}) =>{
             </TouchableOpacity>
         );
     }
+    
     
     return (
         <View style={styles.main}>

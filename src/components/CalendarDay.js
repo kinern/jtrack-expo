@@ -1,9 +1,17 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {TouchableOpacity, StyleSheet, Text, ImageBackground, Alert} from 'react-native';
 import { getTodayDate } from '../commonDate';
-import {Context as ExerciseContext} from '../context/exerciseContext';
 
 
+/*
+CalendarDay Component
+
+Displays a single date, along with a star image if the user has recorded
+time for that day.
+The onDayPress event is used to navigate to the AddExercise screen, where
+the user can add a new time.
+
+*/
 const CalendarDay = ({date, marking, navigation}) =>{
 
     const {day, month, year} = date;

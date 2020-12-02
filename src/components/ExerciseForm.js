@@ -4,6 +4,19 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 import {Text, Input, Button} from 'react-native-elements';
 
 
+/*
+ExerciseForm Component
+
+A basic form to add a time. Displays the selected date in the 
+title and input for entering minutes exercised.
+
+When submitted, uses saveExercise from the ExerciseContext to
+save the data to the database.
+
+The passed callback function is used to navigate back to the 
+calendar screen.
+
+*/
 const ExerciseForm = ({date, callback}) => {
     
     const {saveExercise} = useContext(ExerciseContext);
