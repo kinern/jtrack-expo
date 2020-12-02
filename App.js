@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
@@ -10,8 +10,13 @@ import AddExerciseScreen from './src/screens/AddExerciseScreen.js';
 import {Provider as WeatherProvider} from './src/context/weatherContext';
 import {Provider as ExerciseProvider} from './src/context/exerciseContext';
 
+
+/*
+Main bottom tab navigator.
+Loads the CalendarScreen, OptionsScreen and StatsScreen components.
+*/
 const mainFlowNav = createBottomTabNavigator({
-  Calendar: {screen : CalendarScreen},
+  Calendar: CalendarScreen,
   Options: OptionsScreen,
   Stats: StatsScreen
 }, {
@@ -29,13 +34,22 @@ const mainFlowNav = createBottomTabNavigator({
   }
 });
 
+
+//Adds the AddExerciseScreen component to the navigation flow.
 const switchNavigator = createSwitchNavigator({
   mainFlow: mainFlowNav,
   AddExercise : AddExerciseScreen
 });
 
+
 const App = createAppContainer(switchNavigator);
 
+
+/*
+Providers made with createDataContext() are parent components of App.
+This way, the related state object and reducer action functions can be called
+from any child component by calling useContext().
+*/
 export default () =>{
   return (
     <ExerciseProvider>
