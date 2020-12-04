@@ -16,13 +16,13 @@ export default class DB{
                     "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
                     [],
                     function(txn, res) {
-                      if (res.rows.length == 0) {
+                      if (res.rows.length == 0) { //Testing - resets table
                         txn.executeSql('DROP TABLE IF EXISTS exercises', []);
                         txn.executeSql(
                           'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
                           ,[]
                           ,(txn, results)=>{
-                              resolve('setup and inserts completed');
+                              resolve('exercise table created');
                           }
                           ,(txn, err)=>{reject(err)}
                         );
@@ -35,7 +35,7 @@ export default class DB{
                     }
                 );
             });
-        }, (err)=>{console.log(err)}, ()=>{console.log('transaction success callback')});
+        }, (err)=>{console.log(err)}, ()=>{console.log('setupDatabase transaction success')});
     }
 
     fetchExercises (startDate)  {
@@ -80,7 +80,7 @@ export default class DB{
                         'SELECT * FROM exercises WHERE date = ? LIMIT 1'
                         ,[sqlDate]
                         ,(txn, res)=>{
-                            const foundDate = {date: date, time: "0"};
+                            let foundDate = {date: date, time: "0"};
                             if (res.rows.length != 0){
                                 const firstRow = res.rows.item(0);
                                 foundDate = {date: date, time: firstRow.time};

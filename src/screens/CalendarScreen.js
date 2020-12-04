@@ -45,7 +45,7 @@ const CalendarScreen = ({navigation}) =>{
         .then((res)=>{
             return fetchGraphExercises(startMonth);
         }).then(()=>{
-            //return fetchTodayExercise();
+            return fetchTodayExercise();
         })
         .catch((err)=>{console.log('err:', err)}); 
     }
