@@ -41,8 +41,13 @@ An Exercise Tracking App Using React Native, SQLite, And Expo
 
 ## How to use
 
+Note: Requires an OpenWeatherMapAPI key to gather local weather data.
 - Use command "yarn" or "npm install" to setup.
+- Create a new file called api.js outside of the app folder.
+- Add "export const weather_api_key = *api key*;" to the api.js folder and save.
 - Use command "expo start" to run expo on your browser.
+
+Notes for Expo:
 - In order to use on a physical device, you will need to download the expo app. Use "Scan QR Code" to load the application. 
 - If there are problems loading Jtrack on the expo app then you may need to switch from LAN to Tunnel setting.
 - You will need an emulator already installed on your computer in order to test on android or ios emulator or physical device.
