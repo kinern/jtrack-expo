@@ -7,17 +7,47 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 /*
-WeatherBox Component
+TodayBox Component
 
 Displays modal box with the minutes exercised today, and the local weather.
 
 */
-const WeatherBox = ({modalVisible, changeModalVisible}) => {
+const TodayBox = ({modalVisible, changeModalVisible}) => {
 
     const {state: weatherState, fetchWeather} = useContext(WeatherContext);
     const {state: exerciseState} = useContext(ExerciseContext);
     const {weather, setWeather} = useState({});
     const [err, setErr] = useState('');
+
+    //Colors for modal box background
+    //Todo: change colors to images with weather icon patterns.
+    const bgColors = {
+        'Thunderstorm': '#fff86e',
+        'Drizzle': '#8cbce6',
+        'Rain': '#477ba8',
+        'Snow': '#ead1ff',
+        'Mist': '#b4a7b5',
+        'Smoke': '#c98c77',
+        'Haze': '#c9b6af',
+        'Dust': '#d1b18c',
+        'Fog': '#a6aeb3',
+        'Sand': '#cfc48a',
+        'Ash': '#d1c9c7',
+        'Squall': '#deaa9e',
+        'Tornado': '#7b888c',
+        'Clear': '#3ca2c2',
+        'Clouds': '#bcccd1'
+    };
+
+    //Takes the current weather type and updates the bgColor state variable.
+    const getBgColorFromWeather = () => {
+        const weatherType = weatherState.weather? weatherState.weather.weather[0].main : '';
+        if (bgColors[weatherType]){
+            return bgColors[weatherType];
+        } else {
+            return 'white' //Default color for background
+        }
+    } 
 
     useEffect(()=>{
         (async () => {
@@ -66,7 +96,7 @@ const WeatherBox = ({modalVisible, changeModalVisible}) => {
         onRequestClose={() => changeModalVisible(!modalVisible)}
         >
             <View style={styles.centeredView}>
-                <View style={styles.modalView}>
+                <View style={{...styles.modalView, backgroundColor: getBgColorFromWeather()}}>
                     <TouchableOpacity
                     onPress={()=>{closeModal()}}
                     style={styles.closeBtn}
@@ -92,7 +122,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: "white",
+        //backgroundColor: "white",
         borderRadius: 20,
         padding: 10,
         width: '80%',
@@ -115,4 +145,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default WeatherBox;
+export default TodayBox;

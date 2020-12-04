@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import WeatherBox from '../components/WeatherBox';
+import TodayBox from '../components/TodayBox';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
 import DB from '../api/database';
@@ -13,7 +13,7 @@ Calendar Screen Component
 The default screen for the application. Does intial database queries to get saved
 exercise data which will be be displayed on the calendar and line graph.
 
-Displays Calendar component and "Today" button which toggles the WeatherBox 
+Displays Calendar component and "Today" button which toggles the TodayBox 
 modal component.
 
 */
@@ -66,7 +66,7 @@ const CalendarScreen = ({navigation}) =>{
     
     return (
         <View style={styles.main}>
-            <WeatherBox 
+            <TodayBox 
             modalVisible={modalVisible}
             changeModalVisible={(val)=>{setModalVisible(val)}} 
             />
