@@ -17,6 +17,8 @@ const weatherReducer = (state, action)=>{
             return {...state, weather: action.payload};
         case 'set_degrees':
             return {...state, degrees: action.payload};
+        case 'set_coords':
+            return {...state, lat:action.payload.lat, lon:action.payload.lon};
         default:
             return state;
     }
@@ -39,8 +41,12 @@ const fetchWeather = dispatch => async (lat, lon, units='imperial') => {
 
 
 //Dispatches new type of degrees to the reducer.
-const setDegrees = dispatch => async (name) => {
+const setDegrees = dispatch => (name) => {
     dispatch({type: 'set_degrees', payload: name});
+}
+
+const setCoords = dispatch => (lat, lon)=>{
+    dispatch({type: 'set_coords', payload: {lat, lon}});
 }
 
 
@@ -51,6 +57,10 @@ and default state object.
 */
 export const {Context, Provider } = createDataContext(
     weatherReducer,
-    {fetchWeather, setDegrees},
-    {weather: null,  weatherData: [], degrees: 'imperial'}
+    {
+        fetchWeather, 
+        setDegrees,
+        setCoords
+    },
+    {weather: null,  weatherData: [], lat: 0, lon: 0, degrees: 'imperial'}
 );

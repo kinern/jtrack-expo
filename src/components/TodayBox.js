@@ -14,7 +14,7 @@ Displays modal box with the minutes exercised today, and the local weather.
 */
 const TodayBox = ({modalVisible, changeModalVisible}) => {
 
-    const {state: weatherState, fetchWeather} = useContext(WeatherContext);
+    const {state: weatherState, fetchWeather, setCoords} = useContext(WeatherContext);
     const {state: exerciseState} = useContext(ExerciseContext);
     const {weather, setWeather} = useState({});
     const [err, setErr] = useState('');
@@ -55,8 +55,12 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                 if (Location.requestPermissionsAsync){
                     await Location.requestPermissionsAsync();
                 }
+                console.log('after location request async');
                 const loc = await Location.getCurrentPositionAsync();
+                console.log(loc);
                 const {latitude, longitude } = loc.coords;
+                console.log(latitude, '-',longitude);
+                setCoords(latitude, longitude);
                 fetchWeather(latitude, longitude);
                 setWeather(weatherState.weather);
             } catch (e){
@@ -65,6 +69,9 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
         })();
     }, []);
 
+
+    const degreeNames = {'imperial': 'F', 'metric': 'C', 'standard': 'K'};
+
     const renderWeather = () => {
         if (!weatherState.weather){
             return (
@@ -72,12 +79,17 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                     <Text>Loading weather...</Text>
                 </View>
                 );
-        }
+        } 
+        const weatherTemp = weatherState.weather? weatherState.weather.main.temp : null;
+        const weatherName = weatherState.weather? weatherState.weather.weather[0].main : null;
+        const degreeName = weatherState.weather? degreeNames[weatherState.degrees]: null;
         return (
             <View style={styles.weatherLine}>
-                {(weatherState.weather? <Text>{weatherState.weather.main.temp}F</Text>: null)}
+                {(weatherState.weather? 
+                <Text>{weatherTemp}{degreeName}</Text>
+                : null)}
                 <Text> - </Text>
-                {(weatherState.weather? <Text>{weatherState.weather.weather[0].main}</Text>: null)}
+                {(weatherState.weather? <Text>{weatherName}</Text>: null)}
                 <Text> - </Text>
                 <Text>Great day to get fit!</Text>
             </View>

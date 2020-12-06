@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {Text} from 'react-native-elements';
 import {Context as ExerciseContext} from '../context/exerciseContext';
+import {Context as WeatherContext} from '../context/weatherContext';
 
 
 /*
@@ -12,12 +13,13 @@ Has options to clear database and insert test data.
 const OptionsScreen = () =>{
 
     const { 
-        state, 
+        state: exerciseState, 
         clearDatabase, 
         insertTestData,
         fetchCalendarExercises,
-        fetchGraphExercises
+        fetchGraphExercises,
     } = useContext(ExerciseContext);
+    const {state: weatherState, setDegrees, fetchWeather} = useContext(WeatherContext);
     const [exercises, setExercises] = useState(null);
 
 
@@ -67,27 +69,59 @@ const OptionsScreen = () =>{
     //and calendarExercises state values by calling context functions.
     const reloadData = async () => {
         try {
-            await fetchGraphExercises(state.selectedDate);
-            await fetchCalendarExercises(state.selectedDate);
+            await fetchGraphExercises(exerciseState.selectedDate);
+            await fetchCalendarExercises(exerciseState.selectedDate);
         } catch (err){
             console.log(err);
         }
+    }
+
+    
+    const toggleDegrees = async (degreeName) => {
+        await setDegrees(degreeName);
+        await fetchWeather(
+            weatherState.lat, 
+            weatherState.lon, 
+            degreeName
+        );
+    }
+
+
+    const renderDegreeToggle = () =>{
+        return (
+            <View style={styles.degreeToggleMenu}>
+                <Text>Weather Degrees</Text>
+                <View style={styles.toggleMenu}>
+                    <TouchableOpacity 
+                    style={{...styles.degreeBtn, backgroundColor: 'lightblue'}}
+                    onPress={()=>{toggleDegrees('metric')}}
+                    ><Text>C</Text></TouchableOpacity>
+                    <TouchableOpacity 
+                    style={{...styles.degreeBtn, backgroundColor: 'pink'}}
+                    onPress={()=>{toggleDegrees('imperial')}}
+                    ><Text>F</Text></TouchableOpacity>
+                </View>
+            </View>
+        );
     }
 
 
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Options</Text>
-            <TouchableOpacity 
-            onPress={()=>{confirmChange(clearData, "clear")}}
-            style={styles.btn}>
-                <Text style={styles.btnText}>Clear Data</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-            onPress={()=>{confirmChange(addTestData, "add")}}
-            style={styles.btn}>
-                <Text style={styles.btnText}>Add Test Data</Text>
-            </TouchableOpacity>
+            <View>
+                {renderDegreeToggle()}
+                <TouchableOpacity 
+                onPress={()=>{confirmChange(clearData, "clear")}}
+                style={styles.btn}>
+                    <Text style={styles.btnText}>Clear Data</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                onPress={()=>{confirmChange(addTestData, "add")}}
+                style={styles.btn}>
+                    <Text style={styles.btnText}>Add Test Data</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -104,20 +138,23 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: 'gray'
     },
-    degreeBtnC: {
-        padding: 10,
-        marginTop: 5,
-        width: 50,
+    degreeToggleMenu: {
+        margin: 20, 
+        borderWidth: 1, 
+        borderRadius: 2,
+        borderColor: 'lightgray',
         alignItems: 'center',
-        backgroundColor: 'lightblue',
-        elevation: 2
+        padding: 20
     },
-    degreeBtnF:{
+    toggleMenu: {
+        flexDirection: 'row'
+    },
+    degreeBtn: {
         padding: 10,
         marginTop: 5,
+        margin: 10,
         width: 50,
         alignItems: 'center',
-        backgroundColor: 'coral',
         elevation: 2
     },
     btn: {
@@ -134,15 +171,8 @@ const styles = StyleSheet.create({
     },
     btnText: {
         fontSize: 20
-    },
-    degreeMenu: {
-        margin: 20, 
-        borderWidth: 1, 
-        borderRadius: 2,
-        borderColor: 'lightgray',
-        alignItems: 'center',
-        padding: 20
     }
 });
+
 
 export default OptionsScreen;
