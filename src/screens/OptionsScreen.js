@@ -76,7 +76,7 @@ const OptionsScreen = () =>{
         }
     }
 
-    
+
     const toggleDegrees = async (degreeName) => {
         await setDegrees(degreeName);
         await fetchWeather(
@@ -88,16 +88,20 @@ const OptionsScreen = () =>{
 
 
     const renderDegreeToggle = () =>{
+
+        const degreeCBg = (weatherState.degrees == 'metric')? '#35c8db': '#a9c1c4';
+        const degreeFBg = (weatherState.degrees == 'imperial')? '#eb4034': '#c4a9a9';
+
         return (
             <View style={styles.degreeToggleMenu}>
                 <Text>Weather Degrees</Text>
                 <View style={styles.toggleMenu}>
                     <TouchableOpacity 
-                    style={{...styles.degreeBtn, backgroundColor: 'lightblue'}}
+                    style={{...styles.degreeBtn, backgroundColor: degreeCBg}}
                     onPress={()=>{toggleDegrees('metric')}}
                     ><Text>C</Text></TouchableOpacity>
                     <TouchableOpacity 
-                    style={{...styles.degreeBtn, backgroundColor: 'pink'}}
+                    style={{...styles.degreeBtn, backgroundColor: degreeFBg}}
                     onPress={()=>{toggleDegrees('imperial')}}
                     ><Text>F</Text></TouchableOpacity>
                 </View>

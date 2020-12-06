@@ -55,11 +55,8 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                 if (Location.requestPermissionsAsync){
                     await Location.requestPermissionsAsync();
                 }
-                console.log('after location request async');
                 const loc = await Location.getCurrentPositionAsync();
-                console.log(loc);
                 const {latitude, longitude } = loc.coords;
-                console.log(latitude, '-',longitude);
                 setCoords(latitude, longitude);
                 fetchWeather(latitude, longitude);
                 setWeather(weatherState.weather);
@@ -113,7 +110,7 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                     onPress={()=>{closeModal()}}
                     style={styles.closeBtn}
                     >
-                        <Icon name="times-circle" size={30} color="gray" />
+                        <Icon name="times-circle" size={30} color="#333030" />
                     </TouchableOpacity>
                     <Text style={[styles.openTitle, {fontSize:18}]}>Today's Exercise Time</Text>
                     
@@ -135,7 +132,7 @@ const styles = StyleSheet.create({
     modalView: {
         margin: 20,
         //backgroundColor: "white",
-        borderRadius: 20,
+        borderRadius: 5,
         padding: 10,
         width: '80%',
         height: 200,
