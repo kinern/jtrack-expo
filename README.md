@@ -20,10 +20,8 @@ An Exercise Tracking App Using React Native, SQLite, And Expo
 ## Features To Add
 - Timer for recording and adding exercise duration for the current day.
 - Allow user to set location weather forcast is gathered from (defaults to local area).
-- Change background of today modal to match the weather forcast.
-- Update styles for screens.
-- Option to change degrees from F to C.
 - Option to import and export SQLite database.
+- Update styles for screens.
 
 ---
 
