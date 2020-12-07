@@ -17,11 +17,13 @@ An Exercise Tracking App Using React Native, SQLite, And Expo
 - Line graph for recorded times.
 - Horizontal scroll to view whole month.
 
-## Features To Add
-- Timer for recording and adding exercise duration for the current day.
-- Allow user to set location weather forcast is gathered from (defaults to local area).
-- Option to import and export SQLite database.
-- Update styles for screens.
+## Changes To Make
+- Move daily time to main calendar screen.
+- Add a timer button to record exercise time.
+- Add 6 month graph to stats page.
+- Add average per day to stats page.
+- Add daily goal setting.
+- Change today button to just weather and add icon image to button.
 
 ---
 
