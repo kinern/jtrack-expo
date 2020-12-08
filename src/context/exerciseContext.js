@@ -28,6 +28,8 @@ const exerciseReducer = (state, action)=>{
             return {...state, selectedDate: action.payload};
         case 'fetch_today_exercise':
             return {...state, todayExercise: action.payload};
+        case 'update_goal_days':
+            return {...state, goalDays: action.payload};
         case 'error':
             return {...state, error:action.payload}; 
         default:
@@ -164,6 +166,11 @@ const fetchTodayExercise = dispatch => () => {
         console.log('Error occured:', err);
         dispatch({type: 'error', payload: 'Fetch Failed.'});
     });
+}
+
+const updateGoalDays = dispatch => (goalDays) => {
+    //Update in database
+    dispatch({type: 'update_goal_days', payload: goalDays});
 }
 
 

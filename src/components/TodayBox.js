@@ -5,6 +5,8 @@ import {Context as ExerciseContext} from '../context/exerciseContext';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import colors from '../theme/colors';
+
 
 /*
 TodayBox Component
@@ -21,23 +23,7 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
 
     //Colors for modal box background
     //Todo: change colors to images with weather icon patterns.
-    const bgColors = {
-        'Thunderstorm': '#fff86e',
-        'Drizzle': '#8cbce6',
-        'Rain': '#477ba8',
-        'Snow': '#ead1ff',
-        'Mist': '#b4a7b5',
-        'Smoke': '#c98c77',
-        'Haze': '#c9b6af',
-        'Dust': '#d1b18c',
-        'Fog': '#a6aeb3',
-        'Sand': '#cfc48a',
-        'Ash': '#d1c9c7',
-        'Squall': '#deaa9e',
-        'Tornado': '#7b888c',
-        'Clear': '#3ca2c2',
-        'Clouds': '#bcccd1'
-    };
+    const bgColors = colors.weather;
 
     //Takes the current weather type and updates the bgColor state variable.
     const getBgColorFromWeather = () => {
@@ -112,9 +98,6 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                     >
                         <Icon name="times-circle" size={30} color="#333030" />
                     </TouchableOpacity>
-                    <Text style={[styles.openTitle, {fontSize:18}]}>Today's Exercise Time</Text>
-                    
-                    <Text style={styles.exerciseTime}>{exerciseState.todayExercise.time}</Text>
                     {renderWeather()}
                 </View>
             </View>
@@ -131,13 +114,12 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        //backgroundColor: "white",
-        borderRadius: 5,
+        borderRadius: 2,
         padding: 10,
         width: '80%',
-        height: 200,
+        height: 100,
         alignItems: "center",
-        elevation: 5
+        elevation: 2
     },
     closeBtn: {
         alignSelf: 'flex-end'

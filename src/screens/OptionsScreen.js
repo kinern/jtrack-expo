@@ -1,16 +1,17 @@
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {Text} from 'react-native-elements';
+import {Text, Input, Button} from 'react-native-elements';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import {Context as WeatherContext} from '../context/weatherContext';
 
+import Header from '../components/Header';
 
 /*
 Options Screen
 
 Has options to clear database and insert test data.
 */
-const OptionsScreen = () =>{
+const OptionsScreen = ({navigation}) =>{
 
     const { 
         state: exerciseState, 
@@ -86,7 +87,6 @@ const OptionsScreen = () =>{
         );
     }
 
-
     const renderDegreeToggle = () =>{
 
         const degreeCBg = (weatherState.degrees == 'metric')? '#35c8db': '#a9c1c4';
@@ -110,21 +110,47 @@ const OptionsScreen = () =>{
     }
 
 
+    const renderOptionButton = (onPressFunction, buttonTitle) => {
+        return (
+            <TouchableOpacity 
+            onPress={onPressFunction}
+            style={styles.btn}>
+                <Text style={styles.btnText}>{buttonTitle}</Text>
+            </TouchableOpacity>
+        );
+    } 
+
+    
+    const findNewLocation = () => {
+
+    }
+
+
+    const renderLocationForm = () => {
+        return (
+            <View>
+                <Text>Location:</Text>
+                <Input 
+                placeHolder="location"
+                style={{width: 50}}
+                />
+                <TouchableOpacity
+                onSubmit={()=>{findNewLocation()}}
+                >
+                    <Text>Submit</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>Options</Text>
+            <Header title={navigation.state.routeName}/>
             <View>
                 {renderDegreeToggle()}
-                <TouchableOpacity 
-                onPress={()=>{confirmChange(clearData, "clear")}}
-                style={styles.btn}>
-                    <Text style={styles.btnText}>Clear Data</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                onPress={()=>{confirmChange(addTestData, "add")}}
-                style={styles.btn}>
-                    <Text style={styles.btnText}>Add Test Data</Text>
-                </TouchableOpacity>
+                {renderOptionButton(()=>{()=>{confirmChange(addTestData, "add")}}, 'Add Test Data')}
+                {renderOptionButton(()=>{confirmChange(clearData, "clear")}, 'Clear Database')}
             </View>
         </View>
     );
@@ -132,7 +158,6 @@ const OptionsScreen = () =>{
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 30,
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',

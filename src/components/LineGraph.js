@@ -3,6 +3,8 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import { LineChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
 import * as scale from 'd3-scale'
 
+import colors from '../theme/colors';
+
 
 /*
 LineGraph Component
@@ -17,14 +19,14 @@ const LineGraph = ({data}) => {
 
     const renderGraph = () => {
         return (
-            <ScrollView style={styles.scrollview} horizontal={true} persistentScrollbar={true}>
-                <View style={{width: 1000, padding: 30}}>
+            <ScrollView style={styles.scrollview} horizontal={true}>
+                <View style={{width: 1000, paddingHorizontal: 10}}>
                     <View style={{height: 200, flexDirection: 'row' }}>
                         <YAxis
                             data={data.map(item=>item.time)}
                             contentInset={contentInset}
-                            svg={{fill: 'grey', fontSize: 10}}
-                            numberOfTicks={10}
+                            svg={{fontSize: 10, fill: colors.inactiveDark}}
+                            numberOfTicks={8}
                             formatLabel={(value) => `${value}`}
                         />
                         <LineChart
@@ -33,7 +35,7 @@ const LineGraph = ({data}) => {
                             yAccessor={ ({ item }) => item.time }
                             xAccessor={ ({ item }) => item.date }
                             xScale={ scale.scaleTime }
-                            svg={{ stroke: 'rgb(134, 65, 244)' }}
+                            svg={{ fill: colors.light, stroke: 'rgb(134, 65, 244)' }}
                             contentInset={contentInset}
                         >
                             <Grid />
@@ -45,7 +47,8 @@ const LineGraph = ({data}) => {
                         scale={ scale.scaleTime }
                         formatLabel={(date)=>{return date.getDate()}}
                         contentInset={{right: 20, left: 20}}
-                        svg={{ fontSize: 10, fill: 'gray' }}
+                        svg={{ fontSize: 14, fill: colors.inactiveDark }}
+                        style={{marginTop: -10}}
                     />
             </View>
         </ScrollView>

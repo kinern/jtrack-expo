@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import ExerciseForm from '../components/ExerciseForm';
 
+import Header from '../components/Header';
 
 /* 
 AddExerciseScreen Component
@@ -18,7 +19,10 @@ const AddExerciseScreen = ({navigation}) =>{
         navigation.navigate('Calendar');
     }
     return (
-        <ExerciseForm date={date} callback={callback}/>
+        <View>
+            <Header title={navigation.state.routeName}/>
+            <ExerciseForm date={date} callback={callback}/>
+        </View>
     );
 };
 

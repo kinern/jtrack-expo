@@ -5,6 +5,8 @@ import CalendarDay from './CalendarDay';
 import { Context as ExerciseContext } from '../context/exerciseContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import colors from '../theme/colors';
+
 
 /*
 Calendar Component
@@ -23,7 +25,7 @@ const Calendar = ({navigation}) =>{
 
   const renderArrowButton = (direction) => {
     const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
-    const arrowColor = ((direction == 'right')&&(isTodayAfterSelected()))? "lightgray": "gray";
+    const arrowColor = ((direction == 'right')&&(isTodayAfterSelected()))? colors.inactiveLight : colors.medium;
     return (
       <View>
         <Icon name={path} size={30} color={arrowColor} />
@@ -74,17 +76,16 @@ const Calendar = ({navigation}) =>{
     onPressArrowLeft={(subtractMonth)=>{updateMonth(subtractMonth, -1)}}
     onPressArrowRight={(addMonth)=>{updateMonth(addMonth, 1)}}
     renderArrow={(direction) => (renderArrowButton(direction))}
-    //style={styles.calendar}
     theme={calendarTheme}
     />
   );
 }
 
 const calendarTheme = {
-  calendarBackground: '#FFFFFF',
-  textSectionTitleColor: '#2F4858',
-  dayTextColor: '#2F4858',
-  monthTextColor: '#2F4858',
+  calendarBackground: 'white',
+  textSectionTitleColor: colors.medium,
+  dayTextColor: colors.dark,
+  monthTextColor: colors.dark,
   textDayHeaderFontWeight: '400',
   textMonthFontWeight: '700',
   textMonthFontSize: 20,

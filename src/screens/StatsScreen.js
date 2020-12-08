@@ -1,9 +1,16 @@
 import React, {useState, useContext} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
+
+import Header from '../components/Header';
 import LineGraph from '../components/LineGraph';
+import SixMonthGraph from '../components/SixMonthGraph';
+
 import {Context as ExerciseContext} from '../context/exerciseContext';
+import colors from '../theme/colors';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -15,7 +22,7 @@ StatsScreen Component
 
 Displays a LineGraph Component and buttons to change the month being shown.
 */
-const StatsScreen = () =>{
+const StatsScreen = ({navigation}) =>{
 
     const {state, fetchGraphExercises} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,7 +52,7 @@ const StatsScreen = () =>{
         if ((direction === 'right') && isTodayAfterSelected()){
             return (
                 <View style={{paddingLeft: 20, paddingRight: 20}} >
-                    <Icon name={path} size={30} color="lightgray" />
+                    <Icon name={path} size={30} color={colors.inactiveLight} />
                 </View>
             );
         }
@@ -55,24 +62,34 @@ const StatsScreen = () =>{
             style={styles.arrowbtn}
             onPress={()=>changeMonth(monthDiff)}
             >
-                <Icon name={path} size={30} color="gray" />
+                <Icon name={path} size={30} color={colors.medium} />
             </TouchableOpacity>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Stats</Text>
-            <View style={styles.dateMenu}>
-                {renderArrowButton('left')}
-                <Text style={styles.dateText}>{dateStr}</Text>
-                {renderArrowButton('right')}
+            <Header title={navigation.state.routeName}/>
+            <View>
+                <View style={styles.dateMenu}>
+                    {renderArrowButton('left')}
+                    <Text style={styles.dateText}>{dateStr}</Text>
+                    {renderArrowButton('right')}
+                </View>
+                <LineGraph data={state.graphExercises} />
+                <View style={styles.swipeTextView}>
+                    <Icon name="angle-double-left" size={12} color={colors.inactiveLight} />
+                    <Text style={styles.swipeText}>Swipe To Scroll Graph</Text>
+                    <Icon name="angle-double-right" size={12} color={colors.inactiveLight} />
+                </View>
+                <View style={styles.averageMenu}>
+                    <Text style={styles.averageText}>This Month's Average: </Text>
+                    <Text style={styles.averageTime}>10min</Text>
+                </View>
             </View>
-            <LineGraph data={state.graphExercises} />
-            <View style={styles.swipeTextView}>
-                <Icon name="angle-double-left" size={24} color="gray" />
-                <Text style={styles.swipeText}>Swipe To Scroll Graph</Text>
-                <Icon name="angle-double-right" size={24} color="gray" />
+            <View style={styles.sixMonthContainer}>
+                <Text style={styles.sixMonthTitle}>Past Six Months</Text>
+                <SixMonthGraph />
             </View>
         </View>
     );
@@ -81,13 +98,8 @@ const StatsScreen = () =>{
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:30
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '700',
-        color: 'gray',
-        alignSelf: 'center'
+        height: '100%',
+        justifyContent: 'flex-start'
     },
     swipeTextView: {
         width: '100%',
@@ -96,9 +108,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     swipeText: {
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: '700',
-        color: 'gray',
+        color: colors.inactiveLight,
         marginRight:10,
         marginLeft: 10
     },
@@ -113,10 +125,10 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         marginLeft: 10,
         marginRight: 10,
-        color: 'rgb(47, 72, 88)'
+        color: colors.medium
     },
     dateMenu: {
-        borderColor: 'lightgray',
+        borderColor: colors.light,
         borderWidth: 1,
         padding: 10,
         marginTop: 10,
@@ -124,6 +136,35 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    averageMenu: {
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    averageText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: colors.medium
+    },
+    averageTime: {
+        fontSize: 20,
+        color: colors.light
+    },
+    sixMonthContainer: {
+        backgroundColor: colors.inactiveLight,
+        width: '100%',
+        paddingBottom: 30
+    },
+    sixMonthTitle: {
+        width: '100%',
+        textAlign: 'center',
+        alignSelf: 'center',
+        paddingTop: 10,
+        fontSize: 18,
+        fontWeight: "700",
+        color: colors.highlight
     }
 });
 

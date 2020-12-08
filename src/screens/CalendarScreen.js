@@ -1,9 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import TodayBox from '../components/TodayBox';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
 import DB from '../api/database';
+
+import Header from '../components/Header';
+
+import colors from '../theme/colors';
 
 const db = new DB();
 
@@ -27,6 +30,7 @@ const CalendarScreen = ({navigation}) =>{
     } = useContext(ExerciseContext);
     const [modalVisible, setModalVisible] = useState(false);
     const startMonth = new Date();
+
 
 
     //useEffect is called one time before screen renders.
@@ -66,14 +70,12 @@ const CalendarScreen = ({navigation}) =>{
     
     return (
         <View style={styles.main}>
-            <TodayBox 
-            modalVisible={modalVisible}
-            changeModalVisible={(val)=>{setModalVisible(val)}} 
-            />
-            <View style={styles.top}>
-                <Text style={styles.title}>JTrack</Text>
-                {renderModalButton()}
+            <Header title={navigation.state.routeName}/>
+            <View style={styles.todayExercise}>
+                <Text style={styles.exerciseTimeText}>Today's Time:</Text>
+                <Text style={styles.exerciseTime}>{state.todayExercise.time}min</Text>
             </View>
+            <View style={styles.hrBar}/>
             <Calendar navigation={navigation}/>
         </View>
     );
@@ -81,7 +83,24 @@ const CalendarScreen = ({navigation}) =>{
 
 const styles = StyleSheet.create({
     main: {
-        marginTop: 30
+    },
+    todayExercise: {
+        flexDirection: 'row',
+        justifyContent:'center',
+        alignItems: 'center',
+        padding: 20
+    },
+    exerciseTimeText: {
+        fontSize: 20
+    },
+    exerciseTime: {
+        fontSize: 28,
+        color: colors.light,
+        marginLeft: 10
+    },
+    hrBar: {
+        borderBottomColor: colors.light,
+        borderBottomWidth: 1,
     },
     top: {
         flexDirection:'row',
