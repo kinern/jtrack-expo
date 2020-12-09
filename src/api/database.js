@@ -12,18 +12,7 @@ const exerciesCreateQuery =
 )`;
 
 //Note: SQLite doesn't have a boolean value, so int is used instead.
-const goalsCreateQuery = 
-`CREATE TABLE IF NOT EXISTS goals(
-    id INTEGER PRIMARY KET AUTOINCREMENT, 
-    sun INTEGER DEFAULT 0,
-    mon INTEGER DEFAULT 0,
-    tue INTEGER DEFAULT 0,
-    wed INTEGER DEFAULT 0,
-    thu INTEGER DEFAULT 0,
-    fri INTEGER DEFAULT 0,
-    sat INTEGER DEFAULT 0,
-    minutes INTEGER DEFAULT 0
-)`;
+const goalsCreateQuery = 'CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY AUTOINCREMENT, sun INTEGER DEFAULT 0, mon INTEGER DEFAULT 0, tue INTEGER DEFAULT 0, wed INTEGER DEFAULT 0, thu INTEGER DEFAULT 0, fri INTEGER DEFAULT 0, sat INTEGER DEFAULT 0, minutes INTEGER DEFAULT 0)';
 
 const createQueries = {
     'goals': goalsCreateQuery,
@@ -38,8 +27,8 @@ export default class DB{
 
     setupDatabase = async () => {
         return new Promise((resolve, reject)=> {
-            this.db.transaction((txn) => {setupTable(txn, 'exercises', false, reject)});
-            this.db.transaction((txn) => {setupTable(txn, 'goals', resolve, reject)});
+            this.db.transaction((txn) => {this.setupTable(txn, 'exercises', false, reject)});
+            this.db.transaction((txn) => {this.setupTable(txn, 'goals', resolve, reject)});
         }, (err)=>{console.log(err)}, ()=>{console.log('setupDatabase transaction success')});
     }
 
@@ -55,10 +44,18 @@ export default class DB{
             function(txn, res) {
               if (res.rows.length == 0) { //Testing - resets table if != 0
                 txn.executeSql(dropQuery, [tableName]);
-                txn.executeSql(createQuery);
-                if (typeof resolve === 'function'){
-                    resolve('finished setup');
-                }
+                txn.executeSql(
+                    createQuery,
+                    [],
+                    (txn, res)=>{
+                        if (typeof resolve === 'function'){
+                            resolve(`finished creating ${tableName}`);
+                        }
+                    },
+                    (txn, err)=>{
+                        reject(err);
+                    }
+                );
               } 
             },
             (txn, err)=>{
@@ -68,7 +65,7 @@ export default class DB{
         );
     };
 
-    
+
     //Goal functions
     fetchGoal(){
         return new Promise ((resolve, reject)=>{
@@ -98,7 +95,16 @@ export default class DB{
     updateGoal(weekdays, minutes){
 
         const insertQuery = 'INSERT INTO goals (mon, tue, wed, thu, fri, sat, sun, minutes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        const insertArguments = [...weekdays, minutes];
+        const insertArguments = [
+            weekdays['mon'], 
+            weekdays['tue'],
+            weekdays['wed'],
+            weekdays['thu'],
+            weekdays['fri'],
+            weekdays['sat'],
+            weekdays['sun'],
+            minutes
+        ];
 
         return new Promise ((resolve, reject)=>{
             this.db.transaction(

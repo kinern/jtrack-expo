@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text, Input} from 'react-native-elements';
 import {Context as ExerciseContext} from '../context/exerciseContext';
@@ -8,22 +8,27 @@ import colors from '../theme/colors';
 
 const GoalsScreen = ({navigation}) => {
 
-    const weekdayNames = ['Sun', 'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const weekdayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     const goalDaysObj  = {};
     weekdayNames.map((item)=>{
-        goalDaysObj[item] = colors.inactiveLight;
+        goalDaysObj[item] = 0;
     }); 
-    const [goalDays, setGoalDays] = useState(goalDaysObj);
-    const {state, updateGoalDays} = useContext(ExerciseContext);
-    const [exerciseTime, setExerciseTime] = useState('0');
+    const {state, fetchGoal, saveGoal} = useContext(ExerciseContext);
+    const [goalDays, setGoalDays] = useState(state.goal.weekdays);
+    const [exerciseTime, setExerciseTime] = useState(state.goal.minutes);
 
+
+    useEffect(()=>{
+        fetchGoal();
+    }, []);
 
     const renderWeekdayButtons = () => {
         const buttons = weekdayNames.map((item)=>{
+            const bgColor = (goalDays[item] !== 0)? colors.medium : colors.inactiveLight;
             return (
                 <TouchableOpacity 
                 key={item} 
-                style={{...styles.weekdayBtn, backgroundColor: goalDays[item]}}
+                style={{...styles.weekdayBtn, backgroundColor: bgColor}}
                 onPress={()=>{updateWeekday(item)}}
                 >
                     <Text>{item}</Text>
@@ -31,7 +36,6 @@ const GoalsScreen = ({navigation}) => {
                 );            
             }
         );
-
         return (
             <View style={styles.weekdayBtnMenu}>{buttons}</View>
         );
@@ -39,14 +43,13 @@ const GoalsScreen = ({navigation}) => {
 
     const updateWeekday = (weekday) => {
         let newGoalDays = goalDays;
-        newGoalDays[weekday] = (newGoalDays[weekday] == colors.light)? colors.inactiveLight : colors.light;
-        updateGoalDays(weekday);
+        newGoalDays[weekday] = (newGoalDays[weekday] !== 0)? 0 : 1;
         setGoalDays({...newGoalDays});
     }
 
-    const saveGoal = () => {
-        //call exercise context to save exerciseTime state variable to user goal setting.
-    };
+    const saveGoalData = () => {
+        saveGoal(goalDays, exerciseTime);
+    }
 
     return (
         <View style={styles.container}>
@@ -67,7 +70,7 @@ const GoalsScreen = ({navigation}) => {
             </View>
             <TouchableOpacity
             style={styles.saveBtn}
-            onPress={()=>{saveGoal()}}
+            onPress={()=>{saveGoalData()}}
             >
                 <Text style={styles.saveBtnText}>Save Goal</Text>
             </TouchableOpacity>

@@ -44,6 +44,7 @@ const CalendarScreen = ({navigation}) =>{
     const fullySetupDatabase = () => {
         db.setupDatabase()
         .then((res)=>{
+            console.log(res);
             return fetchCalendarExercises(startMonth);
         })
         .then((res)=>{
@@ -54,19 +55,6 @@ const CalendarScreen = ({navigation}) =>{
         .catch((err)=>{console.log('err:', err)}); 
     }
 
-
-    //Renders the "Today" toggle button next to the title.
-    const renderModalButton = () => {
-        return(
-            <TouchableOpacity
-            style={styles.closedContainer}
-            onPress={()=>{setModalVisible(!modalVisible)}}
-            >
-                <Text style={styles.toggleText}>Today</Text>
-            </TouchableOpacity>
-        );
-    }
-    
     
     return (
         <View style={styles.main}>
@@ -75,7 +63,6 @@ const CalendarScreen = ({navigation}) =>{
                 <Text style={styles.exerciseTimeText}>Today's Time:</Text>
                 <Text style={styles.exerciseTime}>{state.todayExercise.time}min</Text>
             </View>
-            <View style={styles.hrBar}/>
             <Calendar navigation={navigation}/>
         </View>
     );
@@ -88,19 +75,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent:'center',
         alignItems: 'center',
-        padding: 20
+        padding: 20,
+        width: '100%',
+        backgroundColor: colors.light
     },
     exerciseTimeText: {
-        fontSize: 20
+        fontSize: 20,
+        color: colors.highlight,
+        textShadowColor: colors.medium,
+        textShadowRadius: 20
     },
     exerciseTime: {
         fontSize: 28,
-        color: colors.light,
-        marginLeft: 10
-    },
-    hrBar: {
-        borderBottomColor: colors.light,
-        borderBottomWidth: 1,
+        marginLeft: 10,
+        color: colors.highlight,
+        textShadowColor: colors.medium,
+        textShadowRadius: 20
     },
     top: {
         flexDirection:'row',

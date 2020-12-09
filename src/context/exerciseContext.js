@@ -75,10 +75,10 @@ const fetchCalendarExercises = dispatch => (startDate) =>{
 
 //Helper function that converts result set into calendar data object.
 const convertToCalendarObject = (results) => {
-    const calendarObj = {};
+    const calendarObject = {};
     results.map((item)=>{
         let date = item.date.slice(0, -9);
-        calendarObj[date] = {marked: true, minutes: item.time};
+        calendarObject[date] = {marked: true, minutes: item.time};
     }); 
     return calendarObject;
 }
@@ -88,7 +88,7 @@ const convertToCalendarObject = (results) => {
 const fetchGraphExercises = dispatch => (startDate) =>{
     db.fetchExercises(startDate)
     .then((results)=>{
-        const graphData = convertToGraphObject(results);
+        const graphData = convertToGraphObject(results, startDate);
         const graphArray = fillEmptyGraphData(graphData, startDate);
         dispatch({type:'fetch_graph_ex', payload: graphArray});
     })
@@ -100,7 +100,7 @@ const fetchGraphExercises = dispatch => (startDate) =>{
 
 
 //Helper function to convert result set into correctly formatted graph data.
-const convertToGraphObject = (results) => {
+const convertToGraphObject = (results, startDate) => {
     const resultsObj = {};
     results.map((item)=>{
         let newDate = SQLDateToJSDate(item.date);
@@ -199,7 +199,7 @@ const fetchTodayExercise = dispatch => () => {
 
 const fetchGoal = dispatch => (weekdays, minutes) => {
     //Update in database
-    db.updateGoal(weekdays, minutes).then((result)=>{
+    db.fetchGoal(weekdays, minutes).then((result)=>{
         dispatch({type: 'fetch_goal', payload: result});
     }).catch((err)=>{
         console.log(err);
@@ -260,6 +260,7 @@ export const {Context, Provider} = createDataContext(
         selectedDate: defaultDate, 
         calendarExercises: null, 
         graphExercises: null, 
-        todayExercise: {time: 0, date: '2020-01-01 00:00:00'}
+        todayExercise: {time: 0, date: '2020-01-01 00:00:00'},
+        goal: {weekdays: {'sun': 0, 'mon': 0, 'tue': 0, 'wed': 0, 'thu': 0, 'fri': 0, 'sat': 0, }, minutes: "0"}
     }
 );

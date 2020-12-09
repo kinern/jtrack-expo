@@ -37,7 +37,7 @@ const Header = ({title}) => {
                 <Text style={styles.title}>JTrack</Text>
             </View>
             <View style={styles.middleSection}>
-                <Text style={styles.pageName}>{title}</Text>
+                <Text style={styles.pageName}></Text>
             </View>
             {renderModalButton()}
         </View>
