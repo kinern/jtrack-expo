@@ -3,41 +3,153 @@ import testTableInserts from '../testTableInserts';
 
 const database_name = 'jtrack.db';
 
+
+const exerciesCreateQuery = 
+`CREATE TABLE IF NOT EXISTS exercises(
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    time INTEGER, 
+    date DATETIME
+)`;
+
+//Note: SQLite doesn't have a boolean value, so int is used instead.
+const goalsCreateQuery = 
+`CREATE TABLE IF NOT EXISTS goals(
+    id INTEGER PRIMARY KET AUTOINCREMENT, 
+    sun INTEGER DEFAULT 0,
+    mon INTEGER DEFAULT 0,
+    tue INTEGER DEFAULT 0,
+    wed INTEGER DEFAULT 0,
+    thu INTEGER DEFAULT 0,
+    fri INTEGER DEFAULT 0,
+    sat INTEGER DEFAULT 0,
+    minutes INTEGER DEFAULT 0
+)`;
+
+const createQueries = {
+    'goals': goalsCreateQuery,
+    'exercises': exerciesCreateQuery
+};
+
 export default class DB{
     constructor(){
         this.db = SQLite.openDatabase(database_name);
     }
 
-    setupDatabase = async () => {
 
+    setupDatabase = async () => {
         return new Promise((resolve, reject)=> {
-            this.db.transaction((txn) => {
-                txn.executeSql(
-                    "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
-                    [],
-                    function(txn, res) {
-                      if (res.rows.length == 0) { //Testing - resets table
-                        txn.executeSql('DROP TABLE IF EXISTS exercises', []);
-                        txn.executeSql(
-                          'CREATE TABLE IF NOT EXISTS exercises(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, date DATETIME)'
-                          ,[]
-                          ,(txn, results)=>{
-                              resolve('exercise table created');
-                          }
-                          ,(txn, err)=>{reject(err)}
-                        );
-                      } else {
-                          resolve("found exercise table.");
-                      }
-                    },
-                    (txn, err)=>{
-                        console.log(err);
-                    }
-                );
-            });
+            this.db.transaction((txn) => {setupTable(txn, 'exercises', false, reject)});
+            this.db.transaction((txn) => {setupTable(txn, 'goals', resolve, reject)});
         }, (err)=>{console.log(err)}, ()=>{console.log('setupDatabase transaction success')});
     }
 
+
+    setupTable(txn, tableName, resolve, reject) {
+
+        const selectQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name=?";
+        const dropQuery = 'DROP TABLE IF EXISTS ?';
+        const createQuery = createQueries[tableName];
+        txn.executeSql(
+            selectQuery,
+            [tableName],
+            function(txn, res) {
+              if (res.rows.length == 0) { //Testing - resets table if != 0
+                txn.executeSql(dropQuery, [tableName]);
+                txn.executeSql(createQuery);
+                if (typeof resolve === 'function'){
+                    resolve('finished setup');
+                }
+              } 
+            },
+            (txn, err)=>{
+                console.log(err);
+                reject(`error with setting up ${tableName} table`);
+            }
+        );
+    };
+
+    
+    //Goal functions
+    fetchGoal(){
+        return new Promise ((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql(
+                        'SELECT * FROM goals LIMIT 1',
+                        [],
+                        (txn, results) => {
+                            if (results.rows.length > 0){
+                                resolve(results.rows.item(0));
+                            } else {
+                                const defaultGoals = {'mon':0, 'tue':0, 'wed':0, 'thu':0, 'fri':0, 'sat':0, 'sun':0, 'minutes':0};
+                                resolve(defaultGoals);
+                            }
+                        },
+                        (txn, err)=>{
+                            reject(err);
+                        }
+                    );
+                }
+            );
+        });
+    };
+
+
+    updateGoal(weekdays, minutes){
+
+        const insertQuery = 'INSERT INTO goals (mon, tue, wed, thu, fri, sat, sun, minutes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const insertArguments = [...weekdays, minutes];
+
+        return new Promise ((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql('DELETE FROM goals');
+                    txn.executeSql(
+                        insertQuery,
+                        insertArguments,
+                        (txn, results) => {
+                            resolve('updated goal');
+                        },
+                        (txn, err) => {
+                            reject('update goal failed');
+                        }
+                    );
+                }
+            );
+        });
+    };
+
+    
+    //Six Month Graph
+    fetchMonthlyTotals (year) {
+        const selectQuery = ` 
+        SELECT MONTH('date') AS month, SUM('time') AS price
+        FROM exercises
+        GROUP BY MONTH('date')
+        WHERE YEAR('date') = ?
+        `;
+
+        return new Promise ((resolve, reject)=>{
+            this.db.transaction(
+                txn => {
+                    txn.executeSql(
+                        selectQuery,
+                        [year],
+                        (txn, res)=>{
+                            const resultsArray = this.resultsIntoArray(res);
+                            resolve(resultsArray);
+                        },
+                        (txn, err)=> {
+                            reject(err);
+                        }
+                    );
+                }
+            );
+        });
+    }
+
+
+    //Fetch Exercises
     fetchExercises (startDate)  {
 
         //Ensures starting data for selection is first day of month.
@@ -52,12 +164,9 @@ export default class DB{
                     txn.executeSql(
                         'SELECT * FROM exercises WHERE date >= ? AND date <= ?',
                         [startDateStr, endDateStr],
-                        (txn, results) => {
-                            let res = [];
-                            for (let i = 0; i < results.rows.length; i++){
-                                res.push({...results.rows.item(i)});
-                            }
-                            resolve(res);
+                        (txn, res) => {
+                            const results = this.resultsIntoArray(res);
+                            resolve(results);
                         },
                         (txn, err)=>{
                             reject(err);
@@ -70,7 +179,8 @@ export default class DB{
         });
     }
 
-    //Get single exercise record given a date.
+
+    //Fetch One Exercise
     fetchExercise (date) {
         const sqlDate = this.dateTimeToSQLString(date);
         return new Promise((resolve, reject)=>{
@@ -98,6 +208,8 @@ export default class DB{
         });
     }
 
+
+    //Clear Database
     clearDatabaseData () {
         console.log('clear database data');
         return new Promise((resolve, reject)=>{
@@ -119,6 +231,8 @@ export default class DB{
         });
     }
 
+
+    //Insert Test Data
     insertTestData () {
         return new Promise((resolve, reject)=>{
             this.db.transaction(
@@ -138,8 +252,14 @@ export default class DB{
         });
     }
 
+
+    //Save Exercise
     saveExercise  (date, time) {
+
+        const insertQuery = 'INSERT INTO exercises (time, date) VALUES (?,?)';
+        const updateQuery = 'UPDATE exercises SET time = ? WHERE date = ?';
         const sqlDate = this.dateTimeToSQLString(date);
+
         return new Promise((resolve)=>{ 
             this.db.transaction(
                 txn => {
@@ -148,37 +268,36 @@ export default class DB{
                         'SELECT * FROM exercises WHERE date = ?',
                         [sqlDate],
                         (tx, res) => {
-                            if (res.rows.length == 0){
-                                //Add new record
-                                tx.executeSql(
-                                    'INSERT INTO exercises (time, date) VALUES (?,?)'
-                                ,[time, sqlDate],
-                                (txn, res)=>{
-                                    resolve('inserted');
-                                },
-                                (txn, err)=>{
-                                    reject(err);
-                                });
-                            } else {
-                                //Update existing record
-                                tx.executeSql(
-                                    'UPDATE exercises SET time = ? WHERE date = ?'
-                                ,[time, sqlDate], 
-                                (txn, res)=>{
-                                    resolve('updated');
-                                },
-                                (txn, err)=>{
-                                    reject(err);
-                                });
-                            }
+                            const query = (res.rows.length == 0)? insertQuery : updateQuery;
+                            const successMessage = (res.rows.length == 0)? 'Exercise Inserted': 'Exercise Updated';
+                            tx.executeSql(
+                                query
+                            ,[time, sqlDate],
+                            (txn, res)=>{
+                                resolve(successMessage);
+                            },
+                            (txn, err)=>{
+                                reject(err);
+                            });
                         }
                     );
                 },
                 (err)=>{console.log(err)}, 
-                ()=>{console.log('fetch transaction success callback')}
+                ()=>{console.log('save transaction success callback')}
             );
         });
     }
+
+
+    //Helper function for putting result set into an array.
+    resultsIntoArray (res) {
+        const resultsArray = [];
+        for(let i = 0; i < res.rows.length; i++){
+            resultsArray.push({...res.rows.item(i)});
+        }
+        return resultsArray;
+    }
+
 
     //Helper function to convert a Javascript DateTime object to a SQL DATETIME string.
     dateTimeToSQLString (date) {

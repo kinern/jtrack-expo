@@ -28,8 +28,12 @@ const exerciseReducer = (state, action)=>{
             return {...state, selectedDate: action.payload};
         case 'fetch_today_exercise':
             return {...state, todayExercise: action.payload};
-        case 'update_goal_days':
-            return {...state, goalDays: action.payload};
+        case 'fetch_monthly_totals':
+            return {...state, monthlyTotals: action.payload};
+        case 'fetch_goal':
+            return {...state, goal: action.payload};
+        case 'save_goal':
+            return {...state, goal: action.payload};
         case 'error':
             return {...state, error:action.payload}; 
         default:
@@ -52,73 +56,97 @@ const actionName = (dispatch) => {
 const updateSelectedDate = dispatch => (date, numOfMonths) => {
     date.setMonth(date.getMonth() + numOfMonths);
     dispatch({type: 'update_selected_date', payload: date});
-}
+};
 
 
 //Fetches exercises and formats records to be compatible with the calendar component.
 const fetchCalendarExercises = dispatch => (startDate) =>{
-
     db.fetchExercises(startDate)
     .then((results)=>{
-        const exercisesObj = {};
-        results.map((item)=>{
-            let date = item.date.slice(0, -9);
-            exercisesObj[date] = {marked: true, minutes: item.time};
-        }); 
+        const exercisesObj = convertToCalendarObject(results);
         dispatch({type:'fetch_calendar_ex', payload: exercisesObj});
     })
     .catch((err)=>{
         console.log(err);
         dispatch({type: 'error', payload: 'Fetch Calendar Data Failed.'});
     });
-
 };
+
+
+//Helper function that converts result set into calendar data object.
+const convertToCalendarObject = (results) => {
+    const calendarObj = {};
+    results.map((item)=>{
+        let date = item.date.slice(0, -9);
+        calendarObj[date] = {marked: true, minutes: item.time};
+    }); 
+    return calendarObject;
+}
 
 
 //Fetches exercises and formats records to be compatible with the graph component.
 const fetchGraphExercises = dispatch => (startDate) =>{
-
     db.fetchExercises(startDate)
     .then((results)=>{
-        //Formatting database results to work wth line graph component.
-        const resultsObj = {};
-        results.map((item)=>{
-            let newDate = SQLDateToJSDate(item.date);
-            if (
-                newDate.getMonth() === (startDate.getMonth()) &&
-                (newDate.getFullYear() == startDate.getFullYear())
-                ){
-                let day = parseInt(item.date.slice(8, -9));
-                resultsObj[day] = {time: item.time, date: newDate};
-            }
-        });
-
-        //Inserting default date data for line graph data points.
-        const resultsArray = [];
-        const daysInMonth = getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
-        for (let day = 1; day <= daysInMonth; day++){
-            if (resultsObj[day]){
-                resultsArray.push(resultsObj[day]);
-            } else {
-                let zeroDate = new Date(startDate.getFullYear(), startDate.getMonth(), day, 0,0);
-                let zeroEntry = {time: 0, date: zeroDate};
-                resultsArray.push(zeroEntry);
-            }
-        }
-
-        dispatch({type:'fetch_graph_ex', payload: resultsArray});
+        const graphData = convertToGraphObject(results);
+        const graphArray = fillEmptyGraphData(graphData, startDate);
+        dispatch({type:'fetch_graph_ex', payload: graphArray});
     })
     .catch((err)=>{
         console.log(err);
         dispatch({type: 'error', payload: 'Fetch Graph Data Failed.'});
     });
+};
 
+
+//Helper function to convert result set into correctly formatted graph data.
+const convertToGraphObject = (results) => {
+    const resultsObj = {};
+    results.map((item)=>{
+        let newDate = SQLDateToJSDate(item.date);
+        if (
+            newDate.getMonth() === (startDate.getMonth()) &&
+            (newDate.getFullYear() == startDate.getFullYear())
+            ){
+            let day = parseInt(item.date.slice(8, -9));
+            resultsObj[day] = {time: item.time, date: newDate};
+        }
+    });
+    return resultsObj;
+}
+
+
+//Helper function to add 0 min to days where exercises are not recorded yet.
+const fillEmptyGraphData = (graphData, startDate) => {
+    const resultsArray = [];
+    const daysInMonth = getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+    for (let day = 1; day <= daysInMonth; day++){
+        if (graphData[day]){
+            resultsArray.push(graphData[day]);
+        } else {
+            let zeroDate = new Date(startDate.getFullYear(), startDate.getMonth(), day, 0,0);
+            let zeroEntry = {time: 0, date: zeroDate};
+            resultsArray.push(zeroEntry);
+        }
+    }
+    return resultsArray;
+}
+
+
+const fetchMonthlyTotals = dispatch => () => {
+    db.fetchMonthlyTotals()
+    .then((results)=>{
+        dispatch({type: 'fetch_monthly_totals', payload: results})
+    })
+    .catch((err)=>{
+        console.log(err);
+        dispatch({type: 'error', payload: 'Fetch Monthly Totals Failed.'})
+    })
 };
 
 
 //Saves a single exercise record to the database. 
 const saveExercise = dispatch => (date, minutes, callback) => {
-
     date = new Date(date);
     db.saveExercise(date, minutes).then((saved)=>{
         return db.fetchExercises(date);
@@ -142,7 +170,7 @@ const clearDatabase = dispatch => () => {
         console.log(err);
         dispatch({type: 'error', payload: 'Clear Failed.'});
     });
-}
+};
 
 
 //Inserts test data to database.
@@ -154,7 +182,7 @@ const insertTestData = dispatch => () => {
         console.log(err);
         dispatch({type: 'error', payload: 'Insert Failed.'});
     });
-}
+};
 
 
 //Fetches a single exercise record.
@@ -166,12 +194,29 @@ const fetchTodayExercise = dispatch => () => {
         console.log('Error occured:', err);
         dispatch({type: 'error', payload: 'Fetch Failed.'});
     });
-}
+};
 
-const updateGoalDays = dispatch => (goalDays) => {
+
+const fetchGoal = dispatch => (weekdays, minutes) => {
     //Update in database
-    dispatch({type: 'update_goal_days', payload: goalDays});
-}
+    db.updateGoal(weekdays, minutes).then((result)=>{
+        dispatch({type: 'fetch_goal', payload: result});
+    }).catch((err)=>{
+        console.log(err);
+        dispatch({type: 'error', payload: 'Fetch Goal Failed.'});
+    });
+};
+
+
+const saveGoal = dispatch => (weekdays, minutes) => {
+    //Update in database
+    db.updateGoal(weekdays, minutes).then((result)=>{
+        dispatch({type: 'save_goal', payload: result});
+    }).catch((err)=>{
+        console.log(err);
+        dispatch({type: 'error', payload: 'Save Goal Failed.'});
+    });
+};
 
 
 //Helper function to get number of days in the month.
@@ -206,7 +251,10 @@ export const {Context, Provider} = createDataContext(
         updateSelectedDate,
         clearDatabase,
         insertTestData,
-        fetchTodayExercise
+        fetchTodayExercise,
+        fetchMonthlyTotals,
+        saveGoal,
+        fetchGoal
     },
     {
         selectedDate: defaultDate, 

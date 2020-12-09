@@ -24,7 +24,7 @@ Displays a LineGraph Component and buttons to change the month being shown.
 */
 const StatsScreen = ({navigation}) =>{
 
-    const {state, fetchGraphExercises} = useContext(ExerciseContext);
+    const {state, fetchGraphExercises, fetchMonthyTotals} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
 
