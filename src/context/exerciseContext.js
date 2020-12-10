@@ -147,11 +147,11 @@ const fetchMonthlyTotals = dispatch => () => {
 
 //Saves a single exercise record to the database. 
 const saveExercise = dispatch => (date, minutes, callback) => {
-    date = new Date(date);
+    if (typeof date === 'string' || date instanceof String){
+        date = new Date(date);
+    }
     db.saveExercise(date, minutes).then((saved)=>{
-        return db.fetchExercises(date);
-    }).then((results)=>{
-        dispatch({type: 'exercise_saved', payload: results});
+        dispatch({type: 'exercise_saved', payload: saved});
         callback();
     }).catch((err)=>{
         console.log(err);
@@ -189,6 +189,7 @@ const insertTestData = dispatch => () => {
 const fetchTodayExercise = dispatch => () => {
     const today = new Date();
     db.fetchExercise(today).then((result)=>{
+        console.log('fetch:', result);
         dispatch({type: 'fetch_today_exercise', payload: result});
     }).catch((err)=>{
         console.log('Error occured:', err);

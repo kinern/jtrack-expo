@@ -44,7 +44,6 @@ const CalendarScreen = ({navigation}) =>{
     const fullySetupDatabase = () => {
         db.setupDatabase()
         .then((res)=>{
-            console.log(res);
             return fetchCalendarExercises(startMonth);
         })
         .then((res)=>{

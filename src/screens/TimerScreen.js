@@ -1,23 +1,24 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Input, Text} from 'react-native-elements';
-
+import {Text} from 'react-native-elements';
+import {Context as ExerciseContext} from '../context/exerciseContext';
 import Header from '../components/Header';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import colors from '../theme/colors';
 
 const TimerScreen = ({navigation}) => {
 
+    const {state, saveExercise, fetchTodayExercise} = useContext(ExerciseContext);
     const [timerOn, setTimerOn] = useState(false);
     const [timerInterval, setTimerInterval] = useState('');
+    const [currentTime, setCurrentTime] = useState(state.todayExercise.time);
     const [sec, setSec] = useState(0);
     const [min, setMin] = useState(0);
     let iconName = (timerOn)? 'stop': 'play'; 
 
 
     useEffect(()=>{
+        fetchTodayExercise();
         let interval = null;
         if (timerOn){
             interval = setInterval(()=>{
@@ -49,6 +50,19 @@ const TimerScreen = ({navigation}) => {
         setTimerOn(false);
     }
 
+    //Get recoded time from sec and min, and current exercise time, 
+    //then save sum to database.
+    const addToCurrentTime = async () => {
+        const addTime = (sec > 30)? min+1: min;
+        const date = new Date();
+        console.log('time:', currentTime+addTime);
+        saveExercise(date, addTime + currentTime, ()=>{fetchTodayExercise()});
+        setCurrentTime(state.todayExercise.time);
+        setMin(0);
+        setSec(0);
+        
+    }
+
     return (
         <View style={styles.container}>
             <Header title={navigation.state.routeName}/>
@@ -68,13 +82,16 @@ const TimerScreen = ({navigation}) => {
                 </View>
             </View>
             <View >
-                <TouchableOpacity style={styles.addBtn}>
+                <TouchableOpacity 
+                style={styles.addBtn}
+                onPress={addToCurrentTime}
+                >
                     <Text style={styles.addBtnText}>Add To Workout</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.currentTimeMenu}>
                 <Text style={styles.currentTimeText}>Today's Recorded Time:</Text>
-                <Text style={styles.currentTimeText}>10min</Text>
+                <Text style={styles.currentTimeText}>{currentTime}min</Text>
             </View>
         </View>
     );

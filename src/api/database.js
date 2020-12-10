@@ -55,8 +55,16 @@ export default class DB{
                     (txn, err)=>{
                         reject(err);
                     }
+                    
                 );
-              } 
+                if (typeof resolve === 'function'){
+                    resolve(`finished creating ${tableName}`);
+                }
+              } else {
+                if (typeof resolve === 'function'){
+                    resolve(`finished creating ${tableName}`);
+                }  
+              }
             },
             (txn, err)=>{
                 console.log(err);
