@@ -201,7 +201,11 @@ const fetchTodayExercise = dispatch => () => {
 const fetchGoal = dispatch => (weekdays, minutes) => {
     //Update in database
     db.fetchGoal(weekdays, minutes).then((result)=>{
-        dispatch({type: 'fetch_goal', payload: result});
+        const minutes = result["minutes"];
+        delete result["minutes"];
+        delete result["id"];
+        const weekdays = result;
+        dispatch({type: 'fetch_goal', payload: {minutes, weekdays}});
     }).catch((err)=>{
         console.log(err);
         dispatch({type: 'error', payload: 'Fetch Goal Failed.'});

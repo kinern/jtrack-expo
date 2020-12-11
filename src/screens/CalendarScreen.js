@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
 import DB from '../api/database';
@@ -10,6 +10,7 @@ import colors from '../theme/colors';
 
 const db = new DB();
 
+
 /*
 Calendar Screen Component
 
@@ -18,7 +19,6 @@ exercise data which will be be displayed on the calendar and line graph.
 
 Displays Calendar component and "Today" button which toggles the TodayBox 
 modal component.
-
 */
 const CalendarScreen = ({navigation}) =>{
 
@@ -26,11 +26,11 @@ const CalendarScreen = ({navigation}) =>{
         state, 
         fetchCalendarExercises, 
         fetchGraphExercises, 
-        fetchTodayExercise
+        fetchTodayExercise,
+        fetchGoal
     } = useContext(ExerciseContext);
-    const [modalVisible, setModalVisible] = useState(false);
     const startMonth = new Date();
-
+    const [goalMinutes, setGoalMinutes] = useState(0);
 
 
     //useEffect is called one time before screen renders.
@@ -45,27 +45,48 @@ const CalendarScreen = ({navigation}) =>{
         db.setupDatabase()
         .then((res)=>{
             return fetchCalendarExercises(startMonth);
-        })
-        .then((res)=>{
+        }).then((res)=>{
             return fetchGraphExercises(startMonth);
         }).then(()=>{
             return fetchTodayExercise();
-        })
-        .catch((err)=>{console.log('err:', err)}); 
+        }).then(()=>{
+            return fetchGoal();
+        }).then(()=>{
+            setGoalMinutes(state.goal.minutes);
+        }).catch((err)=>{
+            console.log('err:', err);
+        }); 
     }
 
+
+    const renderGoalMinutes = () => {
+        if ((!state.goal.weekdays) || (state.goal.minutes == 0)){
+            return null;
+        }
+        const {minutes, weekdays} = state.goal; 
+        const weekdayMap = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+        const date = new Date();
+        const dateStr = weekdayMap[date.getDay()];
+        return (state.goal["weekdays"][dateStr] != "0")? <Text>/{state.goal.minutes}</Text> : null;
+    }
     
+
     return (
         <View style={styles.main}>
             <Header title={navigation.state.routeName}/>
             <View style={styles.todayExercise}>
                 <Text style={styles.exerciseTimeText}>Today's Time:</Text>
-                <Text style={styles.exerciseTime}>{state.todayExercise.time}min</Text>
+                <Text style={styles.exerciseTime}>
+                    {state.todayExercise.time}
+                    {renderGoalMinutes()}
+                    min
+                </Text>
             </View>
             <Calendar navigation={navigation}/>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     main: {

@@ -13,18 +13,13 @@ const GoalsScreen = ({navigation}) => {
     weekdayNames.map((item)=>{
         goalDaysObj[item] = 0;
     }); 
-    const {state, fetchGoal, saveGoal} = useContext(ExerciseContext);
+    const {state, saveGoal} = useContext(ExerciseContext);
     const [goalDays, setGoalDays] = useState(state.goal.weekdays);
     const [exerciseTime, setExerciseTime] = useState(state.goal.minutes);
 
-
-    useEffect(()=>{
-        fetchGoal();
-    }, []);
-
     const renderWeekdayButtons = () => {
         const buttons = weekdayNames.map((item)=>{
-            const bgColor = (goalDays[item] !== 0)? colors.medium : colors.inactiveLight;
+            const bgColor = ((goalDays[item]) && goalDays[item] !== 0)? colors.medium : colors.inactiveLight;
             return (
                 <TouchableOpacity 
                 key={item} 
@@ -61,7 +56,7 @@ const GoalsScreen = ({navigation}) => {
             <View style={styles.inlineMenu}>
                 <Text style={styles.mainText}>I want to do</Text>
                 <Input 
-                value={exerciseTime}
+                value={exerciseTime.toString()}
                 onChangeText={(text)=>{setExerciseTime(text.toString())}} 
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.inputText}
