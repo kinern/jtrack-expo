@@ -6,19 +6,25 @@ import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../theme/colors';
 
+
 const TimerScreen = ({navigation}) => {
 
     const {state, saveExercise, fetchTodayExercise} = useContext(ExerciseContext);
     const [timerOn, setTimerOn] = useState(false);
-    const [timerInterval, setTimerInterval] = useState('');
     const [currentTime, setCurrentTime] = useState(state.todayExercise.time);
     const [sec, setSec] = useState(0);
     const [min, setMin] = useState(0);
     let iconName = (timerOn)? 'stop': 'play'; 
 
 
+    //Called when component loads.
     useEffect(()=>{
         fetchTodayExercise();
+    }, []);
+
+
+    //Called multiple times because of timer.
+    useEffect(()=>{
         let interval = null;
         if (timerOn){
             interval = setInterval(()=>{
@@ -42,9 +48,6 @@ const TimerScreen = ({navigation}) => {
     };
 
     const resetTimer = () => {
-        if (timerOn){
-            clearInterval(timerInterval);
-        }
         setSec(0);
         setMin(0);
         setTimerOn(false);
@@ -55,7 +58,6 @@ const TimerScreen = ({navigation}) => {
     const addToCurrentTime = async () => {
         const addTime = (sec > 30)? min+1: min;
         const date = new Date();
-        console.log('time:', currentTime+addTime);
         saveExercise(date, addTime + currentTime, ()=>{fetchTodayExercise()});
         setCurrentTime(state.todayExercise.time);
         setMin(0);

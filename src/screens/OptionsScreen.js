@@ -1,10 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {Text, Input, Button} from 'react-native-elements';
+import {Text} from 'react-native-elements';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import {Context as WeatherContext} from '../context/weatherContext';
 
 import Header from '../components/Header';
+
+import colors from '../theme/colors';
 
 /*
 Options Screen
@@ -89,68 +91,54 @@ const OptionsScreen = ({navigation}) =>{
 
     const renderDegreeToggle = () =>{
 
-        const degreeCBg = (weatherState.degrees == 'metric')? '#35c8db': '#a9c1c4';
-        const degreeFBg = (weatherState.degrees == 'imperial')? '#eb4034': '#c4a9a9';
+        const degreeCBg = (weatherState.degrees == 'metric')? colors.highlight: colors.medium;
+        const degreeFBg = (weatherState.degrees == 'imperial')? colors.highlight: colors.medium;
 
         return (
-            <View style={styles.degreeToggleMenu}>
-                <Text>Weather Degrees</Text>
-                <View style={styles.toggleMenu}>
+            <View style={styles.row}>
+                <Text style={styles.title}>Weather Degrees</Text>
+                <View style={styles.toggle}>
                     <TouchableOpacity 
-                    style={{...styles.degreeBtn, backgroundColor: degreeCBg}}
+                    style={{...styles.toggleBtn, backgroundColor: degreeCBg}}
                     onPress={()=>{toggleDegrees('metric')}}
-                    ><Text>C</Text></TouchableOpacity>
+                    ><Text style={styles.toggleBtnText}>C</Text></TouchableOpacity>
                     <TouchableOpacity 
-                    style={{...styles.degreeBtn, backgroundColor: degreeFBg}}
+                    style={{...styles.toggleBtn, backgroundColor: degreeFBg}}
                     onPress={()=>{toggleDegrees('imperial')}}
-                    ><Text>F</Text></TouchableOpacity>
+                    ><Text style={styles.toggleBtnText}>F</Text></TouchableOpacity>
                 </View>
             </View>
         );
     }
 
 
-    const renderOptionButton = (onPressFunction, buttonTitle) => {
+    const renderOptionButton = (onPressFunction, Title, buttonTitle) => {
         return (
-            <TouchableOpacity 
-            onPress={onPressFunction}
-            style={styles.btn}>
-                <Text style={styles.btnText}>{buttonTitle}</Text>
-            </TouchableOpacity>
-        );
-    } 
-
-    
-    const findNewLocation = () => {
-
-    }
-
-
-    const renderLocationForm = () => {
-        return (
-            <View>
-                <Text>Location:</Text>
-                <Input 
-                placeHolder="location"
-                style={{width: 50}}
-                />
-                <TouchableOpacity
-                onSubmit={()=>{findNewLocation()}}
-                >
-                    <Text>Submit</Text>
+            <View style={styles.row}>
+                <Text style={styles.title}>{Title}</Text>
+                <TouchableOpacity 
+                onPress={onPressFunction}
+                style={styles.btn}>
+                    <Text style={styles.btnTitle}>{buttonTitle}</Text>
                 </TouchableOpacity>
             </View>
         );
-    }
+    } 
 
 
     return (
         <View style={styles.container}>
             <Header title={navigation.state.routeName}/>
             <View>
-                {renderDegreeToggle()}
-                {renderOptionButton(()=>{()=>{confirmChange(addTestData, "add")}}, 'Add Test Data')}
-                {renderOptionButton(()=>{confirmChange(clearData, "clear")}, 'Clear Database')}
+                <Text style={styles.sectionTitle}>Weather</Text>
+                <View style={styles.section}>
+                    {renderDegreeToggle()}
+                </View>
+                <Text style={styles.sectionTitle}>Data</Text>
+                <View style={styles.section}>
+                    {renderOptionButton(()=>{confirmChange(addTestData, "add")}, 'Add Test Data', 'Add')}
+                    {renderOptionButton(()=>{confirmChange(clearData, "clear")}, 'Clear Database', 'Clear')}
+                </View>
             </View>
         </View>
     );
@@ -159,48 +147,61 @@ const OptionsScreen = ({navigation}) =>{
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        width: '100%',
+        backgroundColor: colors.light,
     },
-    titleText: {
+    sectionTitle: {
         fontSize: 24,
-        fontWeight: '700',
-        color: 'gray'
+        textAlign: 'center',
+        width: '100%',
+        backgroundColor: colors.light,
+        padding: 10,
+        color: colors.highlight,
+        textShadowColor: colors.medium,
+        textShadowRadius: 10
     },
-    degreeToggleMenu: {
-        margin: 20, 
-        borderWidth: 1, 
-        borderRadius: 2,
-        borderColor: 'lightgray',
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 20
+        borderBottomWidth: 1,
+        borderBottomColor: colors.highlight,
+        marginHorizontal: 20,
+        paddingVertical: 20
     },
-    toggleMenu: {
+    title: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: colors.highlight,
+        textShadowColor: colors.medium,
+        textShadowRadius: 10
+    },
+    toggle: {
         flexDirection: 'row'
     },
-    degreeBtn: {
-        padding: 10,
-        marginTop: 5,
-        margin: 10,
-        width: 50,
-        alignItems: 'center',
+    toggleBtn: {
+        paddingHorizontal: 30,
+        paddingVertical: 10,
         elevation: 2
+    },
+    toggleBtnText: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: colors.dark
     },
     btn: {
-        borderColor: 'lightgray',
-        borderWidth: 1,
-        borderRadius: 2,
-        justifyContent: 'center',
+        minWidth: 80,
+        padding: 10,
+        borderRadius: 20,
+        elevation: 2,
         alignItems: 'center',
-        margin: 20,
-        padding: 20,
-        width: 180,
-        color: 'gray',
-        elevation: 2
+        backgroundColor: colors.highlight
     },
-    btnText: {
-        fontSize: 20
+    btnTitle: {
+        fontWeight: '700',
+        color: colors.medium
     }
+
 });
 
 

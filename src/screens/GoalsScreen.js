@@ -19,14 +19,14 @@ const GoalsScreen = ({navigation}) => {
 
     const renderWeekdayButtons = () => {
         const buttons = weekdayNames.map((item)=>{
-            const bgColor = ((goalDays[item]) && goalDays[item] !== 0)? colors.medium : colors.inactiveLight;
+            const bgColor = ((goalDays[item]) && goalDays[item] !== 0)? colors.highlight : colors.medium;
             return (
                 <TouchableOpacity 
                 key={item} 
                 style={{...styles.weekdayBtn, backgroundColor: bgColor}}
                 onPress={()=>{updateWeekday(item)}}
                 >
-                    <Text>{item}</Text>
+                    <Text style={styles.weekdayBtnText}>{item.toUpperCase()}</Text>
                 </TouchableOpacity>
                 );            
             }
@@ -50,18 +50,19 @@ const GoalsScreen = ({navigation}) => {
         <View style={styles.container}>
             <Header title={navigation.state.routeName}/>
             <View style={styles.inlineMenu}>
-                <Text style={styles.mainText}>I want to exercise on:</Text>
+                <Text style={styles.weekdayTitle}>I want to exercise on:</Text>
             </View>
             {renderWeekdayButtons()}
             <View style={styles.inlineMenu}>
-                <Text style={styles.mainText}>I want to do</Text>
+                <Text style={styles.minutesText}>I want to do</Text>
                 <Input 
                 value={exerciseTime.toString()}
                 onChangeText={(text)=>{setExerciseTime(text.toString())}} 
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.inputText}
+                underlineColorAndroid={colors.highlight}
                 />
-                <Text style={styles.mainText}>Minutes per workout</Text>
+                <Text style={styles.minutesText}>minutes per workout</Text>
             </View>
             <TouchableOpacity
             style={styles.saveBtn}
@@ -77,10 +78,18 @@ const GoalsScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center'
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: colors.light
     },
-    mainText: {
-        fontSize: 16
+    weekdayTitle: {
+        marginTop: 20,
+        fontSize: 24,
+        color: colors.highlight
+    }, 
+    minutesText: {
+        fontSize: 18,
+        color: colors.highlight
     },
     inlineMenu: {
         flexDirection: 'row',
@@ -90,38 +99,49 @@ const styles = StyleSheet.create({
         width: 80,
         padding: 0,
         margin: 0,
-        marginBottom: -15
+        marginBottom: -15,
+        borderBottomWidth:0
     },
     inputText: {
+        color: colors.highlight,
         textAlign: 'center',
         margin: 0,
         padding:0,
         fontSize: 30
     },
     weekdayBtnMenu: {
+        marginVertical: 20,
         flexDirection: 'row',
         justifyContent:'space-evenly',
         width: '100%'
     },
     weekdayBtn: {
-        borderWidth: 1,
-        borderColor: 'lightgray',
-        padding: 10
+        width: 40,
+        paddingVertical: 20,
+        alignItems: 'center',
+        elevation: 2
     },
+    weekdayBtnText: {
+        fontSize: 10,
+        fontWeight: '700',
+        color: colors.dark
+    }, 
     saveBtn: {
-        borderColor: 'lightgray',
-        borderWidth: 1,
-        padding: 10,
+        backgroundColor: colors.highlight,
+        borderRadius: 25,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginVertical: 20,
         elevation: 2
     },
     saveBtnText: {
         fontSize: 18,
-        fontWeight: '700'
+        fontWeight: '700',
     },
     goalMessage: {
-        backgroundColor: 'lightgray',
         borderRadius: 100,
         fontSize: 36,
+        color: colors.highlight,
         marginTop: 50,
         padding: 25
     }
