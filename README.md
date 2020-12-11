@@ -1,3 +1,5 @@
+## Note - This is the old version of JTrack before I started using Expo. It is not related to the Expo version and is only for reference.
+
 # JTrack - Fitness Tracking App
 
 Website: https://kinern.github.io/jtrack
