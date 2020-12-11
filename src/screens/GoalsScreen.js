@@ -59,8 +59,8 @@ const GoalsScreen = ({navigation}) => {
                 value={exerciseTime.toString()}
                 onChangeText={(text)=>{setExerciseTime(text.toString())}} 
                 containerStyle={styles.inputContainer}
+                inputContainerStyle={{borderBottomColor: colors.highlight}}
                 inputStyle={styles.inputText}
-                underlineColorAndroid={colors.highlight}
                 />
                 <Text style={styles.minutesText}>minutes per workout</Text>
             </View>
