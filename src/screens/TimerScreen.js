@@ -63,7 +63,17 @@ const TimerScreen = ({navigation}) => {
         setMin(0);
         setSec(0);
         
-    }
+    };
+
+    const renderButton = (onPressFn, iconStr) => {
+        return (
+            <TouchableOpacity 
+            onPress={onPressFn}
+            >
+                <Icon name={iconStr} color={colors.medium} size={40} />
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -71,16 +81,8 @@ const TimerScreen = ({navigation}) => {
             <View style={styles.timerContainer}>
                 <Text style={styles.timer}>{('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2)} </Text>
                 <View style={styles.timerMenu}>
-                    <TouchableOpacity 
-                    onPress={toggleTimer}
-                    >
-                        <Icon name={iconName} color={colors.medium} size={40} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    onPress={resetTimer}
-                    >
-                        <Icon name='restart' color={colors.medium} size={40} />
-                    </TouchableOpacity>
+                    {renderButton(toggleTimer, iconName)}
+                    {renderButton(resetTimer, 'restart')}
                 </View>
             </View>
             <View >

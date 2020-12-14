@@ -67,12 +67,12 @@ const CalendarScreen = ({navigation}) =>{
         const weekdayMap = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
         const date = new Date();
         const dateStr = weekdayMap[date.getDay()];
-        return (state.goal["weekdays"][dateStr] != "0")? <Text>/{state.goal.minutes}</Text> : null;
+        return (weekdays[dateStr] != "0")? <Text>/{minutes}</Text> : null;
     }
     
 
     return (
-        <View style={styles.main}>
+        <View>
             <Header title={navigation.state.routeName}/>
             <View style={styles.todayExercise}>
                 <Text style={styles.exerciseTimeText}>Today's Time:</Text>
@@ -89,8 +89,6 @@ const CalendarScreen = ({navigation}) =>{
 
 
 const styles = StyleSheet.create({
-    main: {
-    },
     todayExercise: {
         flexDirection: 'row',
         justifyContent:'center',

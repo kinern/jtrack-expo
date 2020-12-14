@@ -133,9 +133,10 @@ const fillEmptyGraphData = (graphData, startDate) => {
 }
 
 
-const fetchMonthlyTotals = dispatch => () => {
-    db.fetchMonthlyTotals()
+const fetchMonthlyTotals = dispatch => (date) => {
+    db.fetchMonthlyTotals(date)
     .then((results)=>{
+        console.log('fetch six months data:', results);
         dispatch({type: 'fetch_monthly_totals', payload: results})
     })
     .catch((err)=>{

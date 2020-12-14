@@ -135,20 +135,23 @@ export default class DB{
 
     
     //Six Month Graph
-    fetchMonthlyTotals (year) {
-        const selectQuery = ` 
-        SELECT MONTH('date') AS month, SUM('time') AS price
-        FROM exercises
-        GROUP BY MONTH('date')
-        WHERE YEAR('date') = ?
-        `;
+    fetchMonthlyTotals (date) {
+        //Get 1st of startDate and last of endDate.
+
+        const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        const startDateCopy = startDate;
+        const endDate = new Date(startDateCopy.setMonth(startDateCopy.getMonth()-5), 0);
+        const startStr = dateTimeToSQLString(startDate);
+        const endStr = dateTimeToSQLString(endDate);
+
+        const selectQuery = 'SELECT MONTH(\'date\') AS month, SUM(\'time\') AS price FROM exercises GROUP BY MONTH(\'date\') WHERE date > ? AND date < ?';
 
         return new Promise ((resolve, reject)=>{
             this.db.transaction(
                 txn => {
                     txn.executeSql(
                         selectQuery,
-                        [year],
+                        [startStr, endStr],
                         (txn, res)=>{
                             const resultsArray = this.resultsIntoArray(res);
                             resolve(resultsArray);

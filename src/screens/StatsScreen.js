@@ -67,6 +67,25 @@ const StatsScreen = ({navigation}) =>{
         );
     }
 
+    const renderGraphScroll = () => {
+        return (
+            <View style={styles.swipeTextView}>
+                <Icon name="angle-double-left" size={12} color={colors.inactiveLight} />
+                <Text style={styles.swipeText}>Swipe To Scroll Graph</Text>
+                <Icon name="angle-double-right" size={12} color={colors.inactiveLight} />
+            </View>
+        );
+    }
+
+    const renderAverageTime = () => {
+        return (
+            <View style={styles.averageMenu}>
+                <Text style={styles.averageText}>This Month's Average: </Text>
+                <Text style={styles.averageTime}>10min</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <Header title={navigation.state.routeName}/>
@@ -77,15 +96,8 @@ const StatsScreen = ({navigation}) =>{
                     {renderArrowButton('right')}
                 </View>
                 <LineGraph data={state.graphExercises} />
-                <View style={styles.swipeTextView}>
-                    <Icon name="angle-double-left" size={12} color={colors.inactiveLight} />
-                    <Text style={styles.swipeText}>Swipe To Scroll Graph</Text>
-                    <Icon name="angle-double-right" size={12} color={colors.inactiveLight} />
-                </View>
-                <View style={styles.averageMenu}>
-                    <Text style={styles.averageText}>This Month's Average: </Text>
-                    <Text style={styles.averageTime}>10min</Text>
-                </View>
+                {renderGraphScroll()}
+                {renderAverageTime()}
             </View>
             <View style={styles.sixMonthContainer}>
                 <Text style={styles.sixMonthTitle}>Past Six Months</Text>
@@ -111,21 +123,18 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '700',
         color: colors.inactiveLight,
-        marginRight:10,
-        marginLeft: 10
+        marginHorizontal: 10,
     },
     arrowbtn: {
-        paddingRight: 20, 
-        paddingLeft: 20
+        paddingHorizontal: 20
     },
     dateText: {
         alignSelf:'center',
         justifyContent: 'center',
         fontSize: 20,
         fontWeight: "700",
-        marginLeft: 10,
-        marginRight: 10,
-        color: colors.medium
+        marginHorizontal: 10,
+        color: colors.medium,
     },
     dateMenu: {
         borderColor: colors.light,

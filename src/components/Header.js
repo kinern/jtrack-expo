@@ -36,9 +36,6 @@ const Header = ({title}) => {
                 <Image style={styles.logo} source={logoImage} />
                 <Text style={styles.title}>JTrack</Text>
             </View>
-            <View style={styles.middleSection}>
-                <Text style={styles.pageName}></Text>
-            </View>
             {renderModalButton()}
         </View>
     );
@@ -51,8 +48,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         paddingTop: 30,
-        paddingLeft: 5,
-        paddingRight: 5,
+        paddingHorizontal: 5,
         paddingBottom: 5,
         backgroundColor: colors.medium
     },
@@ -72,11 +68,7 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: '700',
         color: colors.highlight
-    },
-    pageName: {
-        fontWeight: '700',
-        color: colors.highlight
     }
 });
 
-export default Header
+export default Header;

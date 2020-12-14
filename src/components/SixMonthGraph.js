@@ -6,8 +6,6 @@ import colors from '../theme/colors';
 
 const SixMonthGraph = ({}) => {
 
-    //const months = ['SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB'];
-
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const contentInset = { top: 20, bottom: 20, left: 5, right: 20 }
     let data = [
@@ -19,17 +17,37 @@ const SixMonthGraph = ({}) => {
         {time: 100, date: new Date(2021, 2, 1)}
     ];
 
+    const renderYAxis = () => {
+        return (
+            <YAxis
+            data={data.map(item=>item.time)}
+            contentInset={contentInset}
+            svg={{fontSize: 10, fill: colors.inactiveDark}}
+            numberOfTicks={5}
+            formatLabel={(value) => `${value}`}
+            showGrid={false}
+            />
+        );
+    }
+
+    const renderXAxis = () => {
+        return (
+            <XAxis
+            data={data}
+            xAccessor={ ({ item }) => item.date }
+            scale={ scale.scaleTime }
+            formatLabel={(date)=>{return monthNames[date.getMonth()]}}
+            contentInset={{right: 45, left: 45}}
+            svg={{ fontSize: 14, fontWeight: '700', fill: colors.inactiveDark }}
+            style={{ marginTop: 10 }}
+            />
+        );
+    }
+
     return (
         <View style={{paddingHorizontal: 10}}>
             <View style={{height: 120, flexDirection: 'row' }}>
-                <YAxis
-                    data={data.map(item=>item.time)}
-                    contentInset={contentInset}
-                    svg={{fontSize: 10, fill: colors.inactiveDark}}
-                    numberOfTicks={5}
-                    formatLabel={(value) => `${value}`}
-                    showGrid={false}
-                />
+                {renderYAxis()}
                 <BarChart
                     style={{ flex: 1 }}
                     data={ data }
@@ -43,21 +61,11 @@ const SixMonthGraph = ({}) => {
                     <Grid />
                 </BarChart>
             </View>
-            <XAxis
-                data={data}
-                xAccessor={ ({ item }) => item.date }
-                scale={ scale.scaleTime }
-                formatLabel={(date)=>{return monthNames[date.getMonth()]}}
-                contentInset={{right: 45, left: 45}}
-                svg={{ fontSize: 14, fontWeight: '700', fill: colors.inactiveDark }}
-                style={{ marginTop: 10 }}
-            />
+            {renderXAxis()}
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
 
 export default SixMonthGraph;

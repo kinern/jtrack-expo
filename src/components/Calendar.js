@@ -95,10 +95,7 @@ const styles = StyleSheet.create({
     calendar: {
         height: 450,
         width: '98%',
-        //backgroundColor: '#FFFFFF',
-        //borderRadius: 15,
         margin: '1%',
-        //elevation : 2,
     }
 });
 

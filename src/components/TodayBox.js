@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import {Context as WeatherContext} from '../context/weatherContext';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import * as Location from 'expo-location';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 import colors from '../theme/colors';
 
@@ -68,13 +67,11 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
         const degreeName = weatherState.weather? degreeNames[weatherState.degrees]: null;
         return (
             <View style={styles.weatherLine}>
-                {(weatherState.weather? 
-                <Text>{weatherTemp}{degreeName}</Text>
-                : null)}
-                <Text> - </Text>
-                {(weatherState.weather? <Text>{weatherName}</Text>: null)}
-                <Text> - </Text>
-                <Text>Great day to get fit!</Text>
+                {(weatherState.weather? <Text style={styles.temp}>{weatherTemp}{degreeName}</Text>: null)}
+                <View style={styles.name}>
+                    {(weatherState.weather? <Text>{weatherName}</Text>: null)}
+                    <Text> - Great day to get fit!</Text>
+                </View>
             </View>
         );
     }
@@ -91,15 +88,11 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
         onRequestClose={() => changeModalVisible(!modalVisible)}
         >
             <View style={styles.centeredView}>
-                <View style={{...styles.modalView, backgroundColor: getBgColorFromWeather()}}>
-                    <TouchableOpacity
-                    onPress={()=>{closeModal()}}
-                    style={styles.closeBtn}
-                    >
-                        <Icon name="times-circle" size={30} color="#333030" />
-                    </TouchableOpacity>
-                    {renderWeather()}
-                </View>
+                <TouchableOpacity onPress={()=>{closeModal()}}>
+                    <View style={{...styles.modalView, borderColor: getBgColorFromWeather()}}>
+                        {renderWeather()}
+                    </View>
+                </TouchableOpacity>
             </View>
         </Modal>
     )
@@ -108,29 +101,34 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
+        marginTop: 22,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
     },
     modalView: {
         margin: 20,
-        borderRadius: 2,
         padding: 10,
-        width: '80%',
+        borderRadius: 2,
+        borderWidth: 5,
+        elevation: 2,
         height: 100,
+        width: '80%',
         alignItems: "center",
-        elevation: 2
-    },
-    closeBtn: {
-        alignSelf: 'flex-end'
+        backgroundColor: '#FFF'
     },
     exerciseTime: {
-        fontWeight: '700',
+        marginTop: 10,
         fontSize: 24,
-        marginTop: 10
+        fontWeight: '700',
     },
     weatherLine: {
         marginTop:20,
+        flexDirection: 'row'
+    },
+    temp: {
+        fontSize: 36
+    },
+    name: {
         flexDirection: 'row'
     }
 });
