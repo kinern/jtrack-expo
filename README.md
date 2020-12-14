@@ -30,13 +30,15 @@ An Exercise Tracking App Using React Native, SQLite, And Expo
 ## Screenshots
 
 <p float="left">
-  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/calendar_screen.png?raw=true"  height="400" alt="calendar screen"/>
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/current-ver/calendar_screen.png?raw=true" height="400" alt="calendar screen"/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/calendar_screen_toggle.png?raw=true" height="400" alt="calendar screen"/>
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/current-ver/graph_screen.png?raw=true" height="400" alt="graph screen"/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/options_screen.png?raw=true" height="400" alt="calendar screen"/>
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/current-ver/timer_screen.png?raw=true" height="400" alt="timer screen"/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/stats_screen.png?raw=true" height="400" alt="calendar screen"/>
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/current-ver/goals_screen.png?raw=true" height="400" alt="goals screen"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/kinern/jtrack-expo/blob/master/images/current-ver/options_screen.png?raw=true" height="400" alt="options screen"/>
 </p>
 
 ## How to use
