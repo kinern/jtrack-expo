@@ -141,10 +141,10 @@ export default class DB{
         const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
         const startDateCopy = startDate;
         const endDate = new Date(startDateCopy.setMonth(startDateCopy.getMonth()-5), 0);
-        const startStr = dateTimeToSQLString(startDate);
-        const endStr = dateTimeToSQLString(endDate);
+        const startStr = this.dateTimeToSQLString(startDate);
+        const endStr = this.dateTimeToSQLString(endDate);
 
-        const selectQuery = 'SELECT MONTH(\'date\') AS month, SUM(\'time\') AS price FROM exercises GROUP BY MONTH(\'date\') WHERE date > ? AND date < ?';
+        const selectQuery = 'SELECT strftime("%m", date) AS month, SUM(time) AS minutes FROM exercises WHERE date > ? AND date < ? GROUP BY strftime("%m", date)';
 
         return new Promise ((resolve, reject)=>{
             this.db.transaction(

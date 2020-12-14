@@ -267,6 +267,7 @@ export const {Context, Provider} = createDataContext(
         calendarExercises: null, 
         graphExercises: null, 
         todayExercise: {time: 0, date: '2020-01-01 00:00:00'},
-        goal: {weekdays: {'sun': 0, 'mon': 0, 'tue': 0, 'wed': 0, 'thu': 0, 'fri': 0, 'sat': 0, }, minutes: "0"}
+        goal: {weekdays: {'sun': 0, 'mon': 0, 'tue': 0, 'wed': 0, 'thu': 0, 'fri': 0, 'sat': 0, }, minutes: "0"},
+        monthlyTotals: []
     }
 );

@@ -66,7 +66,7 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
         const weatherName = weatherState.weather? weatherState.weather.weather[0].main : null;
         const degreeName = weatherState.weather? degreeNames[weatherState.degrees]: null;
         return (
-            <View style={styles.weatherLine}>
+            <View style={styles.weatherBox}>
                 {(weatherState.weather? <Text style={styles.temp}>{weatherTemp}{degreeName}</Text>: null)}
                 <View style={styles.name}>
                     {(weatherState.weather? <Text>{weatherName}</Text>: null)}
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         borderWidth: 5,
         elevation: 2,
-        height: 100,
         width: '80%',
         alignItems: "center",
         backgroundColor: '#FFF'
@@ -121,9 +120,9 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '700',
     },
-    weatherLine: {
-        marginTop:20,
-        flexDirection: 'row'
+    weatherBox: {
+        padding: 20,
+        alignItems: 'center'
     },
     temp: {
         fontSize: 36

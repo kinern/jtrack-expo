@@ -55,7 +55,7 @@ const LineGraph = ({data}) => {
                         yAccessor={ ({ item }) => item.time }
                         xAccessor={ ({ item }) => item.date }
                         xScale={ scale.scaleTime }
-                        svg={{ fill: colors.light, stroke: 'rgb(134, 65, 244)' }}
+                        svg={{ stroke: 'rgb(134, 65, 244)'}}
                         contentInset={contentInset}
                     >
                         <Grid />

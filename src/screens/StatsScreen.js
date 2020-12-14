@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
 
@@ -24,7 +24,7 @@ Displays a LineGraph Component and buttons to change the month being shown.
 */
 const StatsScreen = ({navigation}) =>{
 
-    const {state, fetchGraphExercises, fetchMonthyTotals} = useContext(ExerciseContext);
+    const {state, fetchGraphExercises, fetchMonthlyTotals} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
 
@@ -101,7 +101,7 @@ const StatsScreen = ({navigation}) =>{
             </View>
             <View style={styles.sixMonthContainer}>
                 <Text style={styles.sixMonthTitle}>Past Six Months</Text>
-                <SixMonthGraph />
+                <SixMonthGraph data={state.monthlyTotals}/>
             </View>
         </View>
     );
@@ -173,7 +173,9 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         fontSize: 18,
         fontWeight: "700",
-        color: colors.highlight
+        color: colors.highlight,
+        textShadowColor: 'black',
+        textShadowRadius: 10
     }
 });
 

@@ -1,26 +1,18 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import { BarChart, Grid, YAxis, XAxis } from 'react-native-svg-charts'
-import * as scale from 'd3-scale'
+import {View, StyleSheet, Text} from 'react-native';
+import { BarChart, Grid, YAxis, XAxis } from 'react-native-svg-charts';
 import colors from '../theme/colors';
 
-const SixMonthGraph = ({}) => {
+const SixMonthGraph = ({ data }) => {
 
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const contentInset = { top: 20, bottom: 20, left: 5, right: 20 }
-    let data = [
-        {time: 100, date: new Date(2020, 9, 1)},
-        {time: 200, date: new Date(2020, 10, 1)},
-        {time: 130, date: new Date(2020, 11, 1)},
-        {time: 150, date: new Date(2020, 12, 1)},
-        {time: 90, date: new Date(2021, 1, 1)},
-        {time: 100, date: new Date(2021, 2, 1)}
-    ];
+
 
     const renderYAxis = () => {
         return (
             <YAxis
-            data={data.map(item=>item.time)}
+            data={data.map(item=>item.minutes)}
             contentInset={contentInset}
             svg={{fontSize: 10, fill: colors.inactiveDark}}
             numberOfTicks={5}
@@ -30,19 +22,20 @@ const SixMonthGraph = ({}) => {
         );
     }
 
+
     const renderXAxis = () => {
         return (
             <XAxis
             data={data}
-            xAccessor={ ({ item }) => item.date }
-            scale={ scale.scaleTime }
-            formatLabel={(date)=>{return monthNames[date.getMonth()]}}
-            contentInset={{right: 45, left: 45}}
-            svg={{ fontSize: 14, fontWeight: '700', fill: colors.inactiveDark }}
-            style={{ marginTop: 10 }}
+            xAccessor={ ({ item }) => item.month }
+            formatLabel={(value)=>monthNames[parseInt(value)-1]}
+            contentInset={{right: 60, left: 60}}
+            svg={{ fontSize: 14, fill: colors.inactiveDark }}
+            style={{marginTop: 10}}
             />
         );
     }
+
 
     return (
         <View style={{paddingHorizontal: 10}}>
@@ -51,9 +44,8 @@ const SixMonthGraph = ({}) => {
                 <BarChart
                     style={{ flex: 1 }}
                     data={ data }
-                    yAccessor={ ({ item }) => item.time }
-                    xAccessor={ ({ item }) => item.date }
-                    xScale={ scale.scaleTime }
+                    yAccessor={ ({ item }) => item.minutes }
+                    xAccessor={ ({ item }) => item.month }
                     svg={{ fill: colors.inactiveDark }}
                     contentInset={contentInset}
                     showGrid={false}
@@ -66,6 +58,8 @@ const SixMonthGraph = ({}) => {
     );
 };
 
+
 const styles = StyleSheet.create({});
+
 
 export default SixMonthGraph;

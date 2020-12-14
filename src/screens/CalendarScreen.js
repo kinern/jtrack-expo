@@ -27,6 +27,7 @@ const CalendarScreen = ({navigation}) =>{
         fetchCalendarExercises, 
         fetchGraphExercises, 
         fetchTodayExercise,
+        fetchMonthlyTotals,
         fetchGoal
     } = useContext(ExerciseContext);
     const startMonth = new Date();
@@ -50,6 +51,10 @@ const CalendarScreen = ({navigation}) =>{
         }).then(()=>{
             return fetchTodayExercise();
         }).then(()=>{
+            const date = new Date();
+            return fetchMonthlyTotals(date);
+        }).then(()=>{
+            console.log('monthly totals:', state.monthlyTotals);
             return fetchGoal();
         }).then(()=>{
             setGoalMinutes(state.goal.minutes);
