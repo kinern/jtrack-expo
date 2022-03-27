@@ -3,9 +3,6 @@ import {View, StyleSheet, Text} from 'react-native';
 import {Context as ExerciseContext} from '../context/exerciseContext';
 import Calendar from '../components/Calendar';
 import DB from '../api/database';
-
-import Header from '../components/Header';
-
 import colors from '../theme/colors';
 
 const db = new DB();
@@ -33,7 +30,6 @@ const CalendarScreen = ({navigation}) =>{
     const startMonth = new Date();
     const [goalMinutes, setGoalMinutes] = useState(0);
 
-
     //useEffect is called one time before screen renders.
     useEffect(()=>{
         fullySetupDatabase();
@@ -56,12 +52,16 @@ const CalendarScreen = ({navigation}) =>{
         }).then(()=>{
             console.log('monthly totals:', state.monthlyTotals);
             return fetchGoal();
-        }).then(()=>{
-            setGoalMinutes(state.goal.minutes);
         }).catch((err)=>{
             console.log('err:', err);
         }); 
     }
+
+    useEffect(()=>{
+        if (Object.prototype.hasOwnProperty.call(state, 'goal')){
+            setGoalMinutes(state.goal.minutes);
+        }
+    }, [state]);
 
 
     const renderGoalMinutes = () => {
@@ -78,9 +78,8 @@ const CalendarScreen = ({navigation}) =>{
 
     return (
         <View>
-            <Header title={navigation.state.routeName}/>
             <View style={styles.todayExercise}>
-                <Text style={styles.exerciseTimeText}>Today's Time:</Text>
+                <Text style={styles.exerciseTimeText}>Today:</Text>
                 <Text style={styles.exerciseTime}>
                     {state.todayExercise.time}
                     {renderGoalMinutes()}
@@ -92,52 +91,31 @@ const CalendarScreen = ({navigation}) =>{
     );
 }
 
+CalendarScreen.navigationOptions = {
+    title: 'calendar'
+}
+
 
 const styles = StyleSheet.create({
     todayExercise: {
         flexDirection: 'row',
-        justifyContent:'center',
+        justifyContent:'flex-start',
         alignItems: 'center',
         padding: 20,
         width: '100%',
-        backgroundColor: colors.light
+        backgroundColor: colors.highlight,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10
     },
     exerciseTimeText: {
-        fontSize: 20,
-        color: colors.highlight,
-        textShadowColor: colors.medium,
-        textShadowRadius: 20
+        fontSize: 14,
+        color: colors.medium
     },
     exerciseTime: {
-        fontSize: 28,
+        fontSize: 16,
         marginLeft: 10,
-        color: colors.highlight,
-        textShadowColor: colors.medium,
-        textShadowRadius: 20
-    },
-    top: {
-        flexDirection:'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '60%',
-        alignSelf: 'flex-end'
-    }, 
-    closedContainer: {
-        borderWidth:3,
-        borderColor: '#876f94',
-        width: 50,
-        height: 25,
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#b491c7',
-        elevation: 5,
-    },
-    title: { 
-        fontSize: 24,
-        fontWeight: '700',
-        color: 'gray',
-        alignSelf: 'center'
+        fontWeight: "700",
+        color: colors.medium
     }
 });
 

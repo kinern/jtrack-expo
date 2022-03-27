@@ -13,7 +13,7 @@ Displays a monthly line graph, where the x-axis is the days of the month
 and the y-axis is the minutes exercised.
 
 */
-const LineGraph = ({data}) => {
+const LineGraph = ({data = []}) => {
 
     const contentInset = { top: 20, bottom: 20, left: 5, right: 20 }
 
@@ -47,7 +47,7 @@ const LineGraph = ({data}) => {
     return (
         <ScrollView style={styles.scrollview} horizontal={true}>
             <View style={{width: 1000, paddingHorizontal: 10}}>
-                <View style={{height: 200, flexDirection: 'row' }}>
+                <View style={{height: "100%", flexDirection: 'row', paddingBottom: 10}}>
                     {renderYAxis()}
                     <LineChart
                         style={{ flex: 1 }}

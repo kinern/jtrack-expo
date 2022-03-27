@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Calendar as ReactCalendar } from 'react-native-calendars';
 import CalendarDay from './CalendarDay';
-import { Context as ExerciseContext } from '../context/exerciseContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import colors from '../theme/colors';
+
+import { Context as ExerciseContext } from '../context/exerciseContext';
 
 
 /*
@@ -24,8 +24,8 @@ const Calendar = ({navigation}) =>{
   const { state, updateSelectedDate, fetchCalendarExercises } = useContext(ExerciseContext);
 
   const renderArrowButton = (direction) => {
-    const path = (direction == 'left')? "angle-double-left" : "angle-double-right";
-    const arrowColor = ((direction == 'right')&&(isTodayAfterSelected()))? colors.inactiveLight : colors.medium;
+    const path = `angle-double-${direction}`;
+    const arrowColor = ((direction == 'right')&&(isTodayAfterSelected()))? colors.inactiveLight : colors.dark;
     return (
       <View>
         <Icon name={path} size={30} color={arrowColor} />
@@ -35,9 +35,7 @@ const Calendar = ({navigation}) =>{
 
 
   const updateMonth = (changeMonth, amount) => {
-    if ((amount == 1) && isTodayAfterSelected()){
-      return;
-    }
+    if ((amount == 1) && isTodayAfterSelected()) return;
     updateSelectedDate(state.selectedDate, amount);
     fetchCalendarExercises(state.selectedDate);
     changeMonth();
@@ -46,11 +44,10 @@ const Calendar = ({navigation}) =>{
 
   //Compare today to state.selectedDate
   const isTodayAfterSelected = () => {
-    const today = new Date();
-    const selectedMonth = ('0' + (state.selectedDate.getMonth()+1)).slice(-2);
+    const selectedMonth = (`0${state.selectedDate.getMonth()+1}`).slice(-2);
     const selectedComp = state.selectedDate.getFullYear().toString() + selectedMonth.toString();
-    const todayMonth = ('0' + (today.getMonth()+1)).slice(-2);
-    const todayComp = today.getFullYear().toString() + todayMonth;
+    const today = new Date();
+    const todayComp = today.getFullYear().toString() + (`0${today.getMonth()+1}`).slice(-2);
     return (selectedComp >= todayComp);
   }
 
@@ -59,7 +56,7 @@ const Calendar = ({navigation}) =>{
     let month = String(date.getMonth()+1).padStart(2, '0');
     let day = String(date.getDate()).padStart(2, '0');
     let year = date.getFullYear();
-    return (year +'-'+ month +'-'+ day);
+    return (`${year}-${month}-${day}`);
   };
 
   
@@ -70,7 +67,10 @@ const Calendar = ({navigation}) =>{
     markedDates = {state.calendarExercises}
     dayComponent={({ date, marking }) => {
         return ( 
-        <CalendarDay date={date} marking={marking} navigation={navigation}/>
+        <CalendarDay 
+        date={date} 
+        marking={marking} 
+        navigation={navigation}/>
         );
     }}
     onPressArrowLeft={(subtractMonth)=>{updateMonth(subtractMonth, -1)}}
@@ -85,7 +85,7 @@ const calendarTheme = {
   calendarBackground: 'white',
   textSectionTitleColor: colors.medium,
   dayTextColor: colors.dark,
-  monthTextColor: colors.dark,
+  monthTextColor: colors.medium,
   textDayHeaderFontWeight: '400',
   textMonthFontWeight: '700',
   textMonthFontSize: 20,

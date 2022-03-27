@@ -14,6 +14,7 @@ const TimerScreen = ({navigation}) => {
     const [currentTime, setCurrentTime] = useState(state.todayExercise.time);
     const [sec, setSec] = useState(0);
     const [min, setMin] = useState(0);
+    const [hour, setHour] = useState(0);
     let iconName = (timerOn)? 'stop': 'play'; 
 
 
@@ -28,6 +29,11 @@ const TimerScreen = ({navigation}) => {
         let interval = null;
         if (timerOn){
             interval = setInterval(()=>{
+                if (min == 59){
+                    setMin(0);
+                    const newHour = hour + 1;
+                    setHour(newHour);
+                }
                 if (sec == 59){
                     setSec(0)
                     const newMin = min + 1;
@@ -69,33 +75,38 @@ const TimerScreen = ({navigation}) => {
         return (
             <TouchableOpacity 
             onPress={onPressFn}
+            style={styles.iconBtn}
             >
                 <Icon name={iconStr} color={colors.medium} size={40} />
             </TouchableOpacity>
         );
     };
 
+
+    const renderTimerParts = () => {
+        return (
+            <View style={styles.timerParts}>
+                <Text style={styles.timerText}>{('0' + hour).slice(-2)}</Text>
+                <Text style={styles.timerText}>:</Text>
+                <Text style={styles.timerText}>{('0' + min).slice(-2)}</Text>
+                <Text style={styles.timerText}>:</Text>
+                <Text style={styles.timerText}>{('0' + sec).slice(-2)}</Text>
+            </View>
+        );
+    }
+
+    
     return (
         <View style={styles.container}>
-            <Header title={navigation.state.routeName}/>
-            <View style={styles.timerContainer}>
-                <Text style={styles.timer}>{('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2)} </Text>
-                <View style={styles.timerMenu}>
-                    {renderButton(toggleTimer, iconName)}
-                    {renderButton(resetTimer, 'restart')}
+            <View style={styles.timerScreen}>
+                <View style={styles.timerContainer}>
+                    {renderTimerParts()}
+                    <View style={styles.timerMenu}>
+                        {renderButton(toggleTimer, iconName)}
+                        {renderButton(resetTimer, 'restart')}
+                        {renderButton(addToCurrentTime, 'plus')}
+                    </View>
                 </View>
-            </View>
-            <View >
-                <TouchableOpacity 
-                style={styles.addBtn}
-                onPress={addToCurrentTime}
-                >
-                    <Text style={styles.addBtnText}>Add To Workout</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.currentTimeMenu}>
-                <Text style={styles.currentTimeText}>Today's Recorded Time:</Text>
-                <Text style={styles.currentTimeText}>{currentTime}min</Text>
             </View>
         </View>
     );
@@ -108,9 +119,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: colors.light
     },
+    timerScreen: {
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center"
+    },
     timerContainer: {
-        paddingVertical: 50,
-        width: '100%'
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 50,
     },
     timerTitle: {
         flexDirection: 'row',
@@ -121,39 +138,36 @@ const styles = StyleSheet.create({
     timerMenu: {
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 50
     },
-    timer: {
-        width: '100%',
-        textAlign: 'right',
-        fontSize: 120,
-        color: colors.highlight,
-        textShadowColor: colors.medium,
-        textShadowRadius: 20
+    timerParts: {
+        flexDirection: 'row',
+        justifyContent:'center'
     },
-    addBtn: {
-        borderColor: colors.inactiveLight,
-        borderWidth: 1,
+    timerText: {
+        fontSize: 56,
+        fontFamily: 'Lato_400Regular',
+        color: colors.medium,
+        marginHorizontal: 5
+    },
+    iconBtn: {
+        backgroundColor: "white",
+        shadowColor: colors.medium,
+        shadowRadius: 3,
         borderRadius: 40,
-        backgroundColor: 'white',
-        padding: 15,
-        marginVertical: 20,
+        padding: 10,
+        marginHorizontal: 20,
         elevation: 2
-    },
-    addBtnText: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: colors.medium
+
     },
     currentTimeMenu : {
         flexDirection: 'row'
     },
     currentTimeText: {
-        fontSize: 20,
-        color: colors.highlight,
+        fontSize: 18,
+        color: colors.medium,
         padding: 5,
-        textShadowColor: colors.medium,
-        textShadowRadius: 10
     },
 });
 

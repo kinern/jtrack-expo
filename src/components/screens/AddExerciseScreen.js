@@ -1,8 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import ExerciseForm from '../components/ExerciseForm';
-
-import Header from '../components/Header';
+import ExerciseForm from '../ExerciseForm';
 
 /* 
 AddExerciseScreen Component
@@ -20,7 +18,6 @@ const AddExerciseScreen = ({navigation}) =>{
     }
     return (
         <View>
-            <Header title={navigation.state.routeName}/>
             <ExerciseForm date={date} callback={callback}/>
         </View>
     );

@@ -1,7 +1,15 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Text, ImageBackground, Alert} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, ImageBackground} from 'react-native';
 import { getTodayDate } from '../commonDate';
+import colors from '../theme/colors';
 
+const images = {
+    star1 : require('../assets/images/calendar/star1.png'),
+    star2 : require('../assets/images/calendar/star2.png'),
+    star3 : require('../assets/images/calendar/star3.png'),
+    star4 : require('../assets/images/calendar/star4.png'),
+    star5 : require('../assets/images/calendar/star5.png')
+};
 
 /*
 CalendarDay Component
@@ -12,35 +20,26 @@ The onDayPress event is used to navigate to the AddExercise screen, where
 the user can add a new time.
 
 */
-const CalendarDay = ({date, marking, navigation}) =>{
+const CalendarDay = ({date, marking, navigation}) => {
 
     const {day, month, year} = date;
-    const datestr = year + "-" + ("0" + (month)).slice(-2) + "-" + ("0" + day).slice(-2);
+    const datestr = `${year}-${(`0${month}`).slice(-2)}-${(`0${day}`).slice(-2)}`;
     const todayDate = getTodayDate();
+    const starImage = getStarImage(parseInt(marking.minutes));
+    const dayTextStyle = (datestr === todayDate)? styles.todayText : styles.dayText;
 
-    const getHeartImage = () => {
-        const minutes = parseInt(marking.minutes);
-    
+    const getStarImage = (minutes) => {
         if (minutes > 0 && minutes < 10 ) {
-          return require('../assets/images/calendar/star1.png');
+          return images.star1;
         } else if (minutes < 20 ) {
-          return require('../assets/images/calendar/star2.png');
+          return images.star2;
         } else if (minutes < 30 ) {
-          return require('../assets/images/calendar/star3.png');
+          return images.star3;
         } else if (minutes < 40  ) {
-          return require('../assets/images/calendar/star4.png');
+          return images.star4;
         } else {
-          return require('../assets/images/calendar/star5.png');
+          return images.star5;
         }
-    };
-
-    const renderDateContent = () =>{
-        const color = getHeartImage(marking.minutes);
-        const dayTextStyle = (datestr === todayDate)? styles.todayText : styles.dayText;
-        return (marking.marked)
-        ? <ImageBackground style={styles.heart} source={color}><Text>{day}</Text></ImageBackground> 
-        : <Text style={dayTextStyle}>{day}</Text>
-        ;
     };
 
     const onDayPress = () => {
@@ -56,22 +55,30 @@ const CalendarDay = ({date, marking, navigation}) =>{
         }
     };
 
+    const DayStarComponent = (
+        <ImageBackground style={styles.heart} source={starImage}>
+            <Text>{day}</Text>
+        </ImageBackground> 
+    );
+
     return (
         <TouchableOpacity 
         style={styles.container}
         onPress={onDayPress}
         >
-            {renderDateContent()}
+            {(marking.marked) ? DayStarComponent : <Text style={dayTextStyle}>{day}</Text>}
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
     dayText:{
-        fontSize: 16
+        fontSize: 16,
+        color: colors.medium
     },
     todayText: {
         fontSize: 18,
+        color: colors.dark, 
         fontWeight: "700"
     }, 
     heart: {

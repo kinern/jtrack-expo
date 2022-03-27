@@ -1,30 +1,17 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import {Text} from 'react-native-elements';
-
 import TodayBox from '../components/TodayBox';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../theme/colors';
 
-import logoImage from '../assets/images/calendar/jumprope.png';
+const images = { 
+    logo : require('../assets/images/calendar/jumprope.png') 
+};
 
-const Header = ({title}) => {
+const Header = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
-
-    //Renders the "Today" toggle button next to the title.
-    const renderModalButton = () => {
-        return(
-            <TouchableOpacity
-            style={styles.weatherBtn}
-            onPress={()=>{setModalVisible(!modalVisible)}}
-            >
-                <Icon name="weather-sunny" size={30} color={colors.highlight}/>
-            </TouchableOpacity>
-        );
-    }
-
 
     return (
         <View style={styles.header}>
@@ -33,10 +20,14 @@ const Header = ({title}) => {
             changeModalVisible={(val)=>{setModalVisible(val)}} 
             />
             <View style={styles.titleLogo}>
-                <Image style={styles.logo} source={logoImage} />
-                <Text style={styles.title}>JTrack</Text>
+                <Image style={styles.logo} source={images.logo} />
             </View>
-            {renderModalButton()}
+            <TouchableOpacity
+            style={styles.weatherBtn}
+            onPress={()=>{setModalVisible(!modalVisible)}}
+            >
+                <Icon name="weather-sunny" size={30} color={colors.highlight}/>
+            </TouchableOpacity>
         </View>
     );
 }

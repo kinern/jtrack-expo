@@ -9,9 +9,10 @@ const weatherColors = {
 
 const colors = {
     highlight: 'white',
-    dark: '#1b1140',
-    medium: '#7c57b3',
-    light: '#ddc2ed',
+    dark: '#7a567a',
+    medium: '#b0a4b0',
+    light: '#f7e6f7',
+    lightGray: '#d9d7d9',
     contrastDark: '#7a5f3e',
     contrastMedium: '#cfc6a9',
     contrastLight: '#f5f1d7',

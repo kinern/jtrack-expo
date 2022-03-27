@@ -17,23 +17,21 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
 
     const {state: weatherState, fetchWeather, setCoords} = useContext(WeatherContext);
     const {state: exerciseState} = useContext(ExerciseContext);
+    const degreeNames = {'imperial': 'F', 'metric': 'C', 'standard': 'K'};
     const {weather, setWeather} = useState({});
     const [err, setErr] = useState('');
-
-    //Colors for modal box background
-    //Todo: change colors to images with weather icon patterns.
-    const bgColors = colors.weather;
+    const modalBgColors = colors.weather;
 
     //Takes the current weather type and updates the bgColor state variable.
     const getBgColorFromWeather = () => {
         const weatherType = weatherState.weather? weatherState.weather.weather[0].main : '';
-        if (bgColors[weatherType]){
-            return bgColors[weatherType];
-        } else {
-            return 'white' //Default color for background
-        }
+        const color = (modalBgColors[weatherType])? modalBgColors[weatherType]: 'white';
+        return color;
     } 
 
+
+    //Gets permission to use locaton
+    //Sets coordinates
     useEffect(()=>{
         (async () => {
             try {
@@ -41,35 +39,45 @@ const TodayBox = ({modalVisible, changeModalVisible}) => {
                     await Location.requestPermissionsAsync();
                 }
                 const loc = await Location.getCurrentPositionAsync();
-                const {latitude, longitude } = loc.coords;
-                setCoords(latitude, longitude);
-                fetchWeather(latitude, longitude);
-                setWeather(weatherState.weather);
+                if (Object.prototype.hasOwnProperty.call(loc, 'coords')){
+                    setCoords(loc.coords.latitude, loc.coords.longitude);
+                }
             } catch (e){
                 setErr('Error getting weather.');
             }
         })();
     }, []);
 
+    //Dispatch action to fetch weather with coords
+    useEffect(()=>{
+        if (Object.prototype.hasOwnProperty.call(weatherState, 'lat') && Object.prototype.hasOwnProperty.call(weatherState, 'lon')){
+            fetchWeather(weatherState.lat, weatherState.lon);
+        }  
+    }, [weatherState.lat]);
 
-    const degreeNames = {'imperial': 'F', 'metric': 'C', 'standard': 'K'};
+    //Sets the local state variable
+    useEffect(()=>{
+        if (Object.prototype.hasOwnProperty.call(weatherState, 'weather')){
+            setWeather({weather : weatherState.weather, degrees: weatherState.degrees});
+        }
+    }, [seatherState.weather]);
 
     const renderWeather = () => {
-        if (!weatherState.weather){
+        if (!(Object.hasOwnProperty(weather, 'weather')) || (weather.weather == null)){
             return (
                 <View style={styles.weatherLine}>
                     <Text>Loading weather...</Text>
                 </View>
                 );
         } 
-        const weatherTemp = weatherState.weather? weatherState.weather.main.temp : null;
-        const weatherName = weatherState.weather? weatherState.weather.weather[0].main : null;
-        const degreeName = weatherState.weather? degreeNames[weatherState.degrees]: null;
+        const weatherTemp = weather.weather.main.temp;
+        const weatherName = weather.weather.weather[0].main;
+        const degreeName = degreeNames[weather.degrees];
         return (
             <View style={styles.weatherBox}>
-                {(weatherState.weather? <Text style={styles.temp}>{weatherTemp}{degreeName}</Text>: null)}
+                <Text style={styles.temp}>{weatherTemp}{degreeName}</Text>
                 <View style={styles.name}>
-                    {(weatherState.weather? <Text>{weatherName}</Text>: null)}
+                    <Text>{weatherName}</Text>
                     <Text> - Great day to get fit!</Text>
                 </View>
             </View>

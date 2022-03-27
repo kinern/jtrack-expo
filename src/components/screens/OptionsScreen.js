@@ -91,19 +91,19 @@ const OptionsScreen = ({navigation}) =>{
 
     const renderDegreeToggle = () =>{
 
-        const degreeCBg = (weatherState.degrees == 'metric')? colors.highlight: colors.medium;
-        const degreeFBg = (weatherState.degrees == 'imperial')? colors.highlight: colors.medium;
+        const degreeCBg = (weatherState.degrees == 'metric')? colors.highlight: colors.lightGray
+        const degreeFBg = (weatherState.degrees == 'imperial')? colors.highlight: colors.lightGray;
 
         return (
             <View style={styles.row}>
-                <Text style={styles.title}>Weather Degrees</Text>
+                <Text style={styles.title}>Degrees</Text>
                 <View style={styles.toggle}>
                     <TouchableOpacity 
-                    style={{...styles.toggleBtn, backgroundColor: degreeCBg}}
+                    style={[styles.toggleBtnLeft, {backgroundColor: degreeCBg}]}
                     onPress={()=>{toggleDegrees('metric')}}
                     ><Text style={styles.toggleBtnText}>C</Text></TouchableOpacity>
                     <TouchableOpacity 
-                    style={{...styles.toggleBtn, backgroundColor: degreeFBg}}
+                    style={[styles.toggleBtnRight, {backgroundColor: degreeFBg}]}
                     onPress={()=>{toggleDegrees('imperial')}}
                     ><Text style={styles.toggleBtnText}>F</Text></TouchableOpacity>
                 </View>
@@ -128,16 +128,15 @@ const OptionsScreen = ({navigation}) =>{
 
     return (
         <View style={styles.container}>
-            <Header title={navigation.state.routeName}/>
             <View>
-                <Text style={styles.sectionTitle}>Weather</Text>
+                <Text style={styles.sectionTitle}>WEATHER</Text>
                 <View style={styles.section}>
                     {renderDegreeToggle()}
                 </View>
-                <Text style={styles.sectionTitle}>Data</Text>
+                <Text style={styles.sectionTitle}>DATA</Text>
                 <View style={styles.section}>
-                    {renderOptionButton(()=>{confirmChange(addTestData, "add")}, 'Add Test Data', 'Add')}
-                    {renderOptionButton(()=>{confirmChange(clearData, "clear")}, 'Clear Database', 'Clear')}
+                    {renderOptionButton(()=>{confirmChange(addTestData, "add")}, 'Add Test Data', 'ADD')}
+                    {renderOptionButton(()=>{confirmChange(clearData, "clear")}, 'Clear Database', 'CLEAR')}
                 </View>
             </View>
         </View>
@@ -151,14 +150,13 @@ const styles = StyleSheet.create({
         backgroundColor: colors.light,
     },
     sectionTitle: {
-        fontSize: 24,
-        textAlign: 'center',
+        padding: 20,
+        fontSize: 12,
         width: '100%',
+        fontWeight: "700",
         backgroundColor: colors.light,
-        padding: 10,
-        color: colors.highlight,
-        textShadowColor: colors.medium,
-        textShadowRadius: 10
+        color: colors.medium,
+        fontFamily: "Roboto_700Bold",
     },
     row: {
         flexDirection: 'row',
@@ -167,22 +165,33 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: colors.highlight,
         marginHorizontal: 20,
-        paddingVertical: 20
+        paddingVertical: 10
     },
     title: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: colors.highlight,
-        textShadowColor: colors.medium,
-        textShadowRadius: 10
+        fontSize: 14,
+        fontWeight: "700",
+        color: colors.dark
     },
     toggle: {
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
-    toggleBtn: {
-        paddingHorizontal: 30,
+    toggleBtnLeft: {
+        paddingHorizontal: 20,
         paddingVertical: 10,
-        elevation: 2
+        elevation: 10,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.lightGray
+    },
+    toggleBtnRight: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        elevation: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.lightGray
     },
     toggleBtnText: {
         fontSize: 18,
@@ -192,7 +201,7 @@ const styles = StyleSheet.create({
     btn: {
         minWidth: 80,
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         elevation: 2,
         alignItems: 'center',
         backgroundColor: colors.highlight
@@ -200,6 +209,10 @@ const styles = StyleSheet.create({
     btnTitle: {
         fontWeight: '700',
         color: colors.medium
+    },
+    section: {
+        backgroundColor: "white",
+        borderRadius: 10
     }
 
 });

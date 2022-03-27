@@ -27,6 +27,7 @@ const StatsScreen = ({navigation}) =>{
     const {state, fetchGraphExercises, fetchMonthlyTotals} = useContext(ExerciseContext);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dateStr = `${monthNames[selectedDate.getMonth()]} / ${selectedDate.getFullYear()}`;
+    const [shownGraph, setShownGraph] = useState('oneMonth'); //oneMonth //sixMonths
 
     //Calls the context fetchGraphExercises function to get new data for the graph.
     const changeMonth = (amount) => { 
@@ -62,7 +63,7 @@ const StatsScreen = ({navigation}) =>{
             style={styles.arrowbtn}
             onPress={()=>changeMonth(monthDiff)}
             >
-                <Icon name={path} size={30} color={colors.medium} />
+                <Icon name={path} size={30} color={colors.dark} />
             </TouchableOpacity>
         );
     }
@@ -86,23 +87,55 @@ const StatsScreen = ({navigation}) =>{
         );
     }
 
+    const renderRangeMenu = () => {
+        const oneColor = (shownGraph == "oneMonth")? "white" : "lightgray";
+        const sixColor = (shownGraph == "sixMonths")? "white" : "lightgray";
+        return (
+            <View style={styles.rangeSelectMenu}>
+                <TouchableOpacity 
+                style={[styles.rangeBtn, {backgroundColor: oneColor}]}
+                onPress={()=>{setShownGraph("oneMonth")}}
+                >
+                    <Text style={styles.rangeBtnText}>Monthly</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                style={[styles.rangeBtn, {backgroundColor: sixColor}]}
+                onPress={()=>{setShownGraph("sixMonths")}}
+                >
+                    <Text style={styles.rangeBtnText}>Six Months</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    const renderGraph = () => {
+        if (shownGraph === "oneMonth"){
+            return (
+                <View style={styles.graphContainer}>
+                    <View style={styles.dateMenu}>
+                        {renderArrowButton('left')}
+                        <Text style={styles.dateText}>{dateStr}</Text>
+                        {renderArrowButton('right')}
+                    </View>
+                    <LineGraph data={state.graphExercises} />
+                    {renderGraphScroll()}
+                    {renderAverageTime()}
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.graphContainer}>
+                    <Text style={styles.sixMonthTitle}>Past Six Months</Text>
+                    <SixMonthGraph data={state.monthlyTotals}/>
+                </View>
+            )
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <Header title={navigation.state.routeName}/>
-            <View>
-                <View style={styles.dateMenu}>
-                    {renderArrowButton('left')}
-                    <Text style={styles.dateText}>{dateStr}</Text>
-                    {renderArrowButton('right')}
-                </View>
-                <LineGraph data={state.graphExercises} />
-                {renderGraphScroll()}
-                {renderAverageTime()}
-            </View>
-            <View style={styles.sixMonthContainer}>
-                <Text style={styles.sixMonthTitle}>Past Six Months</Text>
-                <SixMonthGraph data={state.monthlyTotals}/>
-            </View>
+            {renderRangeMenu()}
+            {renderGraph()}
         </View>
     );
 }
@@ -113,11 +146,29 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'flex-start'
     },
+    rangeSelectMenu: {
+        flexDirection: "row",
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+        marginTop: 10
+    },
+    rangeBtn: {
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        paddingHorizontal: 50,
+        paddingVertical: 10
+    },
+    rangeBtnText: {
+        fontSize: 14,
+        fontFamily: "Roboto_700Bold",
+        color: colors.dark
+    },
     swipeTextView: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingTop: 20
     },
     swipeText: {
         fontSize: 12,
@@ -161,21 +212,19 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: colors.light
     },
-    sixMonthContainer: {
-        backgroundColor: colors.inactiveLight,
-        width: '100%',
-        paddingBottom: 30
+    graphContainer: {
+        backgroundColor: "white",
+        justifyContent: "flex-start",
+        flex: 1
     },
     sixMonthTitle: {
         width: '100%',
         textAlign: 'center',
         alignSelf: 'center',
-        paddingTop: 10,
-        fontSize: 18,
+        paddingTop: 20,
+        fontSize: 20,
         fontWeight: "700",
-        color: colors.highlight,
-        textShadowColor: 'black',
-        textShadowRadius: 10
+        color: colors.medium,
     }
 });
 
