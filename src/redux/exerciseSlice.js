@@ -27,6 +27,22 @@ export const fetchMonthlyTotals = createAsyncThunk(
   }
 );
 
+export const clearAllExercises = createAsyncThunk(
+  'exercise/clearAllExercises',
+  async (data, thunkAPI) =>{
+    const response = await db.clearAllExercises(data);
+    return response.data;
+  }
+);
+
+export const fetchExercise = createAsyncThunk(
+  'exercise/fetchExercise',
+  async (data, thunkAPI) =>{
+    const response = await db.fetchExercise(data);
+    return response.data;
+  }
+);
+
 export const saveExercise = createAsyncThunk(
   'exercise/saveExercise',
   async (data, thunkAPI) =>{
@@ -51,10 +67,21 @@ export const saveGoal = createAsyncThunk(
   }
 );
 
+export const insertTestData = createAsyncThunk(
+  'exercise/insertTestExerciseData',
+  async (data, thunkAPI) =>{
+    const response = await db.insertTestExerciseData(data);
+    return response.data;
+  }
+);
+
 const initialState = {
-  graphData: {},
-  calendarData : {},
-  goal : {}
+  calendarData : {}, //All exercise data for calendar
+  exerciseData : {}, //Data for single exercise
+  goal : {}, //Data for goal
+  graphData: {}, //All exercise data for graphs
+  monthlyTotals : [], //Montly total data for graphs
+  selectedDate: new Date(), //Selected date when updating/adding exercise
 }
 
 export const exerciseSlice = createSlice({
@@ -71,10 +98,18 @@ export const exerciseSlice = createSlice({
     },
     [fetchMonthlyTotals.fulfilled] : (state, {payload}) => {
       state.monthlyTotals = payload;
-    }
+    },
     [fetchGoal.fulfilled] : (state, {payload}) => {
       state.goal = payload;
-    }
+    },
+    [fetchExercise.fulfilled] : (state, {payload}) => {
+      state.exerciseData = payload;
+    },
+    [saveGoal.fulfilled] : (state, {payload}) => {
+      state.goal = payload;
+    },
+    [insertTestData.fulfilled] : (state, {payload}) => {
+    },
   }
 })
 

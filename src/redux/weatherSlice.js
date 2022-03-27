@@ -2,9 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import weatherAPI from '../api/weather';
 import weather_key from '../config';
 
-const initialState = {
-  weather : {},
-}
 
 export const fetchWeather = createAsyncThunk(
   'weather/fetchWeather',
@@ -15,22 +12,29 @@ export const fetchWeather = createAsyncThunk(
           appid: weather_key,
           lat: state.coords.lat,
           lon: state.coords.lon,
-          units: state.coords.units //degrees?
+          units: state.degrees
       }
     });
     return response.data;
   }
 );
 
+const initialState = {
+  coords: {lat: 0, lon: 0},
+  degrees: 'imperial',
+  weather: null,  
+  weatherData: null, 
+}
+
 export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
     setDegrees : (state, action) => {
-      state.degrees = action.payload;
+      state.degrees = action.payload; // degrees = {lat: float, lon: float}
     },
     setCoords : (state, action) => {
-      state.coords = action.payload;
+      state.coords = action.payload; 
     }
   },
   extraReducers: {
